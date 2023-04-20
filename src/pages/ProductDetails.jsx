@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Carousel from "react-material-ui-carousel";
+// import Carousel from "react-material-ui-carousel";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { Paper, Grid, Container, Typography } from "@mui/material";
 import BasicCard from "../components/BasicCard";
@@ -32,10 +32,10 @@ const ProductDetails = () => {
     <Container maxWidth="xl" sx={{ padding: "20px 0px" }}>
       <Grid container direction={"row"} spacing={1}>
         <Grid item xs={12} md={6} sx={{maxHeight:"100vh"}}>
-          <Carousel>
+          <div>
             {product &&
               product.images.map((item, i) => <Item key={i} item={item} />)}
-          </Carousel>
+          </div>
         </Grid>
         <Grid
           item
