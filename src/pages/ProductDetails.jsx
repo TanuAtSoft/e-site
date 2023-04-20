@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
