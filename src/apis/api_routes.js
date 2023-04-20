@@ -8,4 +8,7 @@ export const API_ROUTES = {
         // FORGOT_PASS:'forgotPassword',
         // RESET_PASS:'resetPassword'
     },
+    PRODUCTS:{
+        GET_ALL: "products",
+    }
 }

@@ -24,7 +24,9 @@ const Footer=()=> {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh"
+        // position:"absolute",
+        // bottom:"0px",
+        // width:"100%"
       }}
     >
       <CssBaseline />

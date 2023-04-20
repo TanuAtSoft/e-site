@@ -2,11 +2,14 @@ import React, { Component, Suspense } from "react";
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import './App.css';
 import Header from "./components/Header";
+import Footer from "./components/Footer"
 import PrivateRoute from "./commans/PrivateRoute";
 
 const Login = React.lazy(() => import("./pages/SignIn"));
 const SignUp = React.lazy(() => import("./pages/SignUp"));
 const ForgotPassword = React.lazy(() => import("./pages/ForgotPassword"));
+const LandingPage = React.lazy(() => import("./pages/LandingPage"));
+const ProductDetails = React.lazy(()=> import("./pages/ProductDetails"))
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -35,8 +38,13 @@ function App() {
           <Route
             exact
             path="/"
+            name="landing page"
+            element={<LandingPage/>}
+          />
+          <Route
+            path="/details/:id"
             name="Register Page"
-            element={<h1>Home</h1>}
+            element={<ProductDetails/>}
           />
            <Route
             exact
@@ -85,6 +93,7 @@ function App() {
           />
         </Routes>
       </Suspense>
+      <Footer/>
     </Router>
   );
 }

@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+.decsription-div{
+  overflow-y: scroll;
+}
+.decsription-div::-webkit-scrollbar {
+  width: 6px;
+  background-color: transparent;
+}
