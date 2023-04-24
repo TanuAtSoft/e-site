@@ -1,15 +1,23 @@
-import React, { Component, Suspense } from "react";
-import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
-import './App.css';
+import React, { useState, Suspense, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
+import "./App.css";
 import Header from "./components/Header";
-import Footer from "./components/Footer"
+import Footer from "./components/Footer";
 import PrivateRoute from "./commans/PrivateRoute";
+import Dashboard from "./components/Dashboard";
 
 const Login = React.lazy(() => import("./pages/SignIn"));
 const SignUp = React.lazy(() => import("./pages/SignUp"));
 const ForgotPassword = React.lazy(() => import("./pages/ForgotPassword"));
-const LandingPage = React.lazy(() => import("./pages/LandingPage"));
-const ProductDetails = React.lazy(()=> import("./pages/ProductDetails"))
+const ProductDetails = React.lazy(() => import("./pages/ProductDetails"));
+const AddProduct = React.lazy(() => import("./pages/AddProduct"));
+const LoggedOut = React.lazy(() => import("./pages/LoggedOut"));
+
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -18,39 +26,34 @@ const loading = (
 
 function App() {
   return (
-    
     <Router>
-      <Header/>
+      <Header />
       <Suspense fallback={loading}>
         <Routes>
-          <Route
-            exact
-            path="/login"
-            name="Login Page"
-            element={<Login />}
-          />
+          <Route exact path="/login" name="Login Page" element={<Login />} />
           <Route
             exact
             path="/register"
             name="Register Page"
             element={<SignUp />}
           />
-          <Route
-            exact
-            path="/"
-            name="landing page"
-            element={<LandingPage/>}
-          />
+          <Route exact path="/" name="dashboard" element={<Dashboard />} />
           <Route
             path="/details/:id"
             name="Register Page"
-            element={<ProductDetails/>}
+            element={<ProductDetails />}
           />
-           <Route
+          <Route
             exact
             path="/forgot-password"
             name="Register Page"
-            element={<ForgotPassword/>}
+            element={<ForgotPassword />}
+          />
+          <Route
+            exact
+            path="/loggedOut"
+            name="logged out"
+            element={<LoggedOut />}
           />
           {/* <Route
             exact
@@ -83,17 +86,17 @@ function App() {
             }
           /> */}
           <Route
-            path="/seller"
-            name="seller Dashboard"
+            path="/addProduct"
+            name="add product"
             element={
               <PrivateRoute>
-                <h1>This is seller dashboard</h1>
+                <AddProduct />
               </PrivateRoute>
             }
           />
         </Routes>
       </Suspense>
-      <Footer/>
+      <Footer />
     </Router>
   );
 }

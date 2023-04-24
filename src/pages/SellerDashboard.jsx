@@ -1,7 +1,6 @@
-import React, { Component }  from 'react';
-const SellerDashboard =()=>{
+const SellerDashboard=()=>{
     return(
-        <div>SellerDashboard</div>
+        <h1>This is seller Dashboard</h1>
     )
 }
 export default SellerDashboard

@@ -10,5 +10,10 @@ export const API_ROUTES = {
     },
     PRODUCTS:{
         GET_ALL: "products",
+        GET_ONE: "product",
+        ADD_PRODUCT:"addProducts"
+    },
+    UPLOAD:{
+        IMAGES:"upload/images"
     }
 }

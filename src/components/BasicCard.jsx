@@ -35,7 +35,7 @@ const BasicCard = () => {
         <Typography sx={{ mb: 1.5,mt: 1.5 }} color="text.secondary">
           <LocationOnIcon /> select delivery location
         </Typography>
-        <Typography variant="h5" component="div"  sx={{ mt: 1.5 }}>
+        <Typography variant="h5"  sx={{ mt: 1.5 }}>
           In stock
         </Typography>
 
@@ -44,7 +44,7 @@ const BasicCard = () => {
           <br />
           {'"a benevolent smile"'}
         </Typography>
-        <Typography sx={{ mb: 1.5,mt: 1.5 }}>
+        <Typography sx={{ mb: 1.5,mt: 1.5 }} component="div">
           Quantity:
           <Select
             labelId="demo-simple-select-label"

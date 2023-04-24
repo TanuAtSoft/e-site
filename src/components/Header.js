@@ -1,5 +1,5 @@
-import React, { Component }  from 'react';
-import { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect, useMemo } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,10 +13,10 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { Link, useLocation,useNavigate } from "react-router-dom";
-
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const pages = ["Products", "Pricing", "Blog"];
+const sellerPages = [{ label: "Add Products", path: "/addProduct" }];
 const LogoutSettings = ["Profile", "Account", "Dashboard", "Logout"];
 const LoginSettings = [{ label: "SignIn", link: "/login" }];
 const SignUpSettings = [{ label: "SignUp", link: "/register" }];
@@ -26,8 +26,11 @@ const Header = () => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
   const location = useLocation();
-  const [role, setRole] = useState();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const localStorageRole = localStorage.getItem("role");
+  const role = useMemo(() => {
+    return localStorage.getItem("role");
+  }, [localStorageRole]);
 
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
@@ -35,8 +38,6 @@ const Header = () => {
   useEffect(() => {
     if (token) {
       setLoggedIn(true);
-      const userRole = localStorage.getItem("role");
-      setRole(userRole);
     }
   }, [token]);
 
@@ -55,12 +56,13 @@ const Header = () => {
     setAnchorElUser(null);
   };
   const handleChange = (setting) => {
-    console.log("setting", setting);
+    // console.log("setting", setting);
     if (setting === "Logout") {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("role");
       setLoggedIn(false);
-      navigate("/")
+      navigate("/loggedOut");
     }
   };
   return (
@@ -115,17 +117,26 @@ const Header = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {role !== "SELLER" &&
+                pages.map((page) => (
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page}</Typography>
+                  </MenuItem>
+                ))}
+              {role === "SELLER" &&
+                sellerPages.map((page) => (
+                  <MenuItem key={page} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">
+                      <Link to={page.path} className="link">{page.label}</Link>
+                    </Typography>
+                  </MenuItem>
+                ))}
               {location.pathname === "/register" &&
                 !loggedIn &&
                 LoginSettings.map((page) => (
                   <MenuItem key={page.label} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">
-                      <Link to={page.link}>{page.label}</Link>
+                      <Link to={page.link} className="link">{page.label}</Link>
                     </Typography>
                   </MenuItem>
                 ))}
@@ -133,7 +144,7 @@ const Header = () => {
                 SignUpSettings.map((page) => (
                   <MenuItem key={page.label} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">
-                      <Link to={page.link}>{page.label}</Link>
+                      <Link to={page.link} className="link">{page.label}</Link>
                     </Typography>
                   </MenuItem>
                 ))}
@@ -159,15 +170,26 @@ const Header = () => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            {role !== "SELLER" &&
+              pages.map((page) => (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page}
+                </Button>
+              ))}
+            {role === "SELLER" &&
+              sellerPages.map((page) => (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  <Link to={page.path} className="link"> {page.label}</Link>
+                </Button>
+              ))}
           </Box>
           <Box
             sx={{

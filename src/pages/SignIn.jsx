@@ -1,4 +1,4 @@
-import React, { Component }  from 'react';
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -84,18 +84,8 @@ const SignIn = () => {
       if (res?.data?.statusCode === 200) {
         localStorage.setItem("token", JSON.stringify(res.data.data.user.token));
         localStorage.setItem("user", JSON.stringify(res.data.data.user.user));
-        localStorage.setItem("role", JSON.stringify(res.data.data.user.role));
-        // localStorage.setItem(
-        //   "expireAt",
-        //   JSON.stringify(res.data.data.tokenExpireAt)
-        // );
-        if(res.data.data.user.role === "BUYER"){
-          navigate("/");
-        }
-        if(res.data.data.user.role === "SELLER"){
-          navigate("/seller");
-        }
-       
+        localStorage.setItem("role", res.data.data.user.role);
+        navigate("/");
       } else if (res.remote === "failure") {
         alert(res.errors.errors);
       }
