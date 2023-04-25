@@ -40,6 +40,7 @@ const parseResponse = (response) => {
         "Content-Type": reqParams.contentType
           ? reqParams.contentType
           : "application/json",
+          mode: "no-cors",
       };
       if (reqParams?.token) {
         reqParams.headers.Authorization = `Bearer ${reqParams?.token}`;

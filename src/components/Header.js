@@ -14,6 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import CartWithNotif from "./CartWithNotif";
 
 const pages = ["Products", "Pricing", "Blog"];
 const sellerPages = [{ label: "Add Products", path: "/addProduct" }];
@@ -61,6 +62,7 @@ const Header = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.removeItem("role");
+      localStorage.removeItem("cart");
       setLoggedIn(false);
       navigate("/loggedOut");
     }
@@ -99,6 +101,7 @@ const Header = () => {
             >
               <MenuIcon />
             </IconButton>
+
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -127,7 +130,9 @@ const Header = () => {
                 sellerPages.map((page) => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">
-                      <Link to={page.path} className="link">{page.label}</Link>
+                      <Link to={page.path} className="link">
+                        {page.label}
+                      </Link>
                     </Typography>
                   </MenuItem>
                 ))}
@@ -136,7 +141,9 @@ const Header = () => {
                 LoginSettings.map((page) => (
                   <MenuItem key={page.label} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">
-                      <Link to={page.link} className="link">{page.label}</Link>
+                      <Link to={page.link} className="link">
+                        {page.label}
+                      </Link>
                     </Typography>
                   </MenuItem>
                 ))}
@@ -144,11 +151,18 @@ const Header = () => {
                 SignUpSettings.map((page) => (
                   <MenuItem key={page.label} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">
-                      <Link to={page.link} className="link">{page.label}</Link>
+                      <Link to={page.link} className="link">
+                        {page.label}
+                      </Link>
                     </Typography>
                   </MenuItem>
                 ))}
             </Menu>
+            <MenuItem onClick={() => {}}>
+              <Typography textAlign="center">
+                <CartWithNotif />
+              </Typography>
+            </MenuItem>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
@@ -187,16 +201,25 @@ const Header = () => {
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
-                  <Link to={page.path} className="link"> {page.label}</Link>
+                  <Link to={page.path} className="link">
+                    {" "}
+                    {page.label}
+                  </Link>
                 </Button>
               ))}
           </Box>
+
           <Box
             sx={{
               flexGrow: 1,
               display: { xs: "none", md: "flex", flexDirection: "row-reverse" },
             }}
           >
+            <MenuItem onClick={() => {}}>
+              <Typography textAlign="center">
+                <CartWithNotif />
+              </Typography>
+            </MenuItem>
             {(location.pathname === "/register" || location.pathname === "/") &&
               !loggedIn &&
               LoginSettings.map((page) => (

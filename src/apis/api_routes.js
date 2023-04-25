@@ -15,5 +15,9 @@ export const API_ROUTES = {
     },
     UPLOAD:{
         IMAGES:"upload/images"
+    },
+    CART:{
+        ADD_TO_CART:"addToCart",
+        GET_CART_DETAILS:"getCart"
     }
 }

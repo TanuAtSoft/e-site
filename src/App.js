@@ -11,12 +11,13 @@ import Footer from "./components/Footer";
 import PrivateRoute from "./commans/PrivateRoute";
 import Dashboard from "./components/Dashboard";
 
-const Login = React.lazy(() => import("./pages/SignIn"));
-const SignUp = React.lazy(() => import("./pages/SignUp"));
-const ForgotPassword = React.lazy(() => import("./pages/ForgotPassword"));
-const ProductDetails = React.lazy(() => import("./pages/ProductDetails"));
-const AddProduct = React.lazy(() => import("./pages/AddProduct"));
-const LoggedOut = React.lazy(() => import("./pages/LoggedOut"));
+const Login = React.lazy(() => import("./pages/common/SignIn"));
+const SignUp = React.lazy(() => import("./pages/common/SignUp"));
+const ForgotPassword = React.lazy(() => import("./pages/common/ForgotPassword"));
+const ProductDetails = React.lazy(() => import("./pages/common/ProductDetails"));
+const AddProduct = React.lazy(() => import("./pages/seller/AddProduct"));
+const LoggedOut = React.lazy(() => import("./pages/common/LoggedOut"));
+const ViewCart = React.lazy(() => import("./pages/common/ViewCart"));
 
 const loading = (
   <div className="pt-3 text-center">
@@ -55,6 +56,7 @@ function App() {
             name="logged out"
             element={<LoggedOut />}
           />
+          
           {/* <Route
             exact
             path="/password"
@@ -94,7 +96,17 @@ function App() {
               </PrivateRoute>
             }
           />
+           <Route
+            path="/cart"
+            name="cart"
+            element={
+              <PrivateRoute>
+                <ViewCart />
+              </PrivateRoute>
+            }
+          />
         </Routes>
+        
       </Suspense>
       <Footer />
     </Router>

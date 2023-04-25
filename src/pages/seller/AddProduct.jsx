@@ -9,10 +9,10 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import { catAvailable } from "../helpers/helper";
-import { uploadImgs } from "../apis/upload/uploadImgs";
-import { addProduct } from "../apis/products/addProduct";
-import Loader from "../components/Loader";
+import { catAvailable } from "../../helpers/helper";
+import { uploadImgs } from "../../apis/upload/uploadImgs";
+import { addProduct } from "../../apis/products/addProduct";
+import Loader from "../../components/Loader";
 
 const AddProduct = () => {
   const user = JSON.parse(localStorage.getItem("user"));

@@ -8,9 +8,9 @@ import {
   Container,
   Typography,
 } from "@mui/material";
-import BasicCard from "../components/BasicCard";
-import { getSingleProduct } from "../apis/products/getSingleProduct";
-import Loader from "../components/Loader";
+import BasicCard from "../../components/BasicCard";
+import { getSingleProduct } from "../../apis/products/getSingleProduct";
+import Loader from "../../components/Loader";
 
 const ProductDetails = () => {
   const [product, setProduct] = useState();
@@ -117,7 +117,7 @@ const ProductDetails = () => {
               sx={{ maxHeight: "99vh" }}
               component="div"
             >
-              <BasicCard />
+              <BasicCard product={product}/>
             </Grid>
           </Grid>
         </Container>

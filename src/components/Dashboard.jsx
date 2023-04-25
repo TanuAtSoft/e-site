@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-const SellerDashboard = React.lazy(() => import("../pages/SellerDashboard"));
-const LandingPage = React.lazy(() => import("../pages/LandingPage"));
+const SellerDashboard = React.lazy(() => import("../pages/seller/SellerDashboard"));
+const LandingPage = React.lazy(() => import("../pages/common/LandingPage"));
 
 const Dashboard = () => {
   const localStorageRole = localStorage.getItem("role");

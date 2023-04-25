@@ -1,4 +1,4 @@
-import React, { Component }  from 'react';
+import React  from 'react';
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -9,23 +9,25 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import { addToCart } from '../apis/carts/addToCart';
 
-const bull = (
-  <Box
-    component="span"
-    sx={{ display: "inline-block", mx: "2px", transform: "scale(0.8)" }}
-  >
-    •
-  </Box>
-);
 
-const BasicCard = () => {
+const BasicCard = ({product}) => {
   const [count,setCount ] = React.useState(1);
   const Quantity=[1,2,3,4,5,6,7,8,9,10,11,12]
+  const token = JSON.parse(localStorage.getItem("token"));
 
   const handleChange = (event) => {
     setCount(event.target.value);
   };
+  const handleAddCart = async()=>{
+    const data ={
+      productId : product._id
+  }
+    const res = await addToCart(token,JSON.stringify(data))
+    console.log("res", res)
+
+  }
   return (
     <Card sx={{ minWidth: 275,height:"80vh" }}>
       <CardContent>
@@ -42,7 +44,7 @@ const BasicCard = () => {
         <Typography variant="body2">
           sold by
           <br />
-          {'"a benevolent smile"'}
+         {product.seller.name}
         </Typography>
         <Typography sx={{ mb: 1.5,mt: 1.5 }} component="div">
           Quantity:
@@ -64,7 +66,7 @@ const BasicCard = () => {
      
       </CardContent>
       <CardActions sx={{flexDirection:"column", justifyContent:"center",gap:"30px"}}>
-      <Button  variant="contained" sx={{width:"100% !important"}}>
+      <Button  variant="contained" sx={{width:"100% !important"}} onClick={handleAddCart}>
          Add to Cart
         </Button>
         <Button variant="contained" sx={{width:"100% !important"}}>

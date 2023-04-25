@@ -24,3 +24,25 @@ code {
   text-decoration: none;
   color: white;
 }
+
+.cart-container{
+  color: #fff;
+  position: relative;
+  animation: bell 1s linear infinite alternate-reverse;
+  transform-origin: top;
+}
+.cart-container::after {
+  content: attr(current-count);
+  position: absolute;
+  top: -20%;
+  right: -20%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  background-color: blue;
+
+}

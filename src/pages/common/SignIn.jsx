@@ -14,7 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { signIn } from "../apis/signIn/signIn";
+import { signIn } from "../../apis/signIn/signIn";
 import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
@@ -85,6 +85,10 @@ const SignIn = () => {
         localStorage.setItem("token", JSON.stringify(res.data.data.user.token));
         localStorage.setItem("user", JSON.stringify(res.data.data.user.user));
         localStorage.setItem("role", res.data.data.user.role);
+        if (res.data.data.user.role === "BUYER") {
+          localStorage.setItem("cart", res.data.data.user.cart);
+          localStorage.setItem("address", res.data.data.user.address);
+        }
         navigate("/");
       } else if (res.remote === "failure") {
         alert(res.errors.errors);

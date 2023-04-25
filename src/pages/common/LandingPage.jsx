@@ -1,10 +1,10 @@
 import React, {useState }  from 'react';
 
-import ProductCard from "../components/ProductCards";
+import ProductCard from "../../components/ProductCards";
 import { Grid, Container } from "@mui/material";
 import { useEffect, Suspense } from "react";
-import { getProducts } from "../apis/products/getProducts";
-import Loader from '../components/Loader';
+import { getProducts } from "../../apis/products/getProducts";
+import Loader from '../../components/Loader';
 
 const LandingPage = () => {
   const [products, setProducts] = useState();
@@ -13,7 +13,7 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await getProducts();
-      console.log("res", res.data.data.products);
+      //console.log("res", res.data.data.products);
       setProducts(res?.data?.data?.products);
       setLoading(false)
     };
