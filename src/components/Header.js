@@ -159,7 +159,7 @@ const Header = () => {
                 ))}
             </Menu>
             <MenuItem onClick={() => {}}>
-              <Typography textAlign="center">
+              <Typography textAlign="center" component="div">
                 <CartWithNotif />
               </Typography>
             </MenuItem>
@@ -216,7 +216,7 @@ const Header = () => {
             }}
           >
             <MenuItem onClick={() => {}}>
-              <Typography textAlign="center">
+              <Typography textAlign="center" component="div">
                 <CartWithNotif />
               </Typography>
             </MenuItem>

@@ -1,5 +1,4 @@
 import React  from 'react';
-import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -13,7 +12,8 @@ import { addToCart } from '../apis/carts/addToCart';
 
 
 const BasicCard = ({product}) => {
-  const [count,setCount ] = React.useState(1);
+  const cartCount = JSON.parse(localStorage.getItem("cart"));
+  const [count,setCount ] = React.useState(cartCount);
   const Quantity=[1,2,3,4,5,6,7,8,9,10,11,12]
   const token = JSON.parse(localStorage.getItem("token"));
 
@@ -26,6 +26,13 @@ const BasicCard = ({product}) => {
   }
     const res = await addToCart(token,JSON.stringify(data))
     console.log("res", res)
+   if(res.data.statusCode === 200){
+    let temp = count
+    temp = temp +1
+    console.log("temp", temp)
+    setCount(temp)
+    localStorage.setItem("cart", temp);
+   }
 
   }
   return (

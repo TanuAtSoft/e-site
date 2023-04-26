@@ -1,10 +1,16 @@
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const CartWithNotif =()=>{
     const navigate = useNavigate()
-    const count = JSON.parse(localStorage.getItem("cart"))
+    const initialCount = JSON.parse(localStorage.getItem("cart"))
+    const [count, setCount] = useState(initialCount)
+    
+    useEffect(()=>{
+        setCount(initialCount)
+    },[initialCount])
+
     const handleCartClick=()=>{
         navigate("/cart")
     }
