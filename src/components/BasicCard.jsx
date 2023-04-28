@@ -32,6 +32,7 @@ const BasicCard = ({product}) => {
     console.log("temp", temp)
     setCount(temp)
     localStorage.setItem("cart", temp);
+    alert(res.data.statusMessage)
    }
 
   }
