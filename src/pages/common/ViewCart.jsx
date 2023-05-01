@@ -15,6 +15,7 @@ import {
   Paper,
 } from "@mui/material";
 import { removeItemFromCart } from "../../apis/carts/removeItemFromCart";
+import { deleteItemFromCart } from "../../apis/carts/deleteItemFromCart";
 
 const ViewCart = () => {
   const token = JSON.parse(localStorage.getItem("token"));
@@ -41,6 +42,16 @@ const ViewCart = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    const data = {
+      productId: id,
+    };
+    const res = await deleteItemFromCart(token, JSON.stringify(data));
+    if (res) {
+      setRefresh(!refresh);
+    }
+  };
+
   useEffect(() => {
     const fetchCartDetails = async () => {
       const res = await getCartDetails(token);
@@ -48,12 +59,21 @@ const ViewCart = () => {
         if (res.data.data.length > 0) {
           setCartItems(res.data.data);
         }
+        else {
+          setCartItems();
+        }
       } else {
-        setCartItems([]);
+        setCartItems();
       }
     };
     fetchCartDetails();
   }, [token, refresh]);
+
+  useEffect(()=>{
+    if(cartItems){
+    localStorage.setItem("cart", cartItems.length)
+    } 
+  },[cartItems])
 
   return (
     <Container
@@ -112,6 +132,13 @@ const ViewCart = () => {
                           <RemoveIcon />
                         </div>
                       </div>
+                      <br />
+                      <Typography
+                        style={{ fontSize: "14px", color: "red" }}
+                        onClick={() => handleDelete(item.productId)}
+                      >
+                        Remove
+                      </Typography>
                     </Grid>
                     <Grid item xs={12} md={4} sx={{ maxHeight: "400px" }}>
                       <Typography>Free Delivery</Typography>
@@ -119,6 +146,9 @@ const ViewCart = () => {
                   </Grid>
                 );
               })}
+            {(!cartItems || cartItems.length === 0) && (
+              <Typography>No Items available in the cart</Typography>
+            )}
           </Paper>
         </Grid>
 

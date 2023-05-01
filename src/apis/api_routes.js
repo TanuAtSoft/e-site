@@ -19,6 +19,7 @@ export const API_ROUTES = {
     CART:{
         ADD_TO_CART:"addToCart",
         GET_CART_DETAILS:"getCart",
-        REMOVE_CART_ITEM:"deleteCartItem"
+        REMOVE_CART_ITEM:"deleteCartItem",
+        DELETE_CART_ITEM:"deleteItemFromCart"
     }
 }

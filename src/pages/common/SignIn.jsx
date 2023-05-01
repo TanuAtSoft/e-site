@@ -86,7 +86,11 @@ const SignIn = () => {
         localStorage.setItem("user", JSON.stringify(res.data.data.user.user));
         localStorage.setItem("role", res.data.data.user.role);
         if (res.data.data.user.role === "BUYER") {
-          localStorage.setItem("cart", res.data.data.user.cart);
+         // console.log("res.data.data.user.cart.length",res.data.data.user.cart)
+          if(res.data.data.user.cart){
+            localStorage.setItem("cart", res.data.data.user.cart);
+          }
+         
           localStorage.setItem("address", res.data.data.user.address);
         }
         navigate("/");
