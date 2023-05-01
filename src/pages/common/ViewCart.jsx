@@ -3,7 +3,7 @@ import { getCartDetails } from "../../apis/carts/getCartDetails";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import {addToCart} from "../../apis/carts/addToCart"
+import { addToCart } from "../../apis/carts/addToCart";
 import {
   Container,
   Grid,
@@ -14,34 +14,38 @@ import {
   Button,
   Paper,
 } from "@mui/material";
-import { countDuplicates } from "../../helpers/countDuplicates";
+import { removeItemFromCart } from "../../apis/carts/removeItemFromCart";
 
 const ViewCart = () => {
   const token = JSON.parse(localStorage.getItem("token"));
   const [cartItems, setCartItems] = useState();
-  const handleAddQuant= async(id)=>{
-    const data ={
-      productId :id
-  }
-    const res = await addToCart(token,JSON.stringify(data))
-    console.log("res", res)
-  }
-  const handleDescreseQuant= async(id)=>{
-    const data ={
-      productId :id
-  }
-    const res = await addToCart(token,JSON.stringify(data))
-    console.log("res", res)
-  }
+  const [refresh, setRefresh] = useState(false);
+
+  const handleIncreaseQuantity = async (id) => {
+    const data = {
+      productId: id,
+    };
+    const res = await addToCart(token, JSON.stringify(data));
+    if (res) {
+      setRefresh(!refresh);
+    }
+  };
+
+  const handleDecreaseQuantity = async (id) => {
+    const data = {
+      productId: id,
+    };
+    const res = await removeItemFromCart(token, JSON.stringify(data));
+    if (res) {
+      setRefresh(!refresh);
+    }
+  };
+
   useEffect(() => {
     const fetchCartDetails = async () => {
       const res = await getCartDetails(token);
       if (res.data.statusCode === 200) {
-        //console.log("res.data",res.data.data)
         if (res.data.data.length > 0) {
-          const sortedArr = countDuplicates(res.data.data);
-          setCartItems(sortedArr);
-        } else {
           setCartItems(res.data.data);
         }
       } else {
@@ -49,8 +53,8 @@ const ViewCart = () => {
       }
     };
     fetchCartDetails();
-  }, [token]);
-  console.log("cartItems", cartItems);
+  }, [token, refresh]);
+
   return (
     <Container
       maxWidth="lg"
@@ -71,7 +75,7 @@ const ViewCart = () => {
                   <Grid key={id} container direction={"row"} spacing={1}>
                     <Grid item xs={12} md={4.5} sx={{ maxHeight: "400px" }}>
                       <img
-                        src={item.product.images[0]}
+                        src={item.image}
                         alt={`cart${id}`}
                         style={{
                           height: "180px",
@@ -86,19 +90,25 @@ const ViewCart = () => {
                       md={3.5}
                       sx={{ maxHeight: "400px", maxWidth: "fit-content" }}
                     >
-                      <Typography>{item.product.brand}</Typography>
+                      <Typography>{item.brand}</Typography>
                       <Typography>
                         <CurrencyRupeeIcon style={{ fontSize: "14px" }} />{" "}
-                        {item.product.price}
+                        {item.price}
                       </Typography>
                       <Typography>Free Delivery</Typography>
                       <br />
                       <div className="quantity">
-                        <div className="icons">
+                        <div
+                          className="icons"
+                          onClick={() => handleIncreaseQuantity(item.productId)}
+                        >
                           <AddIcon />
                         </div>
-                        <button>{item.count}</button>
-                        <div className="icons">
+                        <button>{item.quantity}</button>
+                        <div
+                          className="icons"
+                          onClick={() => handleDecreaseQuantity(item.productId)}
+                        >
                           <RemoveIcon />
                         </div>
                       </div>

@@ -16,10 +16,10 @@ const CartWithNotif =()=>{
     }
     return(
         <Fragment>
-        {count && count >0 &&<div className='cart-container' current-count={count} onClick={handleCartClick}>
+        {count && count > 0 &&<div className='cart-container' current-count={count} onClick={handleCartClick}>
             <ShoppingCartIcon/>
         </div>}
-        {(!count || count ===0) && <ShoppingCartIcon onClick={handleCartClick}/> }
+        {(!count || count === 0) && <ShoppingCartIcon onClick={handleCartClick}/> }
         </Fragment>
     )
 }

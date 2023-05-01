@@ -22,7 +22,12 @@ const BasicCard = ({product}) => {
   };
   const handleAddCart = async()=>{
     const data ={
-      productId : product._id
+      productId : product._id,
+      // title: product.title,
+      // brand: product.brand,
+      // image: product.images[0],
+      // price: product.price,
+      // seller: product.seller._id
   }
     const res = await addToCart(token,JSON.stringify(data))
     console.log("res", res)

@@ -18,6 +18,7 @@ export const API_ROUTES = {
     },
     CART:{
         ADD_TO_CART:"addToCart",
-        GET_CART_DETAILS:"getCart"
+        GET_CART_DETAILS:"getCart",
+        REMOVE_CART_ITEM:"deleteCartItem"
     }
 }
