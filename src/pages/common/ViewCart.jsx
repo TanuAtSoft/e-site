@@ -16,11 +16,32 @@ import {
 } from "@mui/material";
 import { removeItemFromCart } from "../../apis/carts/removeItemFromCart";
 import { deleteItemFromCart } from "../../apis/carts/deleteItemFromCart";
+import { getAddress } from "../../apis/address/getAddressApi";
+import ViewAddressModal from "../../components/ViewAdressModal";
+import AddAddressModal from "../../components/AddAddressModal";
 
 const ViewCart = () => {
   const token = JSON.parse(localStorage.getItem("token"));
   const [cartItems, setCartItems] = useState();
   const [refresh, setRefresh] = useState(false);
+  const [address, setAddress] = useState();
+  const [openView, setOpenView] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [total,setTotal] = useState()
+
+  const handleAddOpen = () => {
+    setOpenAdd(true);
+  };
+  const handleAddClose = () => {
+    setOpenAdd(false);
+  };
+
+  const handleViewOpen = () => {
+    setOpenView(true);
+  };
+  const handleViewClose = () => {
+    setOpenView(false);
+  };
 
   const handleIncreaseQuantity = async (id) => {
     const data = {
@@ -58,8 +79,7 @@ const ViewCart = () => {
       if (res.data.statusCode === 200) {
         if (res.data.data.length > 0) {
           setCartItems(res.data.data);
-        }
-        else {
+        } else {
           setCartItems();
         }
       } else {
@@ -69,11 +89,39 @@ const ViewCart = () => {
     fetchCartDetails();
   }, [token, refresh]);
 
-  useEffect(()=>{
-    if(cartItems){
-    localStorage.setItem("cart", cartItems.length)
-    } 
-  },[cartItems])
+  useEffect(() => {
+    const fetchAddressDetails = async () => {
+      const res = await getAddress(token);
+      if (res.data.statusCode === 200) {
+        if (res.data.data.length > 0) {
+          setAddress(res.data.data);
+        } else {
+          setAddress();
+        }
+      } else {
+        setAddress();
+      }
+    };
+    fetchAddressDetails();
+  }, [token, refresh]);
+
+  useEffect(() => {
+    if (cartItems) {
+      localStorage.setItem("cart", cartItems.length);
+      let total =0;
+      const calcTotal=()=>{
+        for(let i=0; i< cartItems.length; i++){
+          const itemTotal = parseFloat(cartItems[i].price) * parseFloat(cartItems[i].quantity)
+         total = total + itemTotal
+        }
+        return total
+      }
+     const subTotal= calcTotal()
+     setTotal(subTotal)      
+    }
+   
+    
+  }, [cartItems]);
 
   return (
     <Container
@@ -81,9 +129,34 @@ const ViewCart = () => {
       sx={{ padding: "20px 0px", minHeight: "calc(100vh - 160px)" }}
     >
       <Grid container direction={"row"} spacing={1}>
+        <ViewAddressModal
+          openView={openView}
+          handleViewClose={handleViewClose}
+          handleViewOpen={handleViewOpen}
+          address={address}  
+        />
+        <AddAddressModal
+         openAdd={openAdd}
+         handleAddClose={handleAddClose}
+         
+        />
         <Grid item xs={12} md={8}>
           <Grid item xs={12} md={12}>
-            <Paper sx={{ p: "20px" }}>Deliver to</Paper>
+            <Paper
+              sx={{
+                p: "20px",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <Typography>Deliver to</Typography>
+              {address && (
+                <Typography onClick={handleViewOpen}>Select address</Typography>
+              )}
+              {!address && (
+                <Typography onClick={handleAddOpen}>Add address</Typography>
+              )}
+            </Paper>
           </Grid>
           <br />
 
@@ -152,8 +225,8 @@ const ViewCart = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={4} sx={{ maxHeight: "100vh" }}>
-          <Card sx={{ minWidth: 275, height: "80vh" }}>
+        <Grid item xs={12} md={4} sx={{minHeight: "calc(100vh - 160px)" }}>
+          <Card sx={{ minWidth: 275}}>
             <CardContent>
               <Typography
                 sx={{ fontSize: 14 }}
@@ -165,13 +238,34 @@ const ViewCart = () => {
                 color="text.secondary"
               ></Typography>
               <Typography variant="h5" sx={{ mt: 1.5 }}>
-                In stock
+               Total Amount to be paid
               </Typography>
-
-              <Typography variant="body2">
-                sold by
+              <br />
+              {cartItems && <Typography variant="body1">
+                Total Items: {cartItems.length}
+               
+              </Typography>}
+              {cartItems && <Typography variant="body1">
                 <br />
+                {cartItems.map((item,id)=>{
+                  return(
+                    <div className="sub-total-div">
+                    <p>{item.title.substring(0,20)}</p>
+                    <p>{item.price} x {item.quantity}</p>
+                    </div>
+                  )
+                })}
+              </Typography>}
+              <br/>
+              <div className="sub-total-div" >
+              <Typography style={{ fontWeight: "bolder"}}>
+              Total Amount
               </Typography>
+              <Typography style={{ fontWeight: "bolder"}}>
+              <CurrencyRupeeIcon style={{fontSize: "14px"}}/>{total}
+              </Typography>
+              </div>
+              
             </CardContent>
             <CardActions
               sx={{
@@ -185,14 +279,9 @@ const ViewCart = () => {
                 sx={{ width: "100% !important" }}
                 // onClick={handleAddCart}
               >
-                Add to Cart
+                Pay
               </Button>
-              <Button variant="contained" sx={{ width: "100% !important" }}>
-                Buy now
-              </Button>
-              <Button variant="outlined" sx={{ width: "100% !important" }}>
-                Add to wishlist
-              </Button>
+             
             </CardActions>
           </Card>
         </Grid>

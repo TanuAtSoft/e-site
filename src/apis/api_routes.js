@@ -13,6 +13,10 @@ export const API_ROUTES = {
         GET_ONE: "product",
         ADD_PRODUCT:"addProducts"
     },
+    ADDRESS:{
+        GET_ADDRESS: "getAddress",
+        ADD_ADDRESS:"addAddress"
+    },
     UPLOAD:{
         IMAGES:"upload/images"
     },
