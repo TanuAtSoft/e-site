@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { getCartDetails } from "../../apis/carts/getCartDetails";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { addToCart } from "../../apis/carts/addToCart";
+import axios from "axios"
 import {
   Container,
   Grid,
@@ -122,6 +123,44 @@ const ViewCart = () => {
    
     
   }, [cartItems]);
+
+
+  const initPayment = (data) => {
+		const options = {
+			key: process.env.REACT_APP_RAZOR_PAY_KEY_ID,
+			amount: data.amount,
+			currency: data.currency,
+			//name: book.name,
+			description: "Test Transaction",
+			//image: book.img,
+			order_id: data.id,
+			handler: async (response) => {
+				try {
+					const verifyUrl = "http://localhost:8080/verify";
+					const { data } = await axios.post(verifyUrl, response);
+					console.log(data);
+				} catch (error) {
+					console.log(error);
+				}
+			},
+			theme: {
+				color: "#3399cc",
+			},
+		};
+		const rzp1 = new window.Razorpay(options);
+		rzp1.open();
+	};
+
+	const handlePayment = async () => {
+		try {
+			const orderUrl = "http://localhost:8080/orders";
+			const { data } = await axios.post(orderUrl, { amount: total });
+			console.log(data);
+			initPayment(data.data);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
   return (
     <Container
@@ -245,17 +284,18 @@ const ViewCart = () => {
                 Total Items: {cartItems.length}
                
               </Typography>}
-              {cartItems && <Typography variant="body1">
+              {cartItems && <Fragment>
                 <br />
                 {cartItems.map((item,id)=>{
                   return(
-                    <div className="sub-total-div">
-                    <p>{item.title.substring(0,20)}</p>
-                    <p>{item.price} x {item.quantity}</p>
+                    <div key={id} className="sub-total-div">
+                    <>{item.title.substring(0,20)}</>
+                    <>{item.price} x {item.quantity}</>
                     </div>
                   )
                 })}
-              </Typography>}
+                </Fragment>
+              }
               <br/>
               <div className="sub-total-div" >
               <Typography style={{ fontWeight: "bolder"}}>
@@ -277,7 +317,7 @@ const ViewCart = () => {
               <Button
                 variant="contained"
                 sx={{ width: "100% !important" }}
-                // onClick={handleAddCart}
+                 onClick={handlePayment}
               >
                 Pay
               </Button>
