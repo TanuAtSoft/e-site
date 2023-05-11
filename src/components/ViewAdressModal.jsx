@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Container, Modal, Box, Typography } from "@mui/material";
+import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
-  width: "60%",
+  width: "50%",
   transform: "translate(-50%, -50%)",
   bgcolor: "background.paper",
   border: "2px solid #000",
@@ -13,12 +14,13 @@ const style = {
   p: 4,
 };
 
-const ViewAddressModal = ({ openView, handleViewClose, address }) => {
-  const [selected, setSelected] = useState();
+const ViewAddressModal = ({ openView, handleViewClose, address,handleAddAddress , handleAddressSelect}) => {
+  const [selected, setSelected] = useState("");
 
-  const handleSelect = (e) => {
-    setSelected(e.target.name);
-
+  const handleSelect = (e,address) => {
+    setSelected(e.target.value);
+    
+    handleAddressSelect(address)
   };
 
   return (
@@ -43,13 +45,15 @@ const ViewAddressModal = ({ openView, handleViewClose, address }) => {
                       type="radio"
                       value={id}
                       name={id}
-                      onChange={handleSelect}
-                      checked={id === selected? true:false}
+                      onChange={(e) => { handleSelect(e,item) }}
+                      checked={selected.includes(id)}
+                      style={{marginRight:"20px"}}
                     />
-                    {item.fullName +
+                    {`Name:${item.fullName}` +
                       " " +
-                      item.houseNumber +
-                      " " +
+                     `Phone:${item.mobileNumber}` + " " + `House/plot/flat no ${item.houseNumber}`}
+                    <br />
+                    {
                       item.area +
                       " " +
                       item.landmark +
@@ -63,7 +67,13 @@ const ViewAddressModal = ({ openView, handleViewClose, address }) => {
                 );
               })}
           </form>
+          <br/>
+
+        <div className="add-location" onClick={handleAddAddress}>
+         <AddLocationAltIcon style={{fontSize:"16px"}}/>Add Location
+         </div>
         </Box>
+       
       </Modal>
     </Container>
   );

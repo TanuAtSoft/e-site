@@ -16,7 +16,7 @@ const style = {
   overflowY: "scroll",
 };
 
-const AddAddressModal = ({ openAdd, handleAddClose }) => {
+const AddAddressModal = ({ openAdd, handleAddClose,setRefetch,refetch,handleAddressSelect}) => {
   const initialAddress = {
     fullName: "",
     mobileNumber: "",
@@ -31,11 +31,12 @@ const AddAddressModal = ({ openAdd, handleAddClose }) => {
   const token = JSON.parse(localStorage.getItem("token"));
 
   const sumbitAddress = async() => {
-    console.log("address", address);
     const res = await addAddress(token,JSON.stringify(address));
-    console.log("rees",res)
     if(res.data.statusCode === 200){
         alert(res.data.statusMessage)
+        handleAddressSelect(address)
+        setRefetch(!refetch)
+        setAddress(initialAddress)
         handleAddClose()
     }
   };

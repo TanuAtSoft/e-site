@@ -25,5 +25,12 @@ export const API_ROUTES = {
         GET_CART_DETAILS:"getCart",
         REMOVE_CART_ITEM:"deleteCartItem",
         DELETE_CART_ITEM:"deleteItemFromCart"
+    },
+    PAYMENT:{
+        CREATE_PAYMENT:"createOrder" , 
+        VERIFY_PAYMENT:"verifyPayment"
+    },
+    ORDER:{
+        SAVE_ORDER:"saveOrder"
     }
 }

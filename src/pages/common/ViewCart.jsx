@@ -4,7 +4,6 @@ import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { addToCart } from "../../apis/carts/addToCart";
-import axios from "axios"
 import {
   Container,
   Grid,
@@ -20,6 +19,9 @@ import { deleteItemFromCart } from "../../apis/carts/deleteItemFromCart";
 import { getAddress } from "../../apis/address/getAddressApi";
 import ViewAddressModal from "../../components/ViewAdressModal";
 import AddAddressModal from "../../components/AddAddressModal";
+import { createPayment } from "../../apis/payment/createPayment";
+import { verifyPayment } from "../../apis/payment/verifyPayment";
+import { saveOrder } from "../../apis/orders/saveOrder";
 
 const ViewCart = () => {
   const token = JSON.parse(localStorage.getItem("token"));
@@ -28,7 +30,13 @@ const ViewCart = () => {
   const [address, setAddress] = useState();
   const [openView, setOpenView] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
-  const [total,setTotal] = useState()
+  const [total, setTotal] = useState()
+  const [refetch, setRefetch] = useState(false)
+  const [selectedAddress, setSelectedAddress] = useState()
+  const handleAddressSelect = (address) => {
+    const completeAddress = address.fullName+" "+address.mobileNumber+" "+address.houseNumber+" "+address.area+" "+address?.landmark+" "+address.city+" "+ address.state+" "+address.pincode
+    setSelectedAddress(completeAddress)
+  }
 
   const handleAddOpen = () => {
     setOpenAdd(true);
@@ -82,9 +90,11 @@ const ViewCart = () => {
           setCartItems(res.data.data);
         } else {
           setCartItems();
+          localStorage.removeItem("cart");
         }
       } else {
         setCartItems();
+        localStorage.removeItem("cart");
       }
     };
     fetchCartDetails();
@@ -104,80 +114,113 @@ const ViewCart = () => {
       }
     };
     fetchAddressDetails();
-  }, [token, refresh]);
+  }, [token, refetch]);
 
   useEffect(() => {
     if (cartItems) {
-      localStorage.setItem("cart", cartItems.length);
-      let total =0;
-      const calcTotal=()=>{
-        for(let i=0; i< cartItems.length; i++){
-          const itemTotal = parseFloat(cartItems[i].price) * parseFloat(cartItems[i].quantity)
-         total = total + itemTotal
+      let total = 0;
+      const calcTotal = () => {
+        for (let i = 0; i < cartItems.length; i++) {
+          const itemTotal = parseInt(cartItems[i].price) * parseInt(cartItems[i].quantity)
+          total = total + itemTotal
         }
         return total
       }
-     const subTotal= calcTotal()
-     setTotal(subTotal)      
+      const subTotal = calcTotal()
+      setTotal(subTotal)
     }
-   
-    
+
+
   }, [cartItems]);
+
+  const handleAddAddress = () => {
+    setOpenView(false)
+    setOpenAdd(true)
+  }
 
 
   const initPayment = (data) => {
-		const options = {
-			key: process.env.REACT_APP_RAZOR_PAY_KEY_ID,
-			amount: data.amount,
-			currency: data.currency,
-			//name: book.name,
-			description: "Test Transaction",
-			//image: book.img,
-			order_id: data.id,
-			handler: async (response) => {
-				try {
-					const verifyUrl = "http://localhost:8080/verify";
-					const { data } = await axios.post(verifyUrl, response);
-					console.log(data);
-				} catch (error) {
-					console.log(error);
-				}
-			},
-			theme: {
-				color: "#3399cc",
-			},
-		};
-		const rzp1 = new window.Razorpay(options);
-		rzp1.open();
-	};
+    const options = {
+      key: process.env.REACT_APP_RAZOR_PAY_KEY_ID,
+      amount: data.amount,
+      currency: data.currency,
+      //name: book.name,
+      description: "Test Transaction",
+      //image: book.img,
+      order_id: data.id,
+      handler: async (response) => {
+        try {
+          const res = await verifyPayment(token, response)
+          const status = await res.data.statusCode
+          console.log("status", status)
+          if (status === 200) {
+            try{
+            const payload = {
+              orderId: res.data.data.orderId,
+              deliveryAddress: selectedAddress
+            }
+            const orderRes = await saveOrder(token, JSON.stringify(payload))
+            if(orderRes.remote === "success"){
+              alert(orderRes.data.statusMessage)
+              setRefresh(!refresh)
+              localStorage.removeItem("cart");
+            }
+          }catch(e){
+            console.log("oredr save e", e)
+          }
 
-	const handlePayment = async () => {
-		try {
-			const orderUrl = "http://localhost:8080/orders";
-			const { data } = await axios.post(orderUrl, { amount: total });
-			console.log(data);
-			initPayment(data.data);
-		} catch (error) {
-			console.log(error);
-		}
-	};
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      theme: {
+        color: "#3399cc",
+      },
+    };
+    const rzp1 = new window.Razorpay(options);
+    rzp1.open();
+  };
+
+  const handlePayment = async () => {
+    if(selectedAddress){
+    try {
+      const { data } = await createPayment(token, { amount: total })
+      initPayment(data.data)
+    } catch (e) {
+      console.log("e", e)
+    }
+  }else{
+    if(address){
+      setOpenView(true)
+    }
+    else{
+      setOpenAdd(true)
+    }
+  }
+  };
 
   return (
     <Container
       maxWidth="lg"
       sx={{ padding: "20px 0px", minHeight: "calc(100vh - 160px)" }}
     >
-      <Grid container direction={"row"} spacing={1}>
+     {cartItems && <Grid container direction={"row"} spacing={1}>
         <ViewAddressModal
           openView={openView}
           handleViewClose={handleViewClose}
           handleViewOpen={handleViewOpen}
-          address={address}  
+          address={address}
+          handleAddAddress={handleAddAddress}
+          handleAddressSelect={handleAddressSelect}
         />
         <AddAddressModal
-         openAdd={openAdd}
-         handleAddClose={handleAddClose}
-         
+          openAdd={openAdd}
+          handleAddClose={handleAddClose}
+          setRefetch={setRefetch}
+          refetch={refetch}
+          handleAddressSelect={handleAddressSelect}
+
         />
         <Grid item xs={12} md={8}>
           <Grid item xs={12} md={12}>
@@ -264,8 +307,8 @@ const ViewCart = () => {
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={4} sx={{minHeight: "calc(100vh - 160px)" }}>
-          <Card sx={{ minWidth: 275}}>
+        <Grid item xs={12} md={4} sx={{ minHeight: "calc(100vh - 160px)" }}>
+          <Card sx={{ minWidth: 275 }}>
             <CardContent>
               <Typography
                 sx={{ fontSize: 14 }}
@@ -277,35 +320,35 @@ const ViewCart = () => {
                 color="text.secondary"
               ></Typography>
               <Typography variant="h5" sx={{ mt: 1.5 }}>
-               Total Amount to be paid
+                Total Amount to be paid
               </Typography>
               <br />
               {cartItems && <Typography variant="body1">
                 Total Items: {cartItems.length}
-               
+
               </Typography>}
               {cartItems && <Fragment>
                 <br />
-                {cartItems.map((item,id)=>{
-                  return(
+                {cartItems.map((item, id) => {
+                  return (
                     <div key={id} className="sub-total-div">
-                    <>{item.title.substring(0,20)}</>
-                    <>{item.price} x {item.quantity}</>
+                      <>{item.title.substring(0, 20)}</>
+                      <>{item.price} x {item.quantity}</>
                     </div>
                   )
                 })}
-                </Fragment>
+              </Fragment>
               }
-              <br/>
+              <br />
               <div className="sub-total-div" >
-              <Typography style={{ fontWeight: "bolder"}}>
-              Total Amount
-              </Typography>
-              <Typography style={{ fontWeight: "bolder"}}>
-              <CurrencyRupeeIcon style={{fontSize: "14px"}}/>{total}
-              </Typography>
+                <Typography style={{ fontWeight: "bolder" }}>
+                  Total Amount
+                </Typography>
+                <Typography style={{ fontWeight: "bolder" }}>
+                  <CurrencyRupeeIcon style={{ fontSize: "14px" }} />{total}
+                </Typography>
               </div>
-              
+
             </CardContent>
             <CardActions
               sx={{
@@ -317,15 +360,16 @@ const ViewCart = () => {
               <Button
                 variant="contained"
                 sx={{ width: "100% !important" }}
-                 onClick={handlePayment}
+                onClick={handlePayment}
               >
                 Pay
               </Button>
-             
+
             </CardActions>
           </Card>
         </Grid>
-      </Grid>
+      </Grid>}
+      {cartItems && <Container  maxWidth="lg">No Items available in cart</Container>}
     </Container>
   );
 };

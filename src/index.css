@@ -69,3 +69,9 @@ code {
   display: flex;
   justify-content: space-between;
 }
+
+.add-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
