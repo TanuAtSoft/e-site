@@ -33,6 +33,7 @@ const ViewCart = () => {
   const [total, setTotal] = useState()
   const [refetch, setRefetch] = useState(false)
   const [selectedAddress, setSelectedAddress] = useState()
+  const [isCod, setIsCod] = useState(false)
   const handleAddressSelect = (address) => {
     const completeAddress = address.fullName+" "+address.mobileNumber+" "+address.houseNumber+" "+address.area+" "+address?.landmark+" "+address.city+" "+ address.state+" "+address.pincode
     setSelectedAddress(completeAddress)
@@ -157,7 +158,8 @@ const ViewCart = () => {
             try{
             const payload = {
               orderId: res.data.data.orderId,
-              deliveryAddress: selectedAddress
+              deliveryAddress: selectedAddress,
+              isCod:isCod
             }
             const orderRes = await saveOrder(token, JSON.stringify(payload))
             if(orderRes.remote === "success"){

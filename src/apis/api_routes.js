@@ -31,6 +31,7 @@ export const API_ROUTES = {
         VERIFY_PAYMENT:"verifyPayment"
     },
     ORDER:{
-        SAVE_ORDER:"saveOrder"
+        SAVE_ORDER:"saveOrder",
+        GET_SELLER_ORDER_INFO:"getOrderInfo"
     }
 }

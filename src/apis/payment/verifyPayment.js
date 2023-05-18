@@ -1,6 +1,5 @@
 import { API_ROUTES } from "../api_routes";
 import { apiRoot } from "../root";
-import axios from "axios";
 
 export const verifyPayment = async(token,data) => {  
  
