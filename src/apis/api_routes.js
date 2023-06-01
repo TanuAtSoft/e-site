@@ -32,6 +32,8 @@ export const API_ROUTES = {
     },
     ORDER:{
         SAVE_ORDER:"saveOrder",
-        GET_SELLER_ORDER_INFO:"getOrderInfo"
+        GET_SELLER_ORDER_INFO:"getOrderInfo",
+        UPDATE_ORDER_INFO: "updateOrderStatus",
+        GET_BUYER_ORDER_INFO:"getBuyerOrderInfo"
     }
 }

@@ -18,7 +18,7 @@ import CartWithNotif from "./CartWithNotif";
 
 const pages = ["Products", "Pricing", "Blog"];
 const sellerPages = [{ label: "Add Products", path: "/addProduct" }];
-const LogoutSettings = ["Profile", "Account", "Dashboard", "Logout"];
+const LogoutSettings = ["Profile", "Account", "Orders", "Logout"];
 const LoginSettings = [{ label: "SignIn", link: "/login" }];
 const SignUpSettings = [{ label: "SignUp", link: "/register" }];
 
@@ -65,6 +65,9 @@ const Header = () => {
       localStorage.removeItem("cart");
       setLoggedIn(false);
       navigate("/loggedOut");
+    }
+    if(setting === "Orders"){
+      navigate("/orders")
     }
   };
   return (

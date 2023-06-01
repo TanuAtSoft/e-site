@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { updateOrderInfo } from "../apis/orders/updateOrderInfo";
 import {
   Modal,
   Box,
@@ -23,21 +24,85 @@ const style = {
 const orderStatus = ["INPROCESS", "SHIPPED", "INTRANSIT", "DELIVERED"];
 
 const OrderModal = ({ open, handleClose, activeRow }) => {
-  console.log("activeRow", activeRow);
   const [status, setStatus] = useState();
   const [shippingCompany, setShippingCompany] = useState();
   const [trackingNumber, setTrackingNumber] = useState();
+  const token = JSON.parse(localStorage.getItem("token"));
+  const [shippingError, setShippingError] = useState();
+  const [trackingError, setTrackingError] = useState();
+  const [disable, setDisable] = useState(false);
+
+  function arrayRemove(arr, value) {
+    if (arr && arr.length > 0) {
+      return arr.filter(function (ele) {
+        return ele !== value;
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (activeRow) {
+      const trackingDetails = activeRow?.orderedItems?.shippingDetails;
+      if (trackingDetails && trackingDetails !== "") {
+        const trackingDetailsArr = trackingDetails.split("");
+        if (trackingDetailsArr && trackingDetailsArr.length > 0) {
+          setTrackingNumber(trackingDetailsArr[trackingDetails.length - 1]);
+          let temp = "";
+          for (let i = 0; i < trackingDetailsArr.length - 1; i++) {
+            temp = temp + trackingDetailsArr[i];
+          }
+          setShippingCompany(temp);
+          setDisable(true);
+        }
+      }
+    }
+  }, [activeRow]);
 
   const handleCatChange = (e) => {
     const value = e.target.value;
     setStatus(value);
   };
+
   const onChangeHandler = (e) => {
     if (e.target.name === "shippingCompany") {
       setShippingCompany(e.target.value);
+      setShippingError();
     }
     if (e.target.name === "trackingNumber") {
       setTrackingNumber(e.target.value);
+      setTrackingError();
+    }
+  };
+
+  const updateOrderDetails = async () => {
+    try {
+      if(!shippingError && !trackingError){
+      const shipping = shippingCompany +" "+ trackingNumber;
+      const payload = {
+        status: status,
+        orderObjectId: activeRow._id,
+        itemId: activeRow.orderedItems._id,
+        shippingDetails: shipping ? shipping : "",
+      };
+      const res = await updateOrderInfo(token, payload);
+      if (res.data.statusCode === 200) {
+        handleClose();
+        alert(res.data.statusMessage);
+      }
+    }else{
+      return
+    }
+    } catch (e) {
+      console.log("e", e);
+    }
+  };
+  const handleSubmit = () => {
+    if (!shippingCompany) setShippingError("error");
+    if (!trackingNumber) setTrackingError("error");
+    if (status === "INPROCESS") updateOrderDetails();
+    if (status !== "INPROCESS") {
+      if(shippingCompany && trackingNumber)
+      updateOrderDetails();
     }
   };
 
@@ -71,8 +136,9 @@ const OrderModal = ({ open, handleClose, activeRow }) => {
         </Select>
         {orderStatus.includes(status) && !status.includes("INPROCESS") && (
           <TextField
+            disabled={disable}
             value={shippingCompany}
-            // error={errorFields.includes("email") ? true : false}
+            error={shippingError ? true : false}
             margin="normal"
             required
             fullWidth
@@ -82,15 +148,16 @@ const OrderModal = ({ open, handleClose, activeRow }) => {
             autoComplete="off"
             autoFocus
             onChange={onChangeHandler}
-            //   helperText={
-            //     errorFields.includes("email") ? "Incorrect entry." : ""
-            //   }
+            helperText={
+              shippingError ? "kindly enter shipping company details" : ""
+            }
           />
         )}
         {orderStatus.includes(status) && !status.includes("INPROCESS") && (
           <TextField
+            disabled={disable}
             value={trackingNumber}
-            // error={errorFields.includes("email") ? true : false}
+            error={trackingError ? true : false}
             margin="normal"
             required
             fullWidth
@@ -100,17 +167,15 @@ const OrderModal = ({ open, handleClose, activeRow }) => {
             autoComplete="off"
             autoFocus
             onChange={onChangeHandler}
-            //   helperText={
-            //     errorFields.includes("email") ? "Incorrect entry." : ""
-            //   }
+            helperText={trackingError ? "cant be empty" : ""}
           />
         )}
         <Container
           maxWidth="lg"
           sx={{ padding: "20px 0px", textAlign: "center" }}
         >
-          <Button onClick={()=> handleClose()}>Cancel</Button>
-          <Button onClick={()=> handleClose()}>Save</Button>
+          <Button onClick={() => handleClose()}>Cancel</Button>
+          <Button onClick={() => handleSubmit()}>Save</Button>
         </Container>
       </Box>
     </Modal>

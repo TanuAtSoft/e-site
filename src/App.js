@@ -1,7 +1,6 @@
-import React, { useState, Suspense, useEffect } from "react";
+import React, { Suspense } from "react";
 import {
   BrowserRouter as Router,
-  Navigate,
   Route,
   Routes,
 } from "react-router-dom";
@@ -18,6 +17,7 @@ const ProductDetails = React.lazy(() => import("./pages/common/ProductDetails"))
 const AddProduct = React.lazy(() => import("./pages/seller/AddProduct"));
 const LoggedOut = React.lazy(() => import("./pages/common/LoggedOut"));
 const ViewCart = React.lazy(() => import("./pages/common/ViewCart"));
+const Orders = React.lazy(()=> import("./pages/buyer/Orders"))
 
 const loading = (
   <div className="pt-3 text-center">
@@ -102,6 +102,15 @@ function App() {
             element={
               <PrivateRoute>
                 <ViewCart />
+              </PrivateRoute>
+            }
+          />
+           <Route
+            path="/orders"
+            name="orders"
+            element={
+              <PrivateRoute>
+                <Orders />
               </PrivateRoute>
             }
           />
