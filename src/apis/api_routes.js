@@ -35,5 +35,10 @@ export const API_ROUTES = {
         GET_SELLER_ORDER_INFO:"getOrderInfo",
         UPDATE_ORDER_INFO: "updateOrderStatus",
         GET_BUYER_ORDER_INFO:"getBuyerOrderInfo"
+    },
+    WISHLIST:{
+        ADD_TO_WISHLISTBYID:"addWishlist",
+        DELETE_WISHLISTBYID:"deleteWishlist",
+        GET_WISHLIST:"getWishlist"
     }
 }

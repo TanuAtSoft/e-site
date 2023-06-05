@@ -16,8 +16,9 @@ const ForgotPassword = React.lazy(() => import("./pages/common/ForgotPassword"))
 const ProductDetails = React.lazy(() => import("./pages/common/ProductDetails"));
 const AddProduct = React.lazy(() => import("./pages/seller/AddProduct"));
 const LoggedOut = React.lazy(() => import("./pages/common/LoggedOut"));
-const ViewCart = React.lazy(() => import("./pages/common/ViewCart"));
+const ViewCart = React.lazy(() => import("./pages/buyer/ViewCart"));
 const Orders = React.lazy(()=> import("./pages/buyer/Orders"))
+const WishlistPage = React.lazy(()=> import("./pages/buyer/Wishlist"))
 
 const loading = (
   <div className="pt-3 text-center">
@@ -102,6 +103,15 @@ function App() {
             element={
               <PrivateRoute>
                 <ViewCart />
+              </PrivateRoute>
+            }
+          />
+           <Route
+            path="/wishlist"
+            name="wishlist"
+            element={
+              <PrivateRoute>
+                <WishlistPage />
               </PrivateRoute>
             }
           />

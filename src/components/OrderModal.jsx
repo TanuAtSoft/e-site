@@ -32,14 +32,6 @@ const OrderModal = ({ open, handleClose, activeRow }) => {
   const [trackingError, setTrackingError] = useState();
   const [disable, setDisable] = useState(false);
 
-  function arrayRemove(arr, value) {
-    if (arr && arr.length > 0) {
-      return arr.filter(function (ele) {
-        return ele !== value;
-      });
-    }
-  }
-
   useEffect(() => {
     if (activeRow) {
       const trackingDetails = activeRow?.orderedItems?.shippingDetails;

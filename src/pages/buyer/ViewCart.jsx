@@ -89,6 +89,7 @@ const ViewCart = () => {
       if (res.data.statusCode === 200) {
         if (res.data.data.length > 0) {
           setCartItems(res.data.data);
+          localStorage.setItem("cart", res.data.data.length.toString());
         } else {
           setCartItems();
           localStorage.removeItem("cart");
@@ -371,7 +372,7 @@ const ViewCart = () => {
           </Card>
         </Grid>
       </Grid>}
-      {cartItems && <Container  maxWidth="lg">No Items available in cart</Container>}
+      {!cartItems && <Container  maxWidth="lg">No Items available in cart</Container>}
     </Container>
   );
 };

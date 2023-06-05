@@ -28,7 +28,7 @@ const LandingPage = () => {
           {products &&
             products.map((item, id) => {
               return (
-                <Grid item xs={12} md={3} key={id}>
+                <Grid item xs={12} md={3} key={id} style={{ paddingLeft: "19px"}}>
                   <ProductCard product={item}/>
                 </Grid>
               );

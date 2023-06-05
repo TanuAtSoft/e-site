@@ -69,7 +69,7 @@ const ProductDetails = () => {
             >
               <Container
                 className="decsription-div"
-                sx={{ width: "100%", maxHeight: "100vh" }}
+                //sx={{ width: "100%", maxHeight: "100vh",overflow:"scroll" }}
               >
                 <Typography
                   gutterBottom

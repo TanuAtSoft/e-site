@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 
 const CartWithNotif =()=>{
     const navigate = useNavigate()
-    const initialCount = JSON.parse(localStorage.getItem("cart"))
-    const [count, setCount] = useState(initialCount)
+    const [count, setCount] = useState()
     
     useEffect(()=>{
+        const initialCount = JSON.parse(localStorage.getItem("cart"))
         setCount(initialCount)
-    },[initialCount])
+    },[])
 
     const handleCartClick=()=>{
         navigate("/cart")

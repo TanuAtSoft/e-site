@@ -19,16 +19,17 @@ const DisplayOrders = ({ order }) => {
           {order?.orderedItems.length > 0 &&
             order?.orderedItems.map((item, id) => {
               return (
-                <div>
+                <div key={id}>
                   <img
                     style={{ height: "150px", width: "auto" }}
                     src={`${item.image}`}
                     alt="product"
+                    onClick={()=>{}}
                   />
                   <div>
                     <h4>status: {item.status}</h4>
-                    {item.shippingDetails && item.shippingDetails !== "" && (
-                      <h4>Shipping Details {item.shippingDetails}</h4>
+                    {item.shippingDetails && item.shippingDetails !== "" && item.shippingDetails !== undefined &&(
+                      <h4>Shipping Details {item.shippingDetails? item.shippingDetails : ""}</h4>
                     )}
                   </div>
                 </div>
