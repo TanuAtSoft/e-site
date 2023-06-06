@@ -1,9 +1,9 @@
 import { API_ROUTES } from "../api_routes";
 import { apiRoot } from "../root";
 
-export const getWishlist = (token) => {  
+export const getCartLength = (token) => {  
     return apiRoot({ 
-        url: `/${API_ROUTES.WISHLIST.GET_WISHLIST}`,
+        url: `/${API_ROUTES.CART.GET_CART_LENGTH}`,
         method: 'GET',
         token
     });

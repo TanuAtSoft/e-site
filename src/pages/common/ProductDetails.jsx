@@ -12,7 +12,7 @@ import BasicCard from "../../components/BasicCard";
 import { getSingleProduct } from "../../apis/products/getSingleProduct";
 import Loader from "../../components/Loader";
 
-const ProductDetails = () => {
+const ProductDetails = ({handleRefresh,fromWishlist,handleWsihlistCount}) => {
   const [product, setProduct] = useState();
   const location = useLocation();
   const params = useParams();
@@ -117,7 +117,7 @@ const ProductDetails = () => {
               sx={{ maxHeight: "99vh" }}
               component="div"
             >
-              <BasicCard product={product}/>
+              <BasicCard product={product} handleRefresh={handleRefresh} fromWishlist={fromWishlist} handleWsihlistCount={handleWsihlistCount}/>
             </Grid>
           </Grid>
         </Container>

@@ -23,6 +23,7 @@ export const API_ROUTES = {
     CART:{
         ADD_TO_CART:"addToCart",
         GET_CART_DETAILS:"getCart",
+        GET_CART_LENGTH:"getCartLength",
         REMOVE_CART_ITEM:"deleteCartItem",
         DELETE_CART_ITEM:"deleteItemFromCart"
     },
@@ -39,6 +40,7 @@ export const API_ROUTES = {
     WISHLIST:{
         ADD_TO_WISHLISTBYID:"addWishlist",
         DELETE_WISHLISTBYID:"deleteWishlist",
-        GET_WISHLIST:"getWishlist"
+        GET_WISHLIST:"getWishlist",
+        GET_WISHLIST_LENGTH:"getWishlistLength"
     }
 }

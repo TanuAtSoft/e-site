@@ -6,7 +6,7 @@ import { useEffect, Suspense } from "react";
 import { getProducts } from "../../apis/products/getProducts";
 import Loader from '../../components/Loader';
 
-const LandingPage = () => {
+const LandingPage = ({handleRefresh}) => {
   const [products, setProducts] = useState();
   const [loading,setLoading] = useState(true)
 
@@ -29,7 +29,7 @@ const LandingPage = () => {
             products.map((item, id) => {
               return (
                 <Grid item xs={12} md={3} key={id} style={{ paddingLeft: "19px"}}>
-                  <ProductCard product={item}/>
+                  <ProductCard product={item} handleRefresh={handleRefresh} fromWishlist={false}/>
                 </Grid>
               );
             })}

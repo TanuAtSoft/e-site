@@ -37,7 +37,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-const SignIn = () => {
+const SignIn = ({handleCartCount,handleWsihlistCount}) => {
   const [user, setUser] = useState({ email: "", password: "" });
   const [errorFields, setErrorFields] = useState([]);
   const navigate = useNavigate();
@@ -88,10 +88,11 @@ const SignIn = () => {
         if (res.data.data.user.role === "BUYER") {
          // console.log("res.data.data.user.cart.length",res.data.data.user.cart)
           if(res.data.data.user.cart){
-            localStorage.setItem("cart", res.data.data.user.cart);
+            handleCartCount(res.data.data.user.cart)
           }
-         
-          localStorage.setItem("address", res.data.data.user.address);
+          if(res.data.data.user.wishlist){
+            handleWsihlistCount(res.data.data.user.wishlist)
+          }
         }
         navigate("/");
       } else if (res.remote === "failure") {

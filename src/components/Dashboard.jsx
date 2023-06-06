@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 const SellerDashboard = React.lazy(() => import("../pages/seller/SellerDashboard"));
 const LandingPage = React.lazy(() => import("../pages/common/LandingPage"));
 
-const Dashboard = () => {
+const Dashboard = ({handleRefresh}) => {
   const localStorageRole = localStorage.getItem("role");
   const role = useMemo(() => {
     return localStorage.getItem("role");
@@ -25,7 +25,7 @@ const Dashboard = () => {
 
   return (
     <Fragment>
-      {role === "SELLER" ? <SellerDashboard /> : <LandingPage />}
+      {role === "SELLER" ? <SellerDashboard /> : <LandingPage handleRefresh={handleRefresh}/>}
     </Fragment>
   );
 };

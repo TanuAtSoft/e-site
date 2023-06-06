@@ -90,6 +90,7 @@ code {
 }
 .cards-hidden-div Button {
  font-size: 10px;
+ padding: 5px 10px;
 }
 .details-description{
   max-height: 100vh;

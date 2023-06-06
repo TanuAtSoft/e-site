@@ -4,6 +4,7 @@ import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { addToCart } from "../../apis/carts/addToCart";
+import Loader from "../../components/Loader";
 import {
   Container,
   Grid,
@@ -23,7 +24,7 @@ import { createPayment } from "../../apis/payment/createPayment";
 import { verifyPayment } from "../../apis/payment/verifyPayment";
 import { saveOrder } from "../../apis/orders/saveOrder";
 
-const ViewCart = () => {
+const ViewCart = ({handleRefresh}) => {
   const token = JSON.parse(localStorage.getItem("token"));
   const [cartItems, setCartItems] = useState();
   const [refresh, setRefresh] = useState(false);
@@ -60,6 +61,7 @@ const ViewCart = () => {
     const res = await addToCart(token, JSON.stringify(data));
     if (res) {
       setRefresh(!refresh);
+      handleRefresh()
     }
   };
 
@@ -70,6 +72,7 @@ const ViewCart = () => {
     const res = await removeItemFromCart(token, JSON.stringify(data));
     if (res) {
       setRefresh(!refresh);
+      handleRefresh()
     }
   };
 
@@ -80,6 +83,7 @@ const ViewCart = () => {
     const res = await deleteItemFromCart(token, JSON.stringify(data));
     if (res) {
       setRefresh(!refresh);
+      handleRefresh()
     }
   };
 
@@ -89,14 +93,11 @@ const ViewCart = () => {
       if (res.data.statusCode === 200) {
         if (res.data.data.length > 0) {
           setCartItems(res.data.data);
-          localStorage.setItem("cart", res.data.data.length.toString());
         } else {
-          setCartItems();
-          localStorage.removeItem("cart");
+          setCartItems([]);
         }
       } else {
         setCartItems();
-        localStorage.removeItem("cart");
       }
     };
     fetchCartDetails();
@@ -208,7 +209,7 @@ const ViewCart = () => {
       maxWidth="lg"
       sx={{ padding: "20px 0px", minHeight: "calc(100vh - 160px)" }}
     >
-     {cartItems && <Grid container direction={"row"} spacing={1}>
+     {cartItems && cartItems.length > 0 && <Grid container direction={"row"} spacing={1}>
         <ViewAddressModal
           openView={openView}
           handleViewClose={handleViewClose}
@@ -372,7 +373,8 @@ const ViewCart = () => {
           </Card>
         </Grid>
       </Grid>}
-      {!cartItems && <Container  maxWidth="lg">No Items available in cart</Container>}
+      {!cartItems && <Container  maxWidth="lg"><Loader/></Container>}
+      {cartItems && cartItems.length === 0 && <Container  maxWidth="lg">Loading</Container>}
     </Container>
   );
 };

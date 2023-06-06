@@ -9,10 +9,9 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../apis/carts/addToCart";
 import { addToWishlist } from "../apis/wishlist/addToWishlist";
+import {deleteWishlist} from "../apis/wishlist/deleteWishlist"
 
-const BasicCard = ({ product }) => {
-  const cartCount = JSON.parse(localStorage.getItem("cart"));
-  const [count, setCount] = React.useState(cartCount);
+const BasicCard = ({ product, handleRefresh, fromWishlist,handleWsihlistCount}) => {
   const token = JSON.parse(localStorage.getItem("token"));
   const navigate = useNavigate();
 
@@ -26,10 +25,7 @@ const BasicCard = ({ product }) => {
     }
     const res = await addToCart(token, JSON.stringify(data));
     if (res.data.statusCode === 200) {
-      let temp = count;
-      temp = temp + 1;
-      setCount(temp);
-      localStorage.setItem("cart", temp);
+      handleRefresh();
       alert(res.data.statusMessage);
     }
   };
@@ -44,6 +40,23 @@ const BasicCard = ({ product }) => {
     const res = await addToWishlist(token, JSON.stringify(data));
     if (res.data.statusCode === 200) {
       alert(res.data.statusMessage);
+      handleRefresh();
+    }
+  };
+  const handleRemoveFromWishlist = async () => {
+    const data = {
+      productId: product._id,
+    };
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+    const res = await deleteWishlist(token, JSON.stringify(data));
+    if (res.data.statusCode === 200) {
+      alert(res.data.statusMessage);
+      handleRefresh();
+      handleWsihlistCount()
+      navigate("/wishlist")
     }
   };
   return (
@@ -95,13 +108,24 @@ const BasicCard = ({ product }) => {
         {/* <Button variant="contained" sx={{width:"100% !important"}}>
          Buy now
         </Button> */}
-        <Button
-          variant="outlined"
-          sx={{ width: "100% !important" }}
-          onClick={handleAddToWishlist}
-        >
-          Add to wishlist
-        </Button>
+        {!fromWishlist && (
+          <Button
+            variant="outlined"
+            sx={{ width: "100% !important" }}
+            onClick={handleAddToWishlist}
+          >
+            Add to wishlist
+          </Button>
+        )}
+        {fromWishlist && (
+          <Button
+            variant="outlined"
+            sx={{ width: "100% !important" }}
+            onClick={handleRemoveFromWishlist}
+          >
+            Remove from wishlist
+          </Button>
+        )}
       </CardActions>
     </Card>
   );
