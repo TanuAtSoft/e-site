@@ -396,7 +396,7 @@ const Header = ({wishlist,cart,handleCartCount,handleWsihlistCount}) => {
   const navItems =
     role === "SELLER"
       ? [
-          { label: "Add Product", link: "addProducts" },
+          { label: "Add Product", link: "addProduct" },
           { label: "Manage Products", link: "manageProducts" },
           { label: "HeightLights", link: "heighlights" },
         ]
