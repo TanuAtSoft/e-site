@@ -21,6 +21,7 @@ const LoggedOut = React.lazy(() => import("./pages/common/LoggedOut"));
 const ViewCart = React.lazy(() => import("./pages/buyer/ViewCart"));
 const Orders = React.lazy(() => import("./pages/buyer/Orders"));
 const WishlistPage = React.lazy(() => import("./pages/buyer/Wishlist"));
+const ManageProducts = React.lazy(()=> import("./pages/seller/ManageProducts"))
 
 const loading = (
   <div className="pt-3 text-center">
@@ -33,6 +34,8 @@ function App() {
   const [wishlist, setWishlist] = useState();
   let token = JSON.parse(localStorage.getItem("token"));
   const [refresh, setRefresh] = useState(false);
+  const role = localStorage.getItem("role");
+
   const handleCartCount = (count) => {
     setCart(count);
   };
@@ -43,7 +46,7 @@ function App() {
     setRefresh(!refresh);
   };
   useEffect(() => {
-    if (token) {
+    if (token && role === "BUYER") {
       const fetchNumbers = async () => {
         const cartRes = await getCartLength(token);
         if (cartRes.data.data > 0) {
@@ -149,6 +152,15 @@ function App() {
             element={
               <PrivateRoute>
                 <AddProduct />
+              </PrivateRoute>
+            }
+          />
+           <Route
+            path="/manageProducts"
+            name="manage products"
+            element={
+              <PrivateRoute>
+                <ManageProducts />
               </PrivateRoute>
             }
           />

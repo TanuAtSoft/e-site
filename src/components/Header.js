@@ -383,7 +383,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Header = ({wishlist,cart,handleCartCount,handleWsihlistCount}) => {
+const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const token = JSON.parse(localStorage.getItem("token"));
@@ -396,11 +396,17 @@ const Header = ({wishlist,cart,handleCartCount,handleWsihlistCount}) => {
   const navItems =
     role === "SELLER"
       ? [
+          { label: "Dashboard", link: "" },
           { label: "Add Product", link: "addProduct" },
           { label: "Manage Products", link: "manageProducts" },
           { label: "HeightLights", link: "heighlights" },
         ]
-      : ["Home", "About", "Contact"];
+      : [
+          { label: "Home", link: "" },
+          // { label: "Add Product", link: "addProduct" },
+          // { label: "Manage Products", link: "manageProducts" },
+          // { label: "HeightLights", link: "heighlights" },
+        ];
   const handleProfileMenuOpen = (event) => {
     if (token) {
       setAnchorEl(event.currentTarget);
@@ -447,7 +453,6 @@ const Header = ({wishlist,cart,handleCartCount,handleWsihlistCount}) => {
     localStorage.removeItem("user");
     localStorage.removeItem("role");
     navigate("/loggedOut");
-
   };
   const menuId = "primary-search-account-menu";
   const renderMenu = (
@@ -561,17 +566,9 @@ const Header = ({wishlist,cart,handleCartCount,handleWsihlistCount}) => {
       sx={{ textAlign: "center" }}
       style={{ width: "200px" }}
     >
-      <IconButton
-        onClick={() => {
-          navigate("/");
-        }}
-      >
-        <img
-          src="./drawerlogo.png"
-          alt="logo"
-          style={{ maxWidth: "112px", cursor: "pointer" }}
-        />
-      </IconButton>
+      <MenuItem style={{ cursor: "default" }}>
+        <img src="./drawerlogo.png" alt="logo" style={{ maxWidth: "112px" }} />
+      </MenuItem>
       <Divider />
       <List>
         {navItems.map((item) => (

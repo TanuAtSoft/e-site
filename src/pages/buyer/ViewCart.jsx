@@ -374,7 +374,7 @@ const ViewCart = ({handleRefresh}) => {
         </Grid>
       </Grid>}
       {!cartItems && <Container  maxWidth="lg"><Loader/></Container>}
-      {cartItems && cartItems.length === 0 && <Container  maxWidth="lg">Loading</Container>}
+      {cartItems && cartItems.length === 0 && <Container  maxWidth="lg">No Items available in the cart</Container>}
     </Container>
   );
 };

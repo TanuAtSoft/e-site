@@ -96,3 +96,16 @@ code {
   max-height: 100vh;
   overflow: scroll;
 }
+.product-price-div{
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+}
+.delete-confirmation-modal-btnDiv{
+  display: flex;
+  justify-content: space-between;
+  gap:10px;
+}
+.delete-confirmation-modal-btnDiv Button{
+  width:50%;
+}

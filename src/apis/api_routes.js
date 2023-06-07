@@ -11,7 +11,9 @@ export const API_ROUTES = {
     PRODUCTS:{
         GET_ALL: "products",
         GET_ONE: "product",
-        ADD_PRODUCT:"addProducts"
+        ADD_PRODUCT:"addProducts",
+        GET_PRODUCT_BY_USER:"getProductByUser",
+        DELETE_PRODUCT_BY_ID:"softDeleteProduct"
     },
     ADDRESS:{
         GET_ADDRESS: "getAddress",

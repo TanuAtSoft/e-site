@@ -1,138 +1,149 @@
-import React, { Fragment, useState } from "react";
-import {
-  Container,
-  Typography,
-  Box,
-  TextField,
-  Button,
-  Grid,
-  Select,
-  MenuItem,
-} from "@mui/material";
-import { catAvailable } from "../../helpers/helper";
-import { uploadImgs } from "../../apis/upload/uploadImgs";
-import { addProduct } from "../../apis/products/addProduct";
-import Loader from "../../components/Loader";
+import { Fragment,useEffect,useState } from "react";
+import { Container, Modal, Box, TextField, Button,Typography,Grid } from "@mui/material";
+import { uploadImgs } from "../apis/upload/uploadImgs";
+import { addProduct } from "../apis/products/addProduct";
 
-const AddProduct = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const [desc, setDesc] = useState([""]);
-  let token = JSON.parse(localStorage.getItem("token"));
-  const initialState = {
-    title: "",
-    description: [""],
-    category: "",
-    brand: "",
-    price: null,
-    stock: null,
+const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    width: "80%",
+    transform: "translate(-50%, -50%)",
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 24,
+    p: 4,
+    maxHeight: "500px",
+    overflowY: "scroll",
   };
 
-  const [product, setProduct] = useState(initialState);
+  
+const EditProductModal=({openEdit,handleEdit,productDetails})=>{
+    const [desc, setDesc] = useState([""]);
+    let token = JSON.parse(localStorage.getItem("token"));
+    // const initialState = {
+    //   title: "",
+    //   description: [""],
+    //   category: "",
+    //   brand: "",
+    //   price: null,
+    //   stock: null,
+    // };
+    const initialState = productDetails;
+  
+    const [product, setProduct] = useState(initialState);
+  
+    const [files, setFiles] = useState([]);
+    const [imgPreview, setImgPreview] = useState([]);
+    const [loading, setLoading] = useState();
 
-  const [files, setFiles] = useState([]);
-  const [imgPreview, setImgPreview] = useState([]);
-  const [loading, setLoading] = useState();
-
-  const handleCatChange = (e) => {
-    const value = e.target.value;
-    product["category"] = value;
-    setProduct({ ...product });
-  };
-
-  const handleNewDescription = () => {
-    const tempDesc = "";
-    setDesc((prevArray) => [...prevArray, tempDesc]);
-  };
-
-  const onChangeDescription = (e, id) => {
-    const newArray = desc.map((v, i) => {
-      if (i === id) return e.target.value;
-      return v;
-    });
-    setDesc(newArray);
-  };
-
-  const onChangeHandler = (e) => {
-    e.preventDefault();
-    const name = e.target.name;
-    const value = e.target.value;
-    product[name] = value;
-    setProduct({ ...product });
-  };
-
-  const handleFile = async (event) => {
-    let file = event.target.files[0];
-    setFiles([...files, file]);
-    const tempUrl = URL.createObjectURL(event.target.files[0]);
-    if (imgPreview.length < 11) {
-      setImgPreview([...imgPreview, tempUrl]);
-    }
-  };
-
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    const formData = new FormData();
-    if (files.length === 0) {
-      alert("choose atleast 2 pics");
-      setLoading(false);
-      return;
-    }
-    product["description"] = desc;
-    const passTest =
-      product.title !== "" &&
-      product.category !== "" &&
-      product.brand !== "" &&
-      product.price &&
-      product.price > 0 &&
-      product.stock > 1 &&
-      (product.description.length > 1 ||
-        (product.description.length === 1 && product.description[0] !== ""));
-
-    if (passTest) {
-      if (files.length > 0) {
-        files.forEach((file, i) => {
-          formData.append("images", file);
-        });
-        const uploadedRes = await uploadImgs(formData);
-        if (uploadedRes.status) {
-          product["images"] = uploadedRes.data.urls;
-          const res = await addProduct(token, product);
-          if (res.data.statusCode === 200) {
+    useEffect(()=>{
+    setDesc(productDetails.description)
+    setImgPreview(productDetails.images)
+    },[productDetails])
+  
+    const handleCatChange = (e) => {
+      const value = e.target.value;
+      product["category"] = value;
+      setProduct({ ...product });
+    };
+  
+    const handleNewDescription = () => {
+      const tempDesc = "";
+      setDesc((prevArray) => [...prevArray, tempDesc]);
+    };
+  
+    const onChangeDescription = (e, id) => {
+      const newArray = desc.map((v, i) => {
+        if (i === id) return e.target.value;
+        return v;
+      });
+      setDesc(newArray);
+    };
+  
+    const onChangeHandler = (e) => {
+      e.preventDefault();
+      const name = e.target.name;
+      const value = e.target.value;
+      product[name] = value;
+      setProduct({ ...product });
+    };
+  
+    const handleFile = async (event) => {
+      let file = event.target.files[0];
+      setFiles([...files, file]);
+      const tempUrl = URL.createObjectURL(event.target.files[0]);
+      if (imgPreview.length < 11) {
+        setImgPreview([...imgPreview, tempUrl]);
+      }
+    };
+  
+    const handleUpload = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      const formData = new FormData();
+      if (files.length === 0) {
+        alert("choose atleast 2 pics");
+        setLoading(false);
+        return;
+      }
+      product["description"] = desc;
+      const passTest =
+        product.title !== "" &&
+        product.category !== "" &&
+        product.brand !== "" &&
+        product.price &&
+        product.price > 0 &&
+        product.stock > 1 &&
+        (product.description.length > 1 ||
+          (product.description.length === 1 && product.description[0] !== ""));
+  
+      if (passTest) {
+        if (files.length > 0) {
+          files.forEach((file, i) => {
+            formData.append("images", file);
+          });
+          const uploadedRes = await uploadImgs(formData);
+          if (uploadedRes.status) {
+            product["images"] = uploadedRes.data.urls;
+            const res = await addProduct(token, product);
+            if (res.data.statusCode === 200) {
+              setLoading(false);
+              setProduct(initialState);
+              setFiles([]);
+              setImgPreview([]);
+              setDesc([]);
+              alert(res.data.statusMessage);
+            } else {
+              setLoading(false);
+              alert(res.data.statusMessage);
+            }
+          }
+          if (!uploadedRes.status) {
             setLoading(false);
-            setProduct(initialState);
-            setFiles([]);
-            setImgPreview([]);
-            setDesc([]);
-            alert(res.data.statusMessage);
-          } else {
-            setLoading(false);
-            alert(res.data.statusMessage);
+            alert(uploadedRes.statusMessage);
+            return;
           }
         }
-        if (!uploadedRes.status) {
-          setLoading(false);
-          alert(uploadedRes.statusMessage);
-          return;
-        }
+      } else {
+        setLoading(false);
+        alert("kindly fill all the fields");
       }
-    } else {
-      setLoading(false);
-      alert("kindly fill all the fields");
-    }
-  };
-
-  return (
-    <Fragment>
-      {loading && <Loader />}
-      {!loading && (
+    };
+    return(
+        <Fragment>
+            <Container>
+      <Modal
+        open={openEdit}
+        onClose={handleEdit}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
         <Container
           maxWidth="lg"
           sx={{ padding: "20px 0px", minHeight: "85vh", textAlign: "center" }}
         >
-          <Typography gutterBottom variant="h4" component="div">
-            {user}, Welcome to your Dashboard
-          </Typography>
           <Typography
             gutterBottom
             variant="h6"
@@ -224,7 +235,7 @@ const AddProduct = () => {
               >
                 <Container>
                   {/* <InputLabel id="demo-simple-select-label">Category</InputLabel> */}
-                  <Select
+                  {/* <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={product.category}
@@ -240,7 +251,7 @@ const AddProduct = () => {
                         </MenuItem>
                       );
                     })}
-                  </Select>
+                  </Select> */}
                 </Container>
                 <Container>
                   <TextField
@@ -334,6 +345,15 @@ const AddProduct = () => {
               >
                 Add Product
               </Button>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+                onClick={() => handleEdit()}
+              >
+                Cancel
+              </Button>
 
               {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -342,8 +362,11 @@ const AddProduct = () => {
             </Box>
           </Container>
         </Container>
-      )}
-    </Fragment>
-  );
-};
-export default AddProduct;
+        </Box>
+      </Modal>
+    </Container>
+
+        </Fragment>
+    )
+}
+export default EditProductModal;
