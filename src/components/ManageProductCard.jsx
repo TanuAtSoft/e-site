@@ -10,7 +10,7 @@ const ManageProductCard = ({ product, handleRefresh }) => {
   const handleEditModal = () => {
     setOpenEdit(false);
   };
-  console.log("product", product)
+
 
   const handleClose = () => {
     setOpen(false);
@@ -26,7 +26,7 @@ const ManageProductCard = ({ product, handleRefresh }) => {
         >
           <Grid item xs={4} md={3} sx={{ textAlign: "center" }}>
             <img
-              src={product?.images[0]}
+              src={product.images[0]}
               alt="product"
               style={{ maxWidth: "100%", maxHeight: "180px" }}
             />
@@ -74,7 +74,7 @@ const ManageProductCard = ({ product, handleRefresh }) => {
                 productId={product._id}
                 handleRefresh={handleRefresh}
               />
-              <EditProductModal openEdit={openEdit} handleEdit={handleEditModal} productDetails={product}/>
+              <EditProductModal openEdit={openEdit} handleEdit={handleEditModal} productDetails={product} handleRefresh={handleRefresh}/>
             </div>
           </Grid>
         </Grid>

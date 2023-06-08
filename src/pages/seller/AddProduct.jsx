@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState,useEffect } from "react";
 import {
   Container,
   Typography,
@@ -13,11 +13,14 @@ import { catAvailable } from "../../helpers/helper";
 import { uploadImgs } from "../../apis/upload/uploadImgs";
 import { addProduct } from "../../apis/products/addProduct";
 import Loader from "../../components/Loader";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { useMediaQuery } from "react-responsive";
 
 const AddProduct = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [desc, setDesc] = useState([""]);
   let token = JSON.parse(localStorage.getItem("token"));
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const initialState = {
     title: "",
     description: [""],
@@ -32,6 +35,16 @@ const AddProduct = () => {
   const [files, setFiles] = useState([]);
   const [imgPreview, setImgPreview] = useState([]);
   const [loading, setLoading] = useState();
+  const [refresh,setRefresh] = useState()
+
+  const handleDeleteImages =(id)=>{
+   imgPreview.splice(id, 1);
+   setRefresh(!refresh)
+  }
+  useEffect(()=>{
+    setImgPreview(imgPreview)
+  },[refresh])
+
 
   const handleCatChange = (e) => {
     const value = e.target.value;
@@ -64,7 +77,7 @@ const AddProduct = () => {
     let file = event.target.files[0];
     setFiles([...files, file]);
     const tempUrl = URL.createObjectURL(event.target.files[0]);
-    if (imgPreview.length < 11) {
+    if (imgPreview.length < 7) {
       setImgPreview([...imgPreview, tempUrl]);
     }
   };
@@ -85,7 +98,7 @@ const AddProduct = () => {
       product.brand !== "" &&
       product.price &&
       product.price > 0 &&
-      product.stock > 1 &&
+      product.stock > 1 && imgPreview.length >= 2 &&
       (product.description.length > 1 ||
         (product.description.length === 1 && product.description[0] !== ""));
 
@@ -296,7 +309,14 @@ const AddProduct = () => {
                           item
                           xs={12}
                           md={2}
-                          sx={{ height: "100px", width: "100px", mb: 3 }}
+                          sx={{
+                            height: "110px",
+                            width: "110px",
+                            mb: 3,
+                            position: "relative",
+                            margin:"auto"
+                          }}
+                          key={id}
                         >
                           <img
                             key="id"
@@ -304,11 +324,19 @@ const AddProduct = () => {
                             alt="img"
                             style={{ height: "100px", width: "100px" }}
                           />
+                          <CancelIcon
+                            style={{
+                              position: "absolute",
+                              left: isTabletOrMobile ? "66%" : "95%",
+                              top: "19px",
+                            }}
+                            onClick={()=>{handleDeleteImages(id)}}
+                          />
                         </Grid>
                       );
                     })}
                 </Grid>
-                {imgPreview.length < 11 ? (
+                {imgPreview.length < 7 ? (
                   <Button variant="contained" component="label">
                     Upload Image
                     <input
@@ -322,8 +350,9 @@ const AddProduct = () => {
                     />
                   </Button>
                 ) : (
-                  <p>You can add maximum of 10 images</p>
+                  <p>You can add maximum of 6 images</p>
                 )}
+                {imgPreview.length < 2 && <p>Kindly add more than two images</p>}
               </Container>
               <Button
                 type="submit"
