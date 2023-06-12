@@ -6,12 +6,13 @@ import Item from "../../components/Item";
 import SellerHome from "../../components/SellerHome";
 import SellerRevenueComponent from "../../components/SellerRevenueComponent";
 import SellerStock from "../../components/SellerStocks"
+import SellerBestSoldComponent from "../../components/SellerBestSoldComponent"
 
 const SellerDashboard = () => {
   const token = JSON.parse(localStorage.getItem("token"));
   const user = JSON.parse(localStorage.getItem("user"));
   const [dashboardMetrics, setDashboardMetrics] = useState();
-  const [activeTab, setActiveTab] = useState("home");
+  const [activeTab, setActiveTab] = useState("bestSold");
 
   const handleActiveTab = (tab) => {
     setActiveTab(tab);
@@ -130,6 +131,9 @@ const SellerDashboard = () => {
         )}
         {activeTab === "stocks" && (
           <SellerStock />
+        )}
+        {activeTab === "bestSold" && (
+          <SellerBestSoldComponent />
         )}
         
       </Grid>

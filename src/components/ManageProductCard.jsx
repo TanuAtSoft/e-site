@@ -3,7 +3,6 @@ import { Grid, Typography, Button, Paper } from "@mui/material";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import DeleteConfirmationModal from "../components/DeleteConfirmationModal";
 import EditProductModal from "./EditProductModal";
-import { useMediaQuery } from "react-responsive";
 
 const ManageProductCard = ({ product, handleRefresh }) => {
   const [open, setOpen] = useState(false);

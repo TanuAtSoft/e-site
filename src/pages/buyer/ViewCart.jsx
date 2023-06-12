@@ -24,7 +24,7 @@ import { createPayment } from "../../apis/payment/createPayment";
 import { verifyPayment } from "../../apis/payment/verifyPayment";
 import { saveOrder } from "../../apis/orders/saveOrder";
 
-const ViewCart = ({handleRefresh}) => {
+const ViewCart = ({handleRefresh,handleCartCount}) => {
   const token = JSON.parse(localStorage.getItem("token"));
   const [cartItems, setCartItems] = useState();
   const [refresh, setRefresh] = useState(false);
@@ -167,8 +167,8 @@ const ViewCart = ({handleRefresh}) => {
             if(orderRes.remote === "success"){
               alert(orderRes.data.statusMessage)
               setRefresh(!refresh)
+              handleCartCount(0)
               handleRefresh()
-              localStorage.removeItem("cart");
             }
           }catch(e){
             console.log("oredr save e", e)

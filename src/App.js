@@ -170,7 +170,7 @@ function App() {
             name="cart"
             element={
               <PrivateRoute>
-                <ViewCart handleRefresh={handleRefresh} />
+                <ViewCart handleRefresh={handleRefresh} handleCartCount={handleCartCount}/>
               </PrivateRoute>
             }
           />

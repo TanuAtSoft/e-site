@@ -16,13 +16,7 @@ import Loader from "./Loader";
 
 const SellerHome = () => {
   const token = JSON.parse(localStorage.getItem("token"));
-  const user = JSON.parse(localStorage.getItem("user"));
   const [dashboardMetrics, setDashboardMetrics] = useState();
-  const [activeTab, setActiveTab] = useState("home");
-
-  const handleActiveTab = (tab) => {
-    setActiveTab(tab);
-  };
 
   useEffect(() => {
     const fetchDashboardMetrics = async () => {
