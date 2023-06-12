@@ -36,7 +36,7 @@ const ViewCart = ({handleRefresh}) => {
   const [selectedAddress, setSelectedAddress] = useState()
   const [isCod, setIsCod] = useState(false)
   const handleAddressSelect = (address) => {
-    const completeAddress = address.fullName+" "+address.mobileNumber+" "+address.houseNumber+" "+address.area+" "+address?.landmark+" "+address.city+" "+ address.state+" "+address.pincode
+    const completeAddress = address.fullName+" "+address.mobileNumber+" "+address.houseNumber+" "+address.area+" "+ address.landmark+" "+address.city+" "+ address.state+" "+address.pincode
     setSelectedAddress(completeAddress)
   }
 
@@ -167,6 +167,7 @@ const ViewCart = ({handleRefresh}) => {
             if(orderRes.remote === "success"){
               alert(orderRes.data.statusMessage)
               setRefresh(!refresh)
+              handleRefresh()
               localStorage.removeItem("cart");
             }
           }catch(e){
@@ -305,7 +306,7 @@ const ViewCart = ({handleRefresh}) => {
                   </Grid>
                 );
               })}
-            {(!cartItems || cartItems.length === 0) && (
+            {(cartItems.length === 0) && (
               <Typography>No Items available in the cart</Typography>
             )}
           </Paper>

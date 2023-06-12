@@ -22,6 +22,7 @@ const ViewCart = React.lazy(() => import("./pages/buyer/ViewCart"));
 const Orders = React.lazy(() => import("./pages/buyer/Orders"));
 const WishlistPage = React.lazy(() => import("./pages/buyer/Wishlist"));
 const ManageProducts = React.lazy(()=> import("./pages/seller/ManageProducts"))
+const SellerOrders = React.lazy(()=> import("./pages/seller/SellerOrders"))
 
 const loading = (
   <div className="pt-3 text-center">
@@ -199,7 +200,8 @@ function App() {
             name="orders"
             element={
               <PrivateRoute>
-                <Orders />
+                 {role === "BUYER" && <Orders />}
+               {role === "SELLER" && <SellerOrders />}
               </PrivateRoute>
             }
           />

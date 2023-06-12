@@ -28,7 +28,12 @@ const style = {
   overflowY: "scroll",
 };
 
-const EditProductModal = ({ openEdit, handleEdit, productDetails,handleRefresh }) => {
+const EditProductModal = ({
+  openEdit,
+  handleEdit,
+  productDetails,
+  handleRefresh,
+}) => {
   const [desc, setDesc] = useState([""]);
   let token = JSON.parse(localStorage.getItem("token"));
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 768px)" });
@@ -120,16 +125,20 @@ const EditProductModal = ({ openEdit, handleEdit, productDetails,handleRefresh }
         (product.description.length === 1 && product.description[0] !== ""));
     if (passTest) {
       if (files.length > 0) {
+        let temp = [];
+        for (let i = 0; i < imgPreview.length; i++) {
+          if (!imgPreview[i].includes("blob")) {
+            temp.push(imgPreview[i]);
+          }
+        }
+        product["images"] = temp;
         files.forEach((file, i) => {
           formData.append("images", file);
         });
         const uploadedRes = await uploadImgs(formData);
         if (uploadedRes.status) {
-          product["images"] = uploadedRes.data.urls;
-          for (let i = 0; i < imgPreview.length; i++) {
-            if (!imgPreview[i].includes("blob")) {
-              product.images.push(imgPreview[i]);
-            }
+          for (let i = 0; i < uploadedRes.data.urls.length; i++) {
+            product.images.push(uploadedRes.data.urls[i]);
           }
           const res = await editProduct(token, productDetails._id, product);
           if (res.data.statusCode === 200) {
@@ -139,8 +148,8 @@ const EditProductModal = ({ openEdit, handleEdit, productDetails,handleRefresh }
             setImgPreview([]);
             setDesc([]);
             alert(res.data.statusMessage);
-            handleRefresh()
-            handleEdit()
+            handleRefresh();
+            handleEdit();
           } else {
             setLoading(false);
             alert(res.data.statusMessage);
@@ -153,13 +162,13 @@ const EditProductModal = ({ openEdit, handleEdit, productDetails,handleRefresh }
         }
       }
       if (files.length === 0 && imgPreview.length > 0) {
-        let temp = []
+        let temp = [];
         for (let i = 0; i < imgPreview.length; i++) {
           if (!imgPreview[i].includes("blob")) {
-           temp.push(imgPreview[i]);
+            temp.push(imgPreview[i]);
           }
         }
-        product["images"] = temp
+        product["images"] = temp;
         const res = await editProduct(token, productDetails._id, product);
         if (res.data.statusCode === 200) {
           setLoading(false);
@@ -168,9 +177,8 @@ const EditProductModal = ({ openEdit, handleEdit, productDetails,handleRefresh }
           setImgPreview([]);
           setDesc([]);
           alert(res.data.statusMessage);
-          handleRefresh()
-          handleEdit()
-          
+          handleRefresh();
+          handleEdit();
         } else {
           setLoading(false);
           alert(res.data.statusMessage);
@@ -192,110 +200,113 @@ const EditProductModal = ({ openEdit, handleEdit, productDetails,handleRefresh }
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <Container
-              maxWidth="lg"
-              sx={{
-                padding: "20px 0px",
-                minHeight: "85vh",
-                textAlign: "center",
-              }}
-            >
-              <Typography
-                gutterBottom
-                variant="h6"
-                component="div"
-                sx={{ fontSize: "18px" }}
+            {!loading && (
+              <Container
+                maxWidth="lg"
+                sx={{
+                  padding: "20px 0px",
+                  minHeight: "85vh",
+                  textAlign: "center",
+                }}
               >
-                Kindly fill the form given below to sell new product
-              </Typography>
-              <Container maxWidth="md">
-                <Box
-                  component="form"
-                  onSubmit={(e) => handleUpload(e)}
-                  //validate={true}
-                  sx={{ mt: 1 }}
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  component="div"
+                  sx={{ fontSize: "18px" }}
                 >
-                  <TextField
-                    //error={errorFields.includes("email") ? true : false}
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="title"
-                    label="Product Name"
-                    value={product.title}
-                    name="title"
-                    autoComplete="off"
-                    autoFocus
-                    inputProps={{ maxLength: 100 }}
-                    onChange={(e) => {
-                      onChangeHandler(e);
-                    }}
-                    //   helperText={
-                    //     errorFields.includes("email") ? "Incorrect entry." : ""
-                    //   }
-                  />
-                  <TextField
-                    value={product.brand}
-                    // error={errorFields.includes("password") ? true : false}
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="brand"
-                    label="Product brand"
-                    type="text"
-                    id="brand"
-                    autoComplete="off"
-                    onChange={onChangeHandler}
-                    //   helperText={
-                    //     errorFields.includes("password")
-                    //       ? "password cannot be empty"
-                    //       : ""
-                    //   }
-                  />
-                  <Container>
-                    {desc.map((item, id) => {
-                      return (
-                        <TextField
-                          key={id}
-                          value={item}
-                          inputProps={{ maxLength: 200 }}
-                          // error={errorFields.includes("password") ? true : false}
-                          margin="normal"
-                          required
-                          fullWidth
-                          name="description"
-                          label={`Product Description${id + 1} - max 200 char`}
-                          type="text"
-                          id="description"
-                          autoComplete="off"
-                          onChange={(e) => {
-                            onChangeDescription(e, id);
-                          }}
-                          //   helperText={
-                          //     errorFields.includes("password")
-                          //       ? "password cannot be empty"
-                          //       : ""
-                          //   }
-                        />
-                      );
-                    })}
-                    <Button
-                      disabled={desc[desc.length - 1] === "" ? true : false}
-                      onClick={handleNewDescription}
-                    >
-                      Add New Description
-                    </Button>
-                  </Container>
-                  <Container
-                    sx={{
-                      width: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
+                  Kindly fill the form given below to sell new product
+                </Typography>
+                <Container maxWidth="md">
+                  <Box
+                    component="form"
+                    onSubmit={(e) => handleUpload(e)}
+                    //validate={true}
+                    sx={{ mt: 1 }}
                   >
+                    <TextField
+                      //error={errorFields.includes("email") ? true : false}
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="title"
+                      label="Product Name"
+                      value={product.title}
+                      name="title"
+                      autoComplete="off"
+                      autoFocus
+                      inputProps={{ maxLength: 100 }}
+                      onChange={(e) => {
+                        onChangeHandler(e);
+                      }}
+                      //   helperText={
+                      //     errorFields.includes("email") ? "Incorrect entry." : ""
+                      //   }
+                    />
+                    <TextField
+                      value={product.brand}
+                      // error={errorFields.includes("password") ? true : false}
+                      margin="normal"
+                      required
+                      fullWidth
+                      name="brand"
+                      label="Product brand"
+                      type="text"
+                      id="brand"
+                      autoComplete="off"
+                      onChange={onChangeHandler}
+                      //   helperText={
+                      //     errorFields.includes("password")
+                      //       ? "password cannot be empty"
+                      //       : ""
+                      //   }
+                    />
                     <Container>
-                      {/* <InputLabel id="demo-simple-select-label">Category</InputLabel> */}
-                      {/* <Select
+                      {desc.map((item, id) => {
+                        return (
+                          <TextField
+                            key={id}
+                            value={item}
+                            inputProps={{ maxLength: 200 }}
+                            // error={errorFields.includes("password") ? true : false}
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="description"
+                            label={`Product Description${
+                              id + 1
+                            } - max 200 char`}
+                            type="text"
+                            id="description"
+                            autoComplete="off"
+                            onChange={(e) => {
+                              onChangeDescription(e, id);
+                            }}
+                            //   helperText={
+                            //     errorFields.includes("password")
+                            //       ? "password cannot be empty"
+                            //       : ""
+                            //   }
+                          />
+                        );
+                      })}
+                      <Button
+                        disabled={desc[desc.length - 1] === "" ? true : false}
+                        onClick={handleNewDescription}
+                      >
+                        Add New Description
+                      </Button>
+                    </Container>
+                    <Container
+                      sx={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Container>
+                        {/* <InputLabel id="demo-simple-select-label">Category</InputLabel> */}
+                        {/* <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     value={product.category}
@@ -312,141 +323,142 @@ const EditProductModal = ({ openEdit, handleEdit, productDetails,handleRefresh }
                       );
                     })}
                   </Select> */}
-                    </Container>
-                    <Container>
-                      <TextField
-                        value={product.price}
-                        type="number"
-                        InputProps={{ inputProps: { min: 1, max: 1000 } }}
-                        //error={errorFields.includes("email") ? true : false}
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="price"
-                        label="Product Price"
-                        name="price"
-                        autoComplete="off"
-                        autoFocus
-                        inputProps={{ maxLength: 10 }}
-                        onChange={onChangeHandler}
-                        //   helperText={
-                        //     errorFields.includes("email") ? "Incorrect entry." : ""
-                        //   }
-                      />
-                    </Container>
-                    <Container>
-                      <TextField
-                        type="number"
-                        value={product.stock}
-                        InputProps={{ inputProps: { min: 1, max: 1000 } }}
-                        //error={errorFields.includes("email") ? true : false}
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="stock"
-                        label="stock available"
-                        name="stock"
-                        autoComplete="off"
-                        autoFocus
-                        inputProps={{ maxLength: 10 }}
-                        onChange={onChangeHandler}
-                        //   helperText={
-                        //     errorFields.includes("email") ? "Incorrect entry." : ""
-                        //   }
-                      />
-                    </Container>
-                    <Container></Container>
-                  </Container>
-
-                  <Container sx={{ mt: 6 }}>
-                    <Grid
-                      container
-                      direction={"row"}
-                      spacing={4}
-                      sx={{ mb: 6 }}
-                    >
-                      {imgPreview.length > 0 &&
-                        imgPreview.map((item, id) => {
-                          return (
-                            <Grid
-                              item
-                              xs={12}
-                              md={2}
-                              sx={{
-                                height: "110px",
-                                width: "110px",
-                                mb: 3,
-                                position: "relative",
-                                margin: "auto",
-                              }}
-                              key={id}
-                            >
-                              <img
-                                key="id"
-                                src={item}
-                                alt="img"
-                                style={{ height: "100px", width: "100px" }}
-                              />
-                              <CancelIcon
-                                style={{
-                                  position: "absolute",
-                                  left: isTabletOrMobile ? "66%" : "95%",
-                                  top: "19px",
-                                }}
-                                onClick={() => {
-                                  handleDeleteImages(id);
-                                }}
-                              />
-                            </Grid>
-                          );
-                        })}
-                    </Grid>
-                    {imgPreview.length < 7 ? (
-                      <Button variant="contained" component="label">
-                        Upload Image
-                        <input
-                          accept="image/*"
-                          name="images"
-                          type="file"
-                          hidden
-                          onChange={(e) => {
-                            handleFile(e);
-                          }}
+                      </Container>
+                      <Container>
+                        <TextField
+                          value={product.price}
+                          type="number"
+                          InputProps={{ inputProps: { min: 1, max: 1000 } }}
+                          //error={errorFields.includes("email") ? true : false}
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="price"
+                          label="Product Price"
+                          name="price"
+                          autoComplete="off"
+                          autoFocus
+                          inputProps={{ maxLength: 10 }}
+                          onChange={onChangeHandler}
+                          //   helperText={
+                          //     errorFields.includes("email") ? "Incorrect entry." : ""
+                          //   }
                         />
-                      </Button>
-                    ) : (
-                      <p>You can add maximum of 6 images</p>
-                    )}
-                    {imgPreview.length < 2 && (
-                      <p>Kindly add more than two images</p>
-                    )}
-                  </Container>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                    onClick={(e) => handleUpload(e)}
-                  >
-                    Add Product
-                  </Button>
-                  <Button
-                    type="submit"
-                    fullWidth
-                    variant="contained"
-                    sx={{ mt: 3, mb: 2 }}
-                    onClick={() => handleEdit()}
-                  >
-                    Cancel
-                  </Button>
+                      </Container>
+                      <Container>
+                        <TextField
+                          type="number"
+                          value={product.stock}
+                          InputProps={{ inputProps: { min: 1, max: 1000 } }}
+                          //error={errorFields.includes("email") ? true : false}
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="stock"
+                          label="stock available"
+                          name="stock"
+                          autoComplete="off"
+                          autoFocus
+                          inputProps={{ maxLength: 10 }}
+                          onChange={onChangeHandler}
+                          //   helperText={
+                          //     errorFields.includes("email") ? "Incorrect entry." : ""
+                          //   }
+                        />
+                      </Container>
+                      <Container></Container>
+                    </Container>
 
-                  {/* <FormControlLabel
+                    <Container sx={{ mt: 6 }}>
+                      <Grid
+                        container
+                        direction={"row"}
+                        spacing={4}
+                        sx={{ mb: 6 }}
+                      >
+                        {imgPreview.length > 0 &&
+                          imgPreview.map((item, id) => {
+                            return (
+                              <Grid
+                                item
+                                xs={12}
+                                md={2}
+                                sx={{
+                                  height: "110px",
+                                  width: "110px",
+                                  mb: 3,
+                                  position: "relative",
+                                  margin: "auto",
+                                }}
+                                key={id}
+                              >
+                                <img
+                                  key="id"
+                                  src={item}
+                                  alt="img"
+                                  style={{ height: "100px", width: "100px" }}
+                                />
+                                <CancelIcon
+                                  style={{
+                                    position: "absolute",
+                                    left: isTabletOrMobile ? "66%" : "95%",
+                                    top: "19px",
+                                  }}
+                                  onClick={() => {
+                                    handleDeleteImages(id);
+                                  }}
+                                />
+                              </Grid>
+                            );
+                          })}
+                      </Grid>
+                      {imgPreview.length < 7 ? (
+                        <Button variant="contained" component="label">
+                          Upload Image
+                          <input
+                            accept="image/*"
+                            name="images"
+                            type="file"
+                            hidden
+                            onChange={(e) => {
+                              handleFile(e);
+                            }}
+                          />
+                        </Button>
+                      ) : (
+                        <p>You can add maximum of 6 images</p>
+                      )}
+                      {imgPreview.length < 2 && (
+                        <p>Kindly add more than two images</p>
+                      )}
+                    </Container>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                      onClick={(e) => handleUpload(e)}
+                    >
+                      Add Product
+                    </Button>
+                    <Button
+                      type="submit"
+                      fullWidth
+                      variant="contained"
+                      sx={{ mt: 3, mb: 2 }}
+                      onClick={() => handleEdit()}
+                    >
+                      Cancel
+                    </Button>
+
+                    {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-                </Box>
+                  </Box>
+                </Container>
               </Container>
-            </Container>
+            )}
             {loading && (
               <Container>
                 <Loader />

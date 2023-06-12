@@ -109,3 +109,26 @@ code {
 .delete-confirmation-modal-btnDiv Button{
   width:50%;
 }
+.seller-dashboard-orders-div {
+  display: flex;
+  flex-direction: row;
+  gap: 4%;
+  padding: 30px 0px;
+}
+.seller-dashboard-orders-inner-div {
+  display: flex;
+  gap: 7%;
+}
+.revenue-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mini-side-bar{
+  color:#1976d2;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.mini-side-bar-inactive{
+  cursor: pointer;
+}

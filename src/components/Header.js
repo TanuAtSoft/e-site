@@ -399,7 +399,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
           { label: "Dashboard", link: "" },
           { label: "Add Product", link: "addProduct" },
           { label: "Manage Products", link: "manageProducts" },
-          { label: "HeightLights", link: "heighlights" },
+          { label: "Oders", link: "orders" },
         ]
       : [
           { label: "Home", link: "" },

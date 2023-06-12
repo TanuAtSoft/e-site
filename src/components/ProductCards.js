@@ -79,7 +79,7 @@ const ProductCard = ({ product, handleRefresh, fromWishlist }) => {
           }}
         >
           <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
-          {product?.price}
+          {product.price}
         </Typography>
         {!fromWishlist && (
           <div

@@ -45,5 +45,9 @@ export const API_ROUTES = {
         DELETE_WISHLISTBYID:"deleteWishlist",
         GET_WISHLIST:"getWishlist",
         GET_WISHLIST_LENGTH:"getWishlistLength"
+    },
+    SELLER:{
+        GET_SELLER_DASHBOARD_METRICS:"getSellerMatricsInfo",
+        GET_SELLER_STOCK_INFO:"sellerStocksInfo"
     }
 }
