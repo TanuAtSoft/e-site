@@ -3,24 +3,12 @@ import { Grid, Typography } from "@mui/material";
 import {getSellerRevenueMetrics} from "../apis/seller_metrics/seller_revenue_deatils"
 import Loader from "./Loader";
 import Item from "./Item";
-import { getProductsByUser } from "../apis/products/getProductByUser";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 
 
 const SellerRevenueComponent =()=>{
   const [revenue,setRevenue] = useState()
   const token = JSON.parse(localStorage.getItem("token"));
-  const [products, setProducts] = useState();
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const res = await getProductsByUser(token);
-      if (res.data.statusCode === 200) {
-        setProducts(res.data.data);
-      }
-    };
-    fetchProducts();
-  }, [token]);
 
   useEffect(()=>{
     const fetchRevenue =async()=>{
@@ -33,22 +21,7 @@ const SellerRevenueComponent =()=>{
 
   },[token])
 
-  const findItemSold=(id)=>{
-    if(revenue && revenue.length >0){
-      for(let i =0 ; i< revenue.length; i++){
-        if(revenue[i]._id === id){
-          return {
-            itemsold:revenue[i].total_items_sold,
-            total_revenue: revenue[i].revenue_generated
-          }
-        }
-      }
-    }
-  }
 
-  if(revenue){
-    console.log(findItemSold("6486f2a32f1afbba67bf631d"))
-  }
 
     return(
       <Fragment>
@@ -69,7 +42,7 @@ const SellerRevenueComponent =()=>{
                 padding: "15px",
               }}
             >
-              <Typography> Stocks</Typography>
+              <Typography> Revenue Generated</Typography>
             </Item>
           </Grid>
 
@@ -89,14 +62,14 @@ const SellerRevenueComponent =()=>{
                     <Typography>Product</Typography>
                   </th>
                   <th>
-                    <Typography>Items Sold</Typography>
+                    <Typography>Items Delivered</Typography>
                   </th>
                   <th>
                     <Typography>Revenue Generated (<CurrencyRupeeIcon style={{fontSize:"16px"}}/>)</Typography>
                   </th>
                 </tr>
-                {products && products.length > 0 &&
-                  products.map((item, id) => {
+                {revenue.length > 0 &&
+                  revenue.map((item, id) => {
                     return (
                       <tr key={id}>
                         <td>
@@ -104,18 +77,18 @@ const SellerRevenueComponent =()=>{
                         </td>
                         <td>
                           <img
-                            src={item.images[0]}
+                            src={item.image}
                             alt="img"
                             style={{ height: "50px", width: "50px" }}
                           />
                         </td>
                         <td>
                           <Typography>
-                           {findItemSold(item._id) === undefined ?  0 : findItemSold(item._id)?.itemsold }
+                           {item.total_items_sold }
                           </Typography>
                         </td>
                         <td>
-                          <Typography>{findItemSold(item._id) === undefined ? 0:  findItemSold(item._id)?.total_revenue }</Typography>
+                          <Typography>{item.revenue_generated}</Typography>
                         </td>
                       </tr>
                     );

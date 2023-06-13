@@ -155,3 +155,20 @@ code {
   color: white;
   text-align: center;
 }
+.best-sold-cards-container {
+  display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+.best-sold-cards-container img{
+  width: 93%;
+}
+.best-seller-div{
+  top: 0%;
+  right: 0%;
+  background: #1976d2;
+  color: white;
+  padding: 5px 25px;
+  width: 100%;
+  text-align: center;
+}

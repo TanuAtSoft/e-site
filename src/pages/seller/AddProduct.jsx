@@ -1,4 +1,4 @@
-import React, { Fragment, useState,useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import {
   Container,
   Typography,
@@ -17,7 +17,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useMediaQuery } from "react-responsive";
 
 const AddProduct = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+
   const [desc, setDesc] = useState([""]);
   let token = JSON.parse(localStorage.getItem("token"));
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 768px)" });
@@ -35,15 +35,15 @@ const AddProduct = () => {
   const [files, setFiles] = useState([]);
   const [imgPreview, setImgPreview] = useState([]);
   const [loading, setLoading] = useState();
-  const [refresh,setRefresh] = useState()
+  const [refresh, setRefresh] = useState();
 
-  const handleDeleteImages =(id)=>{
-   imgPreview.splice(id, 1);
-   setRefresh(!refresh)
-  }
-  useEffect(()=>{
-    setImgPreview(imgPreview)
-  },[refresh])
+  const handleDeleteImages = (id) => {
+    imgPreview.splice(id, 1);
+    setRefresh(!refresh);
+  };
+  useEffect(() => {
+    setImgPreview(imgPreview);
+  }, [refresh]);
 
 
   const handleCatChange = (e) => {
@@ -98,7 +98,8 @@ const AddProduct = () => {
       product.brand !== "" &&
       product.price &&
       product.price > 0 &&
-      product.stock > 1 && imgPreview.length >= 2 &&
+      product.stock > 1 &&
+      imgPreview.length >= 2 &&
       (product.description.length > 1 ||
         (product.description.length === 1 && product.description[0] !== ""));
 
@@ -143,9 +144,6 @@ const AddProduct = () => {
           maxWidth="lg"
           sx={{ padding: "20px 0px", minHeight: "85vh", textAlign: "center" }}
         >
-          <Typography gutterBottom variant="h4" component="div">
-            {user}, Welcome to your Dashboard
-          </Typography>
           <Typography
             gutterBottom
             variant="h6"
@@ -163,6 +161,7 @@ const AddProduct = () => {
             >
               <TextField
                 //error={errorFields.includes("email") ? true : false}
+                autoFocus
                 margin="normal"
                 required
                 fullWidth
@@ -171,7 +170,6 @@ const AddProduct = () => {
                 value={product.title}
                 name="title"
                 autoComplete="off"
-                autoFocus
                 inputProps={{ maxLength: 100 }}
                 onChange={(e) => {
                   onChangeHandler(e);
@@ -268,7 +266,6 @@ const AddProduct = () => {
                     label="Product Price"
                     name="price"
                     autoComplete="off"
-                    autoFocus
                     inputProps={{ maxLength: 10 }}
                     onChange={onChangeHandler}
                     //   helperText={
@@ -289,7 +286,6 @@ const AddProduct = () => {
                     label="stock available"
                     name="stock"
                     autoComplete="off"
-                    autoFocus
                     inputProps={{ maxLength: 10 }}
                     onChange={onChangeHandler}
                     //   helperText={
@@ -314,7 +310,7 @@ const AddProduct = () => {
                             width: "110px",
                             mb: 3,
                             position: "relative",
-                            margin:"auto"
+                            margin: "auto",
                           }}
                           key={id}
                         >
@@ -330,7 +326,9 @@ const AddProduct = () => {
                               left: isTabletOrMobile ? "66%" : "95%",
                               top: "19px",
                             }}
-                            onClick={()=>{handleDeleteImages(id)}}
+                            onClick={() => {
+                              handleDeleteImages(id);
+                            }}
                           />
                         </Grid>
                       );
@@ -352,7 +350,9 @@ const AddProduct = () => {
                 ) : (
                   <p>You can add maximum of 6 images</p>
                 )}
-                {imgPreview.length < 2 && <p>Kindly add more than two images</p>}
+                {imgPreview.length < 2 && (
+                  <p>Kindly add more than two images</p>
+                )}
               </Container>
               <Button
                 type="submit"

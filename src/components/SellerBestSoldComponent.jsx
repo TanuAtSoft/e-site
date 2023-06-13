@@ -13,9 +13,9 @@ const SellerBestSoldComponent = () => {
   useEffect(() => {
     const fetchDashboardMetrics = async () => {
       const res = await getSellerBestSoldMetrics(token);
-      console.log("res.data.data[0].top_selling_products", res.data.data[0]);
+      console.log("res.data.data[0].top_selling_products", res.data.data);
       if (res.data.statusCode === 200) {
-        setBestSoldProducts(res.data.data[0].top_selling_products);
+        setBestSoldProducts(res.data.data);
       }
     };
     if (token) {
@@ -33,8 +33,8 @@ const SellerBestSoldComponent = () => {
           xs={12}
           md={9}
           spacing={2}
-          direction="column"
-          //direction={!isTabletOrMobile ? "column" : "row"}
+          // direction="column"
+          direction={!isTabletOrMobile ? "column" : "row"}
         >
           <Grid item xs={12} md={2} style={{ borderRadius: "5px" }}>
             <Item
@@ -43,21 +43,25 @@ const SellerBestSoldComponent = () => {
                 padding: "15px",
               }}
             >
-              <Typography> Stocks</Typography>
+              <Typography> Your top three best sold products</Typography>
             </Item>
           </Grid>
 
-          <Grid item xs={12} md={2} style={{ borderRadius: "5px" }}>
+          <Grid item xs={12} md={10}>
             <Item
               style={{
                 lineHeight: "0.2",
                 padding: "15px",
               }}
             >
-              {bestsoldProducts.length > 0 &&
-                bestsoldProducts.map((item, id) => {
-                  return <BestSoldProductCard key={id} productId={item} />;
-                })}
+              <div className="best-sold-cards-container" style={{flexDirection: !isTabletOrMobile ? "row" : "column"}}>
+                {bestsoldProducts.length > 0 &&
+                  bestsoldProducts.map((item, id) => {
+                    return (
+                      <BestSoldProductCard key ={id} product={item}/>
+                    );
+                  })}
+              </div>
             </Item>
           </Grid>
         </Grid>

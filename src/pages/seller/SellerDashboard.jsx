@@ -1,34 +1,21 @@
-import { useState, useEffect, Fragment } from "react";
+import { useState } from "react";
 import { Container, Grid, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import { getSellerDashboardMetrics } from "../../apis/seller_metrics/dashboard_metrics";
 import Item from "../../components/Item";
+
 import SellerHome from "../../components/SellerHome";
 import SellerRevenueComponent from "../../components/SellerRevenueComponent";
-import SellerStock from "../../components/SellerStocks"
-import SellerBestSoldComponent from "../../components/SellerBestSoldComponent"
+import SellerStock from "../../components/SellerStocks";
+import SellerBestSoldComponent from "../../components/SellerBestSoldComponent";
+import ConstructionIcon from "@mui/icons-material/Construction";
 
 const SellerDashboard = () => {
-  const token = JSON.parse(localStorage.getItem("token"));
   const user = JSON.parse(localStorage.getItem("user"));
-  const [dashboardMetrics, setDashboardMetrics] = useState();
-  const [activeTab, setActiveTab] = useState("bestSold");
+  const [activeTab, setActiveTab] = useState("home");
 
   const handleActiveTab = (tab) => {
     setActiveTab(tab);
   };
-
-  useEffect(() => {
-    const fetchDashboardMetrics = async () => {
-      const res = await getSellerDashboardMetrics(token);
-      if (res.data.statusCode === 200) {
-        setDashboardMetrics(res.data.data);
-      }
-    };
-    if (token) {
-      fetchDashboardMetrics();
-    }
-  }, [token]);
 
   return (
     <Container
@@ -123,19 +110,16 @@ const SellerDashboard = () => {
             </Grid>
           </Item>
         </Grid>
-        {activeTab === "home" && (
-          <SellerHome  />
+        {activeTab === "home" && <SellerHome />}
+        {activeTab === "revenue" && <SellerRevenueComponent />}
+        {activeTab === "stocks" && <SellerStock />}
+        {activeTab === "bestSold" && <SellerBestSoldComponent />}
+        {activeTab === "payment" && (
+          <Grid item xs={12} md={9} spacing={2} style={{display:"flex", justifyContent:"center",alignItems:"center",flexDirection:"column"}}>
+            <ConstructionIcon />
+            <Typography>Under Construction</Typography>
+          </Grid>
         )}
-         {activeTab === "revenue" && (
-          <SellerRevenueComponent  />
-        )}
-        {activeTab === "stocks" && (
-          <SellerStock />
-        )}
-        {activeTab === "bestSold" && (
-          <SellerBestSoldComponent />
-        )}
-        
       </Grid>
     </Container>
   );
