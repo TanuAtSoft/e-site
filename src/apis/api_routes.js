@@ -51,5 +51,8 @@ export const API_ROUTES = {
         GET_SELLER_STOCK_INFO:"sellerStocksInfo",
         GET_SELLER_REVENUE_INFO:"sellerRevenueInfo",
         GET_SELLER_BEST_SOLD_INFO:"sellerBestSellerInfo"
+    },
+    RATINGS:{
+        ADD_RATINGS:"reviewProduct"
     }
 }

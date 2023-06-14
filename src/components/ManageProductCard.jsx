@@ -52,7 +52,7 @@ const ManageProductCard = ({ product, handleRefresh }) => {
                 <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
                 {product.price}
               </Typography>
-              <Typography variant="body">Product Price</Typography>
+              <Typography variant="body"> <strong>Stocks: </strong>{product.stock}</Typography>
 
               <Button
                 variant="contained"

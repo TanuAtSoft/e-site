@@ -172,3 +172,34 @@ code {
   width: 100%;
   text-align: center;
 }
+.buyer-order-div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.buyer-order-details{
+  background-color: #D5D9D9;
+  width: 100%;
+  height: 60px;
+  padding: 10px;
+  border-radius: 5px 5px 0px 0px;
+  display: flex;
+  justify-content: space-between;
+}
+.buyer-order-details-inner-div {
+  display: flex;
+  gap:40px;
+}
+.reviews {
+  display: flex;
+  gap: 10px;
+}
+.rating {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: center;
+}
+.rating p{
+ font-size: 8px;
+}

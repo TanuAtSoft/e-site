@@ -200,7 +200,7 @@ function App() {
             name="orders"
             element={
               <PrivateRoute>
-                 {role === "BUYER" && <Orders />}
+                 {role === "BUYER" && <Orders handleRefresh={handleRefresh} />}
                {role === "SELLER" && <SellerOrders />}
               </PrivateRoute>
             }

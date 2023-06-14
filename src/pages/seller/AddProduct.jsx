@@ -17,7 +17,6 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useMediaQuery } from "react-responsive";
 
 const AddProduct = () => {
-
   const [desc, setDesc] = useState([""]);
   let token = JSON.parse(localStorage.getItem("token"));
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 768px)" });
@@ -44,7 +43,6 @@ const AddProduct = () => {
   useEffect(() => {
     setImgPreview(imgPreview);
   }, [refresh]);
-
 
   const handleCatChange = (e) => {
     const value = e.target.value;
