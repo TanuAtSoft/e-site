@@ -203,3 +203,14 @@ code {
 .rating p{
  font-size: 8px;
 }
+.brand-review-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rating-details-page-div {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 10px;
+}

@@ -6,6 +6,10 @@ import {Container} from "@mui/material";
 const SellerOrders=()=>{
     const [orderedItems,setOrderedItems] = useState()
     let token = JSON.parse(localStorage.getItem("token"));
+    const [refetch,setRefetch] = useState(false)
+    const handleRefetch=()=>{
+        setRefetch(!refetch)
+    }
     useEffect(()=>{
         const fetchOrder =async()=>{
         const res = await getSellerOrderInfo(token)
@@ -19,7 +23,7 @@ const SellerOrders=()=>{
           maxWidth="lg"
           sx={{ padding: "20px 0px", minHeight: "85vh", textAlign: "center" }}
         >
-            <Table orderedItems={orderedItems ? orderedItems :[]}/>
+            <Table orderedItems={orderedItems} handleRefetch={handleRefetch}/>
         </Container>
     )
 }

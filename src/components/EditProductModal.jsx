@@ -5,6 +5,7 @@ import {
   Box,
   TextField,
   Button,
+  MenuItem,
   Typography,
   Grid,
 } from "@mui/material";
@@ -13,6 +14,10 @@ import { editProduct } from "../apis/products/editProduct";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useMediaQuery } from "react-responsive";
 import Loader from "./Loader";
+import {
+  getMainCategories,
+  getSubCategories,
+} from "../apis/categories/getCategoris";
 
 const style = {
   position: "absolute",
@@ -37,6 +42,8 @@ const EditProductModal = ({
   const [desc, setDesc] = useState([""]);
   let token = JSON.parse(localStorage.getItem("token"));
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const [mainCat, setMainCat] = useState([]);
+  const [subCat, setSubCat] = useState([]);
   // const initialState = {
   //   title: "",
   //   description: [""],
@@ -70,7 +77,12 @@ const EditProductModal = ({
 
   const handleCatChange = (e) => {
     const value = e.target.value;
-    product["category"] = value;
+    product["main_category"] = value;
+    setProduct({ ...product });
+  };
+  const handleSubCatChange = (e) => {
+    const value = e.target.value;
+    product["sub_category"] = value;
     setProduct({ ...product });
   };
 
@@ -104,6 +116,20 @@ const EditProductModal = ({
     }
   };
 
+  useEffect(() => {
+    const fetchCat = async () => {
+      const mainCatres = await getMainCategories();
+      const subCatres = await getSubCategories();
+      if (mainCatres.data.statusCode === 200) {
+        setMainCat(mainCatres.data.data.mainCategories);
+      }
+      if (subCatres.data.statusCode === 200) {
+        setSubCat(subCatres.data.data.subCategories);
+      }
+    };
+    fetchCat();
+  }, []);
+
   const handleUpload = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -116,7 +142,7 @@ const EditProductModal = ({
     product["description"] = desc;
     const passTest =
       product.title !== "" &&
-      product.category !== "" &&
+      product.main_category !== "" &&
       product.brand !== "" &&
       product.price &&
       product.price > 0 &&
@@ -244,6 +270,25 @@ const EditProductModal = ({
                       //   }
                     />
                     <TextField
+                      //error={errorFields.includes("email") ? true : false}
+                      autoFocus
+                      margin="normal"
+                      required
+                      fullWidth
+                      id="name"
+                      label="Product Generic Name e.g shirt,blazer,shoe etc"
+                      value={product.name}
+                      name="name"
+                      autoComplete="off"
+                      inputProps={{ maxLength: 100 }}
+                      onChange={(e) => {
+                        onChangeHandler(e);
+                      }}
+                      //   helperText={
+                      //     errorFields.includes("email") ? "Incorrect entry." : ""
+                      //   }
+                    />
+                    <TextField
                       value={product.brand}
                       // error={errorFields.includes("password") ? true : false}
                       margin="normal"
@@ -297,32 +342,55 @@ const EditProductModal = ({
                         Add New Description
                       </Button>
                     </Container>
+
                     <Container
                       sx={{
                         width: "100%",
                         display: "flex",
                         alignItems: "center",
+                        flexDirection: isTabletOrMobile ? "column" : "row",
                       }}
                     >
                       <Container>
                         {/* <InputLabel id="demo-simple-select-label">Category</InputLabel> */}
-                        {/* <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={product.category}
-                    defaultValue="select category"
-                    label="category"
-                    onChange={handleCatChange}
-                    sx={{ width: "100%" }}
-                  >
-                    {catAvailable.map((item, id) => {
-                      return (
-                        <MenuItem key={id} value={item}>
-                          {item}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select> */}
+                        <TextField
+                          style={{ width: "100%" }}
+                          variant="outlined"
+                          value={product.main_category}
+                          onChange={handleCatChange}
+                          select
+                          label="main category"
+                        >
+                          {mainCat.length > 0 &&
+                            mainCat.map((item, id) => {
+                              return (
+                                <MenuItem key={id} value={item.mainCategory}>
+                                  {item.mainCategory}
+                                </MenuItem>
+                              );
+                            })}
+                        </TextField>
+                      </Container>
+                      <br />
+                      <Container>
+                        {/* <InputLabel id="demo-simple-select-label">Category</InputLabel> */}
+                        <TextField
+                          style={{ width: "100%" }}
+                          variant="outlined"
+                          value={product.sub_category}
+                          onChange={handleSubCatChange}
+                          select
+                          label="sub-category"
+                        >
+                          {subCat.length > 0 &&
+                            subCat.map((item, id) => {
+                              return (
+                                <MenuItem key={id} value={item.subCategory}>
+                                  {item.subCategory}
+                                </MenuItem>
+                              );
+                            })}
+                        </TextField>
                       </Container>
                       <Container>
                         <TextField
@@ -337,7 +405,6 @@ const EditProductModal = ({
                           label="Product Price"
                           name="price"
                           autoComplete="off"
-                          autoFocus
                           inputProps={{ maxLength: 10 }}
                           onChange={onChangeHandler}
                           //   helperText={
@@ -358,8 +425,7 @@ const EditProductModal = ({
                           label="stock available"
                           name="stock"
                           autoComplete="off"
-                          autoFocus
-                          inputProps={{ maxLength: 10 }}
+                          //inputProps={{ maxLength: 10 }}
                           onChange={onChangeHandler}
                           //   helperText={
                           //     errorFields.includes("email") ? "Incorrect entry." : ""
@@ -368,6 +434,8 @@ const EditProductModal = ({
                       </Container>
                       <Container></Container>
                     </Container>
+
+                    <Container></Container>
 
                     <Container sx={{ mt: 6 }}>
                       <Grid

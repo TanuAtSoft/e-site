@@ -6,31 +6,37 @@ import {
   TextField,
   Button,
   Grid,
-  Select,
   MenuItem,
 } from "@mui/material";
-import { catAvailable } from "../../helpers/helper";
 import { uploadImgs } from "../../apis/upload/uploadImgs";
 import { addProduct } from "../../apis/products/addProduct";
 import Loader from "../../components/Loader";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useMediaQuery } from "react-responsive";
+import {
+  getMainCategories,
+  getSubCategories,
+} from "../../apis/categories/getCategoris";
 
 const AddProduct = () => {
   const [desc, setDesc] = useState([""]);
   let token = JSON.parse(localStorage.getItem("token"));
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const [mainCat, setMainCat] = useState([]);
+  const [subCat, setSubCat] = useState([]);
+
   const initialState = {
     title: "",
+    name:"",
     description: [""],
-    category: "",
+    main_category: "",
+    sub_category: "",
     brand: "",
-    price: null,
-    stock: null,
+    price: 1,
+    stock: 1,
   };
 
   const [product, setProduct] = useState(initialState);
-
   const [files, setFiles] = useState([]);
   const [imgPreview, setImgPreview] = useState([]);
   const [loading, setLoading] = useState();
@@ -46,7 +52,12 @@ const AddProduct = () => {
 
   const handleCatChange = (e) => {
     const value = e.target.value;
-    product["category"] = value;
+    product["main_category"] = value;
+    setProduct({ ...product });
+  };
+  const handleSubCatChange = (e) => {
+    const value = e.target.value;
+    product["sub_category"] = value;
     setProduct({ ...product });
   };
 
@@ -80,6 +91,20 @@ const AddProduct = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchCat = async () => {
+      const mainCatres = await getMainCategories();
+      const subCatres = await getSubCategories();
+      if (mainCatres.data.statusCode === 200) {
+        setMainCat(mainCatres.data.data.mainCategories);
+      }
+      if (subCatres.data.statusCode === 200) {
+        setSubCat(subCatres.data.data.subCategories);
+      }
+    };
+    fetchCat();
+  }, []);
+
   const handleUpload = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -92,7 +117,7 @@ const AddProduct = () => {
     product["description"] = desc;
     const passTest =
       product.title !== "" &&
-      product.category !== "" &&
+      product.main_category !== "" &&
       product.brand !== "" &&
       product.price &&
       product.price > 0 &&
@@ -177,6 +202,25 @@ const AddProduct = () => {
                 //   }
               />
               <TextField
+                //error={errorFields.includes("email") ? true : false}
+                autoFocus
+                margin="normal"
+                required
+                fullWidth
+                id="name"
+                label="Product Generic Name e.g shirt,blazer,shoe etc"
+                value={product.name}
+                name="name"
+                autoComplete="off"
+                inputProps={{ maxLength: 100 }}
+                onChange={(e) => {
+                  onChangeHandler(e);
+                }}
+                //   helperText={
+                //     errorFields.includes("email") ? "Incorrect entry." : ""
+                //   }
+              />
+              <TextField
                 value={product.brand}
                 // error={errorFields.includes("password") ? true : false}
                 margin="normal"
@@ -229,27 +273,53 @@ const AddProduct = () => {
                 </Button>
               </Container>
               <Container
-                sx={{ width: "100%", display: "flex", alignItems: "center" }}
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: isTabletOrMobile ? "column" : "row",
+                }}
               >
                 <Container>
                   {/* <InputLabel id="demo-simple-select-label">Category</InputLabel> */}
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={product.category}
-                    defaultValue="select category"
-                    label="category"
+                  <TextField
+                    style={{ width: "100%" }}
+                    variant="outlined"
+                    value={product.main_category}
                     onChange={handleCatChange}
-                    sx={{ width: "100%" }}
+                    select
+                    label="main category"
                   >
-                    {catAvailable.map((item, id) => {
-                      return (
-                        <MenuItem key={id} value={item}>
-                          {item}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
+                    {mainCat.length > 0 &&
+                      mainCat.map((item, id) => {
+                        return (
+                          <MenuItem key={id} value={item.mainCategory}>
+                            {item.mainCategory}
+                          </MenuItem>
+                        );
+                      })}
+                  </TextField>
+                </Container>
+                <br />
+                <Container>
+                  {/* <InputLabel id="demo-simple-select-label">Category</InputLabel> */}
+                  <TextField
+                    style={{ width: "100%" }}
+                    variant="outlined"
+                    value={product.sub_category}
+                    onChange={handleSubCatChange}
+                    select
+                    label="sub-category"
+                  >
+                    {subCat.length > 0 &&
+                      subCat.map((item, id) => {
+                        return (
+                          <MenuItem key={id} value={item.subCategory}>
+                            {item.subCategory}
+                          </MenuItem>
+                        );
+                      })}
+                  </TextField>
                 </Container>
                 <Container>
                   <TextField
@@ -284,7 +354,7 @@ const AddProduct = () => {
                     label="stock available"
                     name="stock"
                     autoComplete="off"
-                    inputProps={{ maxLength: 10 }}
+                    //inputProps={{ maxLength: 10 }}
                     onChange={onChangeHandler}
                     //   helperText={
                     //     errorFields.includes("email") ? "Incorrect entry." : ""

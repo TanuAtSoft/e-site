@@ -94,6 +94,18 @@ function App() {
             name="dashboard"
             element={<Dashboard handleRefresh={handleRefresh} />}
           />
+           <Route
+            exact
+            path="/bestSeller"
+            name="dashboard"
+            element={<Dashboard handleRefresh={handleRefresh}/>}
+          />
+          <Route
+            exact
+            path="/topRated"
+            name="dashboard"
+            element={<Dashboard handleRefresh={handleRefresh}/>}
+          />
           <Route
             path="/details/:id"
             name="Register Page"

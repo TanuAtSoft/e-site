@@ -52,7 +52,7 @@ const SellerStock = () => {
           direction="column"
           //direction={!isTabletOrMobile ? "column" : "row"}
         >
-          <Grid item xs={12} md={2} style={{ borderRadius: "5px" }}>
+          <Grid item xs={12} md={1} style={{ borderRadius: "5px" }}>
             <Item
               style={{
                 lineHeight: "0.2",

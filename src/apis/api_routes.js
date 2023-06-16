@@ -11,6 +11,7 @@ export const API_ROUTES = {
     PRODUCTS:{
         GET_ALL: "products",
         GET_ONE: "product",
+        GET_TOP_RATED_PRODUCTS:"getTopRated",
         ADD_PRODUCT:"addProducts",
         GET_PRODUCT_BY_USER:"getProductByUser",
         DELETE_PRODUCT_BY_ID:"softDeleteProduct",
@@ -38,7 +39,8 @@ export const API_ROUTES = {
         SAVE_ORDER:"saveOrder",
         GET_SELLER_ORDER_INFO:"getOrderInfo",
         UPDATE_ORDER_INFO: "updateOrderStatus",
-        GET_BUYER_ORDER_INFO:"getBuyerOrderInfo"
+        GET_BUYER_ORDER_INFO:"getBuyerOrderInfo",
+        GET_MOST_SOLD_PRODUCTS:"bestSeller"
     },
     WISHLIST:{
         ADD_TO_WISHLISTBYID:"addWishlist",
@@ -54,5 +56,9 @@ export const API_ROUTES = {
     },
     RATINGS:{
         ADD_RATINGS:"reviewProduct"
+    },
+    CATEGORIES:{
+        GET_MAIN_CATEGORIES:"getMainCategory",
+        GET_SUB_CATEGORIES:"getSubCategory"
     }
 }

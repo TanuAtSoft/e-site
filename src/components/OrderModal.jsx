@@ -23,7 +23,7 @@ const style = {
 };
 const orderStatus = ["INPROCESS", "SHIPPED", "INTRANSIT", "DELIVERED"];
 
-const OrderModal = ({ open, handleClose, activeRow }) => {
+const OrderModal = ({ open, handleClose, activeRow, setRefresh }) => {
   const [status, setStatus] = useState();
   const [shippingCompany, setShippingCompany] = useState();
   const [trackingNumber, setTrackingNumber] = useState();
@@ -31,21 +31,39 @@ const OrderModal = ({ open, handleClose, activeRow }) => {
   const [shippingError, setShippingError] = useState();
   const [trackingError, setTrackingError] = useState();
   const [disable, setDisable] = useState(false);
+  const [currentStatus, setCurrentStatus] = useState(
+    activeRow?.orderedItems?.status
+  );
+  const [dropDowns, setDropDowns] = useState([]);
+  useEffect(() => {
+    const orderStatus1 = ["SHIPPED", "INTRANSIT", "DELIVERED"];
+    const orderStatus2 = ["INTRANSIT", "DELIVERED"];
+    const orderStatus3 = ["DELIVERED"];
+    if (activeRow?.orderedItems?.status === "ORDERED") {
+      setDropDowns(orderStatus);
+    }
+    if (activeRow?.orderedItems?.status === "INPROCESS") {
+      setDropDowns(orderStatus1);
+    }
+    if (activeRow?.orderedItems?.status === "SHIPPED") {
+      setDropDowns(orderStatus2);
+    }
+    if (activeRow?.orderedItems?.status === "INTRANSIT") {
+      setDropDowns(orderStatus3);
+    }
+    setCurrentStatus(activeRow?.orderedItems?.status);
+  console.log("activeRow?.orderedItems?.status",activeRow?.orderedItems?.status)
+  }, [activeRow?.orderedItems?.status, currentStatus]);
 
+  console.log("dropDows",dropDowns)
   useEffect(() => {
     if (activeRow) {
-      const trackingDetails = activeRow?.orderedItems?.shippingDetails;
-      if (trackingDetails && trackingDetails !== "") {
-        const trackingDetailsArr = trackingDetails.split("");
-        if (trackingDetailsArr && trackingDetailsArr.length > 0) {
-          setTrackingNumber(trackingDetailsArr[trackingDetails.length - 1]);
-          let temp = "";
-          for (let i = 0; i < trackingDetailsArr.length - 1; i++) {
-            temp = temp + trackingDetailsArr[i];
-          }
-          setShippingCompany(temp);
-          setDisable(true);
-        }
+      const shippingCompanyTemp = activeRow?.orderedItems?.shippingCompany;
+      const trackingNumberTemp = activeRow?.orderedItems?.trackingNumber;
+      setShippingCompany(shippingCompanyTemp);
+      setTrackingNumber(trackingNumberTemp);
+      if (shippingCompanyTemp && trackingNumberTemp) {
+        setDisable(true);
       }
     }
   }, [activeRow]);
@@ -68,22 +86,23 @@ const OrderModal = ({ open, handleClose, activeRow }) => {
 
   const updateOrderDetails = async () => {
     try {
-      if(!shippingError && !trackingError){
-      const shipping = shippingCompany +" "+ trackingNumber;
-      const payload = {
-        status: status,
-        orderObjectId: activeRow._id,
-        itemId: activeRow.orderedItems._id,
-        shippingDetails: shipping ? shipping : "",
-      };
-      const res = await updateOrderInfo(token, payload);
-      if (res.data.statusCode === 200) {
-        handleClose();
-        alert(res.data.statusMessage);
+      if (!shippingError && !trackingError) {
+        const payload = {
+          status: status,
+          orderObjectId: activeRow._id,
+          itemId: activeRow.orderedItems._id,
+          shippingCompany: shippingCompany,
+          trackingNumber: trackingNumber,
+        };
+        const res = await updateOrderInfo(token, payload);
+        if (res.data.statusCode === 200) {
+          alert(res.data.statusMessage);
+          handleClose();
+          setRefresh(true);
+        }
+      } else {
+        return;
       }
-    }else{
-      return
-    }
     } catch (e) {
       console.log("e", e);
     }
@@ -93,8 +112,7 @@ const OrderModal = ({ open, handleClose, activeRow }) => {
     if (!trackingNumber) setTrackingError("error");
     if (status === "INPROCESS") updateOrderDetails();
     if (status !== "INPROCESS") {
-      if(shippingCompany && trackingNumber)
-      updateOrderDetails();
+      if (shippingCompany && trackingNumber) updateOrderDetails();
     }
   };
 
@@ -107,6 +125,9 @@ const OrderModal = ({ open, handleClose, activeRow }) => {
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
+          <strong>Current Status: </strong> {currentStatus}
+        </Typography>
+        <Typography id="modal-modal-title" variant="h6" component="h2">
           Change the status of the order
         </Typography>
         <Select
@@ -118,7 +139,7 @@ const OrderModal = ({ open, handleClose, activeRow }) => {
           onChange={handleCatChange}
           sx={{ width: "100%" }}
         >
-          {orderStatus.map((item, id) => {
+          {dropDowns.map((item, id) => {
             return (
               <MenuItem key={id} value={item}>
                 {item}
@@ -126,7 +147,7 @@ const OrderModal = ({ open, handleClose, activeRow }) => {
             );
           })}
         </Select>
-        {orderStatus.includes(status) && !status.includes("INPROCESS") && (
+        {dropDowns.includes(status) && !status.includes("INPROCESS") && (
           <TextField
             disabled={disable}
             value={shippingCompany}
@@ -145,7 +166,7 @@ const OrderModal = ({ open, handleClose, activeRow }) => {
             }
           />
         )}
-        {orderStatus.includes(status) && !status.includes("INPROCESS") && (
+        {dropDowns.includes(status) && !status.includes("INPROCESS") && (
           <TextField
             disabled={disable}
             value={trackingNumber}

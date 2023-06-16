@@ -2,17 +2,19 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
-import {
-  Paper,
-  Grid,
-  Container,
-  Typography,
-} from "@mui/material";
+import { Paper, Grid, Container, Typography } from "@mui/material";
 import BasicCard from "../../components/BasicCard";
 import { getSingleProduct } from "../../apis/products/getSingleProduct";
 import Loader from "../../components/Loader";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarIcon from "@mui/icons-material/Star";
+import { Yard } from "@mui/icons-material";
 
-const ProductDetails = ({handleRefresh,fromWishlist,handleWsihlistCount}) => {
+const ProductDetails = ({
+  handleRefresh,
+  fromWishlist,
+  handleWsihlistCount,
+}) => {
   const [product, setProduct] = useState();
   const location = useLocation();
   const params = useParams();
@@ -26,7 +28,6 @@ const ProductDetails = ({handleRefresh,fromWishlist,handleWsihlistCount}) => {
     if (!location.state) {
       const fetchProducts = async () => {
         const res = await getSingleProduct(params.id);
-        console.log("res", res.data.data.product);
         setProduct(res?.data?.data?.product);
         setLoading(false);
       };
@@ -44,6 +45,31 @@ const ProductDetails = ({handleRefresh,fromWishlist,handleWsihlistCount}) => {
       </Paper>
     );
   }
+
+  const [rating, setRating] = useState();
+  let filledArr, unfilledArr;
+
+  useEffect(() => {
+    if (product) {
+      if (product.reviews.length > 0) {
+        const tempArr = product.reviews;
+        const sum = tempArr.reduce((a, b) => a + b, 0);
+        const avg = sum / tempArr.length || 0;
+        setRating(avg);
+      }
+    }
+  }, [product]);
+
+  function NewArray(size) {
+    var x = [];
+    for (var i = 0; i < size; ++i) {
+      x[i] = i;
+    }
+    return x;
+  }
+
+  filledArr = NewArray(rating);
+  unfilledArr = NewArray(5 - rating);
 
   return (
     <Fragment>
@@ -79,6 +105,30 @@ const ProductDetails = ({handleRefresh,fromWishlist,handleWsihlistCount}) => {
                 >
                   {product?.title}
                 </Typography>
+                <div className="rating-details-page-div">
+                  <div className="reviews" style={{ gap: "0px" }}>
+                    {filledArr &&
+                      filledArr.map((item) => {
+                        return (
+                          <div className="rating" key={item}>
+                            <StarIcon />
+                            {/* <p>Very Bad</p> */}
+                          </div>
+                        );
+                      })}
+                    {unfilledArr &&
+                      unfilledArr.map((item) => {
+                        return (
+                          <div className="rating" key={item}>
+                            <StarBorderIcon />
+                          </div>
+                        );
+                      })}
+                    {/* <p>Very Bad</p> */}
+                  </div>
+                  {product && rating && <p>({product.reviews.length})</p>}
+                </div>
+                {!rating  && <Typography>No Rating available</Typography>}
                 <Typography
                   gutterBottom
                   variant="h6"
@@ -117,7 +167,12 @@ const ProductDetails = ({handleRefresh,fromWishlist,handleWsihlistCount}) => {
               sx={{ maxHeight: "99vh" }}
               component="div"
             >
-              <BasicCard product={product} handleRefresh={handleRefresh} fromWishlist={fromWishlist} handleWsihlistCount={handleWsihlistCount}/>
+              <BasicCard
+                product={product}
+                handleRefresh={handleRefresh}
+                fromWishlist={fromWishlist}
+                handleWsihlistCount={handleWsihlistCount}
+              />
             </Grid>
           </Grid>
         </Container>

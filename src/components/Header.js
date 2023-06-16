@@ -402,7 +402,8 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
           { label: "Oders", link: "orders" },
         ]
       : [
-          { label: "Home", link: "" },
+          { label: "Best Seller", link: "bestSeller" },
+          { label: "Top Rated", link: "topRated" },
           // { label: "Add Product", link: "addProduct" },
           // { label: "Manage Products", link: "manageProducts" },
           // { label: "HeightLights", link: "heighlights" },

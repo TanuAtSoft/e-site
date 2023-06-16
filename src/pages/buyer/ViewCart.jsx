@@ -5,6 +5,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { addToCart } from "../../apis/carts/addToCart";
 import Loader from "../../components/Loader";
+import {generateRandomString} from "../../helpers/generateRandomString"
 import {
   Container,
   Grid,
@@ -34,7 +35,7 @@ const ViewCart = ({handleRefresh,handleCartCount}) => {
   const [total, setTotal] = useState()
   const [refetch, setRefetch] = useState(false)
   const [selectedAddress, setSelectedAddress] = useState()
-  const [isCod, setIsCod] = useState(false)
+  const [loading,setLoading] = useState(false)
   const handleAddressSelect = (address) => {
     const completeAddress = address.fullName+" "+address.mobileNumber+" "+address.houseNumber+" "+address.area+" "+ address.landmark+" "+address.city+" "+ address.state+" "+address.pincode
     setSelectedAddress(completeAddress)
@@ -153,29 +154,32 @@ const ViewCart = ({handleRefresh,handleCartCount}) => {
       order_id: data.id,
       handler: async (response) => {
         try {
+          setLoading(true)
           const res = await verifyPayment(token, response)
           const status = await res.data.statusCode
-          console.log("status", status)
           if (status === 200) {
             try{
             const payload = {
               orderId: res.data.data.orderId,
               deliveryAddress: selectedAddress,
-              isCod:isCod
+              isCod:false
             }
             const orderRes = await saveOrder(token, JSON.stringify(payload))
             if(orderRes.remote === "success"){
               alert(orderRes.data.statusMessage)
               setRefresh(!refresh)
               handleCartCount(0)
+              setLoading(false)
               handleRefresh()
             }
           }catch(e){
+            setLoading(false)
             console.log("oredr save e", e)
           }
 
           }
         } catch (error) {
+          setLoading(false)
           console.log(error);
         }
       },
@@ -205,6 +209,36 @@ const ViewCart = ({handleRefresh,handleCartCount}) => {
   }
   };
 
+ const handleCashOnDelivery = async()=>{
+  if(selectedAddress){
+    setLoading(true)
+    try {
+      const orderId = "order_"  + generateRandomString(14)
+      const payload = {
+        orderId: orderId,
+        deliveryAddress: selectedAddress,
+        isCod:true
+      }
+      const orderRes = await saveOrder(token, JSON.stringify(payload))
+      if(orderRes.remote === "success"){
+        alert(orderRes.data.statusMessage)
+        setRefresh(!refresh)
+        handleCartCount(0)
+        setLoading(false)
+        handleRefresh()
+      }
+    }catch (e) {
+      console.log("e", e)
+    }
+  }else{
+    if(address){
+      setOpenView(true)
+    }
+    else{
+      setOpenAdd(true)
+    }
+  }
+ }
   return (
     <Container
       maxWidth="lg"
@@ -369,12 +403,20 @@ const ViewCart = ({handleRefresh,handleCartCount}) => {
               >
                 Pay
               </Button>
+              <Button
+                variant="contained"
+                sx={{ width: "100% !important" }}
+                onClick={handleCashOnDelivery}
+              >
+                Cash On Delivery
+              </Button>
 
             </CardActions>
           </Card>
         </Grid>
       </Grid>}
       {!cartItems && <Container  maxWidth="lg"><Loader/></Container>}
+      {loading && <Container  maxWidth="lg"><Loader/></Container>}
       {cartItems && cartItems.length === 0 && <Container  maxWidth="lg">No Items available in the cart</Container>}
     </Container>
   );
