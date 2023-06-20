@@ -26,6 +26,10 @@ code {
   text-decoration: none;
   color: white;
 }
+.cat-link{
+  text-decoration: none;
+  color: #000000DE;
+}
 
 .cart-container{
   color: #fff;
@@ -213,4 +217,25 @@ code {
   align-items: center;
   justify-content: start;
   gap: 10px;
+}
+.suggestions {
+  position: absolute;
+  background-color: #1976d2;
+  color: #fff;
+  top: 23px;
+  z-index: 9;
+  left: 29px;
+}
+.css-1h51icj-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-endAdornment {
+  right: 9px;
+  visibility: hidden;
+}
+button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.MuiAutocomplete-clearIndicator.css-1glvl0p-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-clearIndicator {
+  visibility: hidden;
+}
+button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.MuiAutocomplete-popupIndicator.css-qzbt6i-MuiButtonBase-root-MuiIconButton-root-MuiAutocomplete-popupIndicator {
+  visibility: hidden;
+}
+.MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input {
+  padding: 0.5px 4px 0.5px 5px;
 }

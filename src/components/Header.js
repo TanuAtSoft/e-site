@@ -1,321 +1,4 @@
-// import React from "react";
-// import { useState, useEffect, useMemo } from "react";
-// import AppBar from "@mui/material/AppBar";
-// import Box from "@mui/material/Box";
-// import Toolbar from "@mui/material/Toolbar";
-// import IconButton from "@mui/material/IconButton";
-// import Typography from "@mui/material/Typography";
-// import Menu from "@mui/material/Menu";
-// import MenuIcon from "@mui/icons-material/Menu";
-// import Container from "@mui/material/Container";
-// import Avatar from "@mui/material/Avatar";
-// import Button from "@mui/material/Button";
-// import Tooltip from "@mui/material/Tooltip";
-// import MenuItem from "@mui/material/MenuItem";
-// import AdbIcon from "@mui/icons-material/Adb";
-// import { Link, useLocation, useNavigate } from "react-router-dom";
-// import CartWithNotif from "./CartWithNotif";
-// import SearchIcon from '@mui/icons-material/Search';
-// import { styled, alpha } from '@mui/material/styles';
-// import InputBase from '@mui/material/InputBase';
-
-// const Search = styled('div')(({ theme }) => ({
-//   position: 'relative',
-//   borderRadius: theme.shape.borderRadius,
-//   backgroundColor: alpha(theme.palette.common.white, 0.15),
-//   '&:hover': {
-//     backgroundColor: alpha(theme.palette.common.white, 0.25),
-//   },
-//   marginRight: theme.spacing(2),
-//   marginLeft: 0,
-//   width: '100%',
-//   [theme.breakpoints.up('sm')]: {
-//     marginLeft: theme.spacing(3),
-//     width: 'auto',
-//   },
-// }));
-
-// const SearchIconWrapper = styled('div')(({ theme }) => ({
-//   padding: theme.spacing(0, 2),
-//   height: '100%',
-//   position: 'absolute',
-//   pointerEvents: 'none',
-//   display: 'flex',
-//   alignItems: 'center',
-//   justifyContent: 'center',
-// }));
-
-// const StyledInputBase = styled(InputBase)(({ theme }) => ({
-//   color: 'inherit',
-//   '& .MuiInputBase-input': {
-//     padding: theme.spacing(1, 1, 1, 0),
-//     // vertical padding + font size from searchIcon
-//     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-//     transition: theme.transitions.create('width'),
-//     width: '100%',
-//     [theme.breakpoints.up('md')]: {
-//       width: '20ch',
-//     },
-//   },
-// }));
-
-// const pages = ["Products", "Pricing", "Blog"];
-// const sellerPages = [{ label: "Add Products", path: "/addProduct" }];
-// const LogoutSettings = ["Profile", "Account", "Orders", "Logout"];
-// const LoginSettings = [{ label: "SignIn", link: "/login" }];
-// const SignUpSettings = [{ label: "SignUp", link: "/register" }];
-
-// const Header = () => {
-//   const [anchorElNav, setAnchorElNav] = React.useState(null);
-//   const [anchorElUser, setAnchorElUser] = React.useState(null);
-//   const [loggedIn, setLoggedIn] = useState(false);
-//   const location = useLocation();
-//   const navigate = useNavigate();
-//   const localStorageRole = localStorage.getItem("role");
-//   const role = useMemo(() => {
-//     return localStorage.getItem("role");
-//   }, [localStorageRole]);
-
-//   const token = localStorage.getItem("token");
-//   const user = localStorage.getItem("user");
-
-//   useEffect(() => {
-//     if (token) {
-//       setLoggedIn(true);
-//     }
-//   }, [token]);
-
-//   const handleOpenNavMenu = (event) => {
-//     setAnchorElNav(event.currentTarget);
-//   };
-//   const handleOpenUserMenu = (event) => {
-//     setAnchorElUser(event.currentTarget);
-//   };
-
-//   const handleCloseNavMenu = () => {
-//     setAnchorElNav(null);
-//   };
-
-//   const handleCloseUserMenu = () => {
-//     setAnchorElUser(null);
-//   };
-//   const handleChange = (setting) => {
-//     // console.log("setting", setting);
-//     if (setting === "Logout") {
-//       localStorage.removeItem("token");
-//       localStorage.removeItem("user");
-//       localStorage.removeItem("role");
-//       localStorage.removeItem("cart");
-//       setLoggedIn(false);
-//       navigate("/loggedOut");
-//     }
-//     if(setting === "Orders"){
-//       navigate("/orders")
-//     }
-//   };
-//   return (
-//     <AppBar position="static">
-//       <Container maxWidth="xl">
-//         <Toolbar disableGutters>
-//          <img src="./logo192.png" alt="logo" style={{maxWidth:"112px",cursor:"pointer"}} onClick={()=>{navigate("/")}}/>
-
-//           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-//             <IconButton
-//               size="large"
-//               aria-label="account of current user"
-//               aria-controls="menu-appbar"
-//               aria-haspopup="true"
-//               onClick={handleOpenNavMenu}
-//               color="inherit"
-//             >
-//               <MenuIcon />
-//             </IconButton>
-
-//             <Menu
-//               id="menu-appbar"
-//               anchorEl={anchorElNav}
-//               anchorOrigin={{
-//                 vertical: "bottom",
-//                 horizontal: "left",
-//               }}
-//               keepMounted
-//               transformOrigin={{
-//                 vertical: "top",
-//                 horizontal: "left",
-//               }}
-//               open={Boolean(anchorElNav)}
-//               onClose={handleCloseNavMenu}
-//               sx={{
-//                 display: { xs: "block", md: "none" },
-//               }}
-//             >
-//               {role !== "SELLER" &&
-//                 pages.map((page) => (
-//                   <MenuItem key={page} onClick={handleCloseNavMenu}>
-//                     <Typography textAlign="center">{page}</Typography>
-//                   </MenuItem>
-//                 ))}
-//               {role === "SELLER" &&
-//                 sellerPages.map((page) => (
-//                   <MenuItem key={page} onClick={handleCloseNavMenu}>
-//                     <Typography textAlign="center">
-//                       <Link to={page.path} className="link">
-//                         {page.label}
-//                       </Link>
-//                     </Typography>
-//                   </MenuItem>
-//                 ))}
-//               {location.pathname === "/register" &&
-//                 !loggedIn &&
-//                 LoginSettings.map((page) => (
-//                   <MenuItem key={page.label} onClick={handleCloseNavMenu}>
-//                     <Typography textAlign="center">
-//                       <Link to={page.link} className="link">
-//                         {page.label}
-//                       </Link>
-//                     </Typography>
-//                   </MenuItem>
-//                 ))}
-//               {location.pathname === "/login" &&
-//                 SignUpSettings.map((page) => (
-//                   <MenuItem key={page.label} onClick={handleCloseNavMenu}>
-//                     <Typography textAlign="center">
-//                       <Link to={page.link} className="link">
-//                         {page.label}
-//                       </Link>
-//                     </Typography>
-//                   </MenuItem>
-//                 ))}
-//             </Menu>
-//             <MenuItem onClick={() => {}}>
-//               <Typography textAlign="center" component="div">
-//                 <CartWithNotif />
-//               </Typography>
-//             </MenuItem>
-//           </Box>
-//           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-//           <Typography
-//             variant="h5"
-//             noWrap
-//             component="a"
-//             href=""
-//             sx={{
-//               mr: 2,
-//               display: { xs: "flex", md: "none" },
-//               flexGrow: 1,
-//               fontFamily: "monospace",
-//               fontWeight: 700,
-//               letterSpacing: ".3rem",
-//               color: "inherit",
-//               textDecoration: "none",
-//             }}
-//           >
-//             LOGO
-//           </Typography>
-//           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-//             {role !== "SELLER" &&
-//               pages.map((page) => (
-//                 <Button
-//                   key={page}
-//                   onClick={handleCloseNavMenu}
-//                   sx={{ my: 2, color: "white", display: "block" }}
-//                 >
-//                   {page}
-//                 </Button>
-//               ))}
-//             {role === "SELLER" &&
-//               sellerPages.map((page) => (
-//                 <Button
-//                   key={page}
-//                   onClick={handleCloseNavMenu}
-//                   sx={{ my: 2, color: "white", display: "block" }}
-//                 >
-//                   <Link to={page.path} className="link">
-//                     {" "}
-//                     {page.label}
-//                   </Link>
-//                 </Button>
-//               ))}
-//           </Box>
-
-//           <Box
-//             sx={{
-//               flexGrow: 1,
-//               display: { xs: "none", md: "flex", flexDirection: "row-reverse" },
-//             }}
-//           >
-//             <MenuItem onClick={() => {}}>
-//               <Typography textAlign="center" component="div">
-//                 <CartWithNotif />
-//               </Typography>
-//             </MenuItem>
-//             {(location.pathname === "/register" || location.pathname === "/") &&
-//               !loggedIn &&
-//               LoginSettings.map((page) => (
-//                 <MenuItem key={page.label} onClick={handleCloseNavMenu}>
-//                   <Typography textAlign="center">
-//                     <Link to={page.link}>{page.label}</Link>
-//                   </Typography>
-//                 </MenuItem>
-//               ))}
-//             {location.pathname === "/login" &&
-//               SignUpSettings.map((page) => (
-//                 <MenuItem key={page.label} onClick={handleCloseNavMenu}>
-//                   <Typography textAlign="center">
-//                     <Link to={page.link}>{page.label}</Link>
-//                   </Typography>
-//                 </MenuItem>
-//               ))}
-//           </Box>
-
-//           {loggedIn && (
-//             <Box sx={{ flexGrow: 0 }}>
-//               <Tooltip title="Open settings">
-//                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-//                   <Avatar
-//                     alt={user ? user.split("")[1] : "G"}
-//                     src="/static/images/avatar/2.jpg"
-//                   />
-//                 </IconButton>
-//               </Tooltip>
-//               <Menu
-//                 sx={{ mt: "45px" }}
-//                 id="menu-appbar"
-//                 anchorEl={anchorElUser}
-//                 anchorOrigin={{
-//                   vertical: "top",
-//                   horizontal: "right",
-//                 }}
-//                 keepMounted
-//                 transformOrigin={{
-//                   vertical: "top",
-//                   horizontal: "right",
-//                 }}
-//                 open={Boolean(anchorElUser)}
-//                 onClose={handleCloseUserMenu}
-//               >
-//                 {loggedIn &&
-//                   LogoutSettings.map((setting) => (
-//                     <MenuItem key={setting} onClick={handleCloseUserMenu}>
-//                       <Typography
-//                         textAlign="center"
-//                         onClick={() => handleChange(setting)}
-//                       >
-//                         {setting}
-//                       </Typography>
-//                     </MenuItem>
-//                   ))}
-//               </Menu>
-//             </Box>
-//           )}
-//         </Toolbar>
-//       </Container>
-//     </AppBar>
-//   );
-// };
-// export default Header;
-
-import { Fragment, useState } from "react";
+import { useState, Fragment, useRef } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -330,7 +13,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, createSearchParams, useNavigate } from "react-router-dom";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Divider from "@mui/material/Divider";
@@ -340,6 +23,10 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import { useMediaQuery } from "react-responsive";
+import { getSearchAutoComplete } from "../apis/products/getSearchAutoComplete";
+import Stack from "@mui/material/Stack";
+import Autocomplete from "@mui/material/Autocomplete";
+import { TextField } from "@mui/material";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -356,20 +43,31 @@ const Search = styled("div")(({ theme }) => ({
     width: "auto",
   },
 }));
+const useStyles = {
+  dropdown: {
+    "&.MuiAutocomplete-root .MuiAutocomplete-inputRoot": {
+      padding: "0px !important",
+      fontSize: "14px",
+      color: "#1E5EF3",
+      fontWeight: 500
+    }
+  }
+};
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: "100%",
   position: "absolute",
-  pointerEvents: "none",
+  // pointerEvents: "none",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   top: "0px",
+  zIndex: "9999",
   right: "0px",
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+const StyledInputBase = styled(TextField)(({ theme }) => ({
   color: "inherit",
   "& .MuiInputBase-input": {
     padding: theme.spacing(1, 1, 1, 0),
@@ -392,7 +90,10 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const [searchedText, setSearchedText] = useState("");
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const [suggestions, setSuggestions] = useState([{name:""}]);
+  const inputRef = useRef("inputRef")
   const navItems =
     role === "SELLER"
       ? [
@@ -408,6 +109,15 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
           // { label: "Manage Products", link: "manageProducts" },
           // { label: "HeightLights", link: "heighlights" },
         ];
+  const categoryNavlinks = [
+    { label: "Men's Fashion", link: "men's clothing" },
+    { label: "Women's Fashion", link: "women's clothing" },
+    { label: "Girl's Fashion", link: "girl's clothing" },
+    { label: "Boy's Fashion", link: "boy's clothing" },
+    { label: "Electronics", link: "electronics" },
+    { label: "Baby's Fashion", link: "baby's clothing" },
+    { label: "Toys", link: "toys" },
+  ];
   const handleProfileMenuOpen = (event) => {
     if (token) {
       setAnchorEl(event.currentTarget);
@@ -416,7 +126,13 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       navigate("/login");
     }
   };
-
+  const handleSearchChange = async(e) => {
+    const res = await getSearchAutoComplete(e.target.value)
+    if(res.data.statusCode === 200){
+      setSuggestions(res.data.data)
+    }
+     setSearchedText(e.target.value);
+  };
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -428,6 +144,11 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+  const handleClick = (e) => {
+    setSuggestions([]);
+    // setValue(e.target.innerText);
+    // setSuggestionsActive(false);
   };
 
   const handleCartClick = () => {
@@ -493,6 +214,8 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       </MenuItem>
     </Menu>
   );
+
+  console.log("suggestions",suggestions)
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -571,10 +294,17 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
         <img src="./drawerlogo.png" alt="logo" style={{ maxWidth: "112px" }} />
       </MenuItem>
       <Divider />
+
+      {role !== "SELLER" && (
+        <Typography variant="h6" disablePadding>
+          Trending
+        </Typography>
+      )}
+
       <List>
-        {navItems.map((item) => (
+        {navItems.map((item, id) => (
           <ListItem
-            key={item}
+            key={id}
             disablePadding
             onClick={() => handleSideNavLinks(item.link)}
           >
@@ -584,8 +314,41 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
           </ListItem>
         ))}
       </List>
+      <Divider />
+      <br />
+      {role !== "SELLER" && (
+        <Typography variant="h6" disablePadding>
+          Shop By Category
+        </Typography>
+      )}
+
+      {role !== "SELLER" && (
+        <List>
+          {categoryNavlinks.map((item, id) => (
+            <Link
+              key={id}
+              className="cat-link"
+              to={{
+                pathname: "/category",
+                search: `?category=${item.link}`,
+              }}
+            >
+              <ListItem
+                key={item}
+                // disablePadding
+                // onClick={() => handleSideNavCatLinks(item.link)}
+              >
+                <ListItemButton sx={{ textAlign: "center" }}>
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
+        </List>
+      )}
     </Box>
   );
+  console.log("seracg e dTex", searchedText)
 
   return (
     <Box sx={{ flexGrow: 1, maxWidth: "1400px", margin: "auto" }}>
@@ -626,15 +389,73 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
             </IconButton>
           )}
           {role !== "SELLER" && (
-            <Search>
-              <StyledInputBase
+            <Stack spacing={1} sx={{ width: 300 }}>
+              <Search>
+                <Autocomplete
+                  onChange={(e,v)=> setSearchedText(v)}
+                   id="custom-input-demo"
+                   className={useStyles}
+                  options={suggestions.map((option) => option.name)}
+                  renderInput={(params) => (
+                    <div ref={params.InputProps.ref}>
+                    <TextField
+                    ref={inputRef}
+                      {...params}
+                      // label="Search"
+                      InputProps={{
+                        ...params.InputProps,
+                        type: "search",
+                      }}
+                      onChange={(e) => handleSearchChange(e)}
+                    />
+                     </div>
+                  )}
+                
+                />
+                
+                {/* <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
-              />
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-            </Search>
+                onChange={(e) => handleSearchChange(e)}
+              /> */}
+
+                <SearchIconWrapper
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log("inputRef",searchedText)
+                    navigate({
+                      pathname: "/",
+                      search: createSearchParams({
+                        search: searchedText,
+                      }).toString(),
+                    });
+                  }}
+                >
+                  {/* <Link
+                  className="link"
+                  to={{
+                    pathname: "/",
+                    search: `?search=${searchedText}`,
+                  }}
+                > */}
+                  <SearchIcon
+                    onClick={() => {
+                      console.log("clicked");
+                      // navigate({
+                      //   pathname: "/",
+                      //   search: createSearchParams({
+                      //     search: searchedText,
+                      //   }).toString(),
+                      // });
+                    }}
+                  />
+                  {/* </Link> */}
+                </SearchIconWrapper>
+              </Search>
+              {/* <div className="suggestions">
+             {suggestionsActive && <Suggestions />}
+             </div> */}
+            </Stack>
           )}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>

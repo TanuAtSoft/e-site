@@ -23,6 +23,7 @@ const Orders = React.lazy(() => import("./pages/buyer/Orders"));
 const WishlistPage = React.lazy(() => import("./pages/buyer/Wishlist"));
 const ManageProducts = React.lazy(()=> import("./pages/seller/ManageProducts"))
 const SellerOrders = React.lazy(()=> import("./pages/seller/SellerOrders"))
+const CategoryPage = React.lazy(()=> import("./pages/common/CategoryPage"))
 
 const loading = (
   <div className="pt-3 text-center">
@@ -61,6 +62,7 @@ function App() {
       fetchNumbers();
     }
   }, [token, refresh]);
+
   return (
     <Router>
       <Header
@@ -106,9 +108,15 @@ function App() {
             name="dashboard"
             element={<Dashboard handleRefresh={handleRefresh}/>}
           />
+           <Route
+            exact
+            path="/category"
+            name="category"
+            element={<CategoryPage />}
+          />
           <Route
             path="/details/:id"
-            name="Register Page"
+            name="Details Page"
             element={
               <ProductDetails
                 handleRefresh={handleRefresh}
