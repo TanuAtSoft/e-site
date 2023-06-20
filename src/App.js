@@ -24,6 +24,7 @@ const WishlistPage = React.lazy(() => import("./pages/buyer/Wishlist"));
 const ManageProducts = React.lazy(()=> import("./pages/seller/ManageProducts"))
 const SellerOrders = React.lazy(()=> import("./pages/seller/SellerOrders"))
 const CategoryPage = React.lazy(()=> import("./pages/common/CategoryPage"))
+const Profilepage = React.lazy(()=>import("./pages/bothRoles/ProfilePage"))
 
 const loading = (
   <div className="pt-3 text-center">
@@ -167,6 +168,15 @@ function App() {
               </PrivateRoute>
             }
           /> */}
+          <Route
+            path="/profile"
+            name="profile"
+            element={
+              <PrivateRoute>
+                <Profilepage />
+              </PrivateRoute>
+            }
+          />
           <Route
             path="/addProduct"
             name="add product"

@@ -24,6 +24,7 @@ import AddAddressModal from "../../components/AddAddressModal";
 import { createPayment } from "../../apis/payment/createPayment";
 import { verifyPayment } from "../../apis/payment/verifyPayment";
 import { saveOrder } from "../../apis/orders/saveOrder";
+import OderConfirmationModal from "../../components/OderConfirmationModal"
 
 const ViewCart = ({handleRefresh,handleCartCount}) => {
   const token = JSON.parse(localStorage.getItem("token"));
@@ -31,6 +32,7 @@ const ViewCart = ({handleRefresh,handleCartCount}) => {
   const [refresh, setRefresh] = useState(false);
   const [address, setAddress] = useState();
   const [openView, setOpenView] = useState(false);
+  const [open,setOpen] = useState(false)
   const [openAdd, setOpenAdd] = useState(false);
   const [total, setTotal] = useState()
   const [refetch, setRefetch] = useState(false)
@@ -155,6 +157,7 @@ const ViewCart = ({handleRefresh,handleCartCount}) => {
       handler: async (response) => {
         try {
           setLoading(true)
+          setOpen(true)
           const res = await verifyPayment(token, response)
           const status = await res.data.statusCode
           if (status === 200) {
@@ -171,10 +174,12 @@ const ViewCart = ({handleRefresh,handleCartCount}) => {
               handleCartCount(0)
               setLoading(false)
               handleRefresh()
+              setOpen(false)
             }
           }catch(e){
             setLoading(false)
             console.log("oredr save e", e)
+            setOpen(false)
           }
 
           }
@@ -418,6 +423,8 @@ const ViewCart = ({handleRefresh,handleCartCount}) => {
       {!cartItems && <Container  maxWidth="lg"><Loader/></Container>}
       {loading && <Container  maxWidth="lg"><Loader/></Container>}
       {cartItems && cartItems.length === 0 && <Container  maxWidth="lg">No Items available in the cart</Container>}
+      <Container  maxWidth="lg"><OderConfirmationModal open={open}/></Container>
+      
     </Container>
   );
 };

@@ -141,6 +141,9 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
+  const handleProfileClick =() =>{
+    navigate("/profile")
+  }
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -193,7 +196,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={()=>{handleMenuClose();handleProfileClick()}}>Profile</MenuItem>
       {role === "BUYER" && (
         <MenuItem
           onClick={() => {
@@ -214,8 +217,6 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       </MenuItem>
     </Menu>
   );
-
-  console.log("suggestions",suggestions)
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -348,7 +349,6 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       )}
     </Box>
   );
-  console.log("seracg e dTex", searchedText)
 
   return (
     <Box sx={{ flexGrow: 1, maxWidth: "1400px", margin: "auto" }}>
@@ -422,7 +422,6 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
                 <SearchIconWrapper
                   onClick={(e) => {
                     e.preventDefault();
-                    console.log("inputRef",searchedText)
                     navigate({
                       pathname: "/",
                       search: createSearchParams({
@@ -440,7 +439,6 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
                 > */}
                   <SearchIcon
                     onClick={() => {
-                      console.log("clicked");
                       // navigate({
                       //   pathname: "/",
                       //   search: createSearchParams({

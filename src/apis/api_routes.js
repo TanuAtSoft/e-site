@@ -8,6 +8,9 @@ export const API_ROUTES = {
         // FORGOT_PASS:'forgotPassword',
         // RESET_PASS:'resetPassword'
     },
+    PROFILE:{
+        RESET_PASSWORD: "resetPassword"
+    },
     PRODUCTS:{
         GET_ALL: "products",
         GET_ONE: "product",
