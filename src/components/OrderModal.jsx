@@ -55,7 +55,6 @@ const OrderModal = ({ open, handleClose, activeRow, setRefresh }) => {
   console.log("activeRow?.orderedItems?.status",activeRow?.orderedItems?.status)
   }, [activeRow?.orderedItems?.status, currentStatus]);
 
-  console.log("dropDows",dropDowns)
   useEffect(() => {
     if (activeRow) {
       const shippingCompanyTemp = activeRow?.orderedItems?.shippingCompany;
@@ -91,6 +90,7 @@ const OrderModal = ({ open, handleClose, activeRow, setRefresh }) => {
           status: status,
           orderObjectId: activeRow._id,
           itemId: activeRow.orderedItems._id,
+          productId: activeRow.orderedItems.productId,
           shippingCompany: shippingCompany,
           trackingNumber: trackingNumber,
         };

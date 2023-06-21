@@ -30,11 +30,13 @@ const BuyerOrderedCard = ({
       navigate("/cart");
     }
   };
+  console.log("itemId",product)
 
   const handleRating = async (rate) => {
     const data = {
       orderObjectId: orderObjectId,
       itemId: product._id,
+      productId: product.productId,
       rating: rate,
     };
     const res = await addRatings(token, JSON.stringify(data));

@@ -88,6 +88,20 @@ export default function Table({ orderedItems, handleRefetch }) {
       },
     },
     {
+      field: "shipping details",
+      headerName: "Shipping Details",
+      description: "This column has a value getter and is not sortable.",
+      sortable: false,
+      width: 160,
+      valueGetter: (params) => {
+        if(params.row.orderedItems.shippingCompany){
+        return `${params.row.orderedItems.shippingCompany} ${params.row.orderedItems.trackingNumber}`;
+        }
+        else return "NA"
+      },
+    },
+
+    {
       field: "action",
       headerName: "Actions",
       description: "This column has a value getter and is not sortable.",
@@ -95,6 +109,10 @@ export default function Table({ orderedItems, handleRefetch }) {
       width: 70,
       renderCell: (params) => (
         <div
+          style={{
+            visibility:
+              params.row.orderedItems.status === "DELIVERED" ? "hidden" : "",
+          }}
           onClick={() => {
             setActiveRow(params.row);
             setOpen(true);
