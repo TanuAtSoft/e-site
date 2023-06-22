@@ -177,7 +177,7 @@ const SignIn = ({handleCartCount,handleWsihlistCount}) => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link to="/forgot-password" variant="body2">
+                <Link to="/forgotPassword" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>

@@ -1,11 +1,10 @@
-import { useState, Fragment, useRef } from "react";
+import { useState, useRef } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
@@ -105,6 +104,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       : [
           { label: "Best Seller", link: "bestSeller" },
           { label: "Top Rated", link: "topRated" },
+          { label: "Best Deals", link: "bestDeals" }
           // { label: "Add Product", link: "addProduct" },
           // { label: "Manage Products", link: "manageProducts" },
           // { label: "HeightLights", link: "heighlights" },
@@ -147,11 +147,6 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
-  };
-  const handleClick = (e) => {
-    setSuggestions([]);
-    // setValue(e.target.innerText);
-    // setSuggestionsActive(false);
   };
 
   const handleCartClick = () => {
@@ -305,8 +300,8 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       <List>
         {navItems.map((item, id) => (
           <ListItem
+          disablePadding
             key={id}
-            disablePadding
             onClick={() => handleSideNavLinks(item.link)}
           >
             <ListItemButton sx={{ textAlign: "center" }}>
@@ -336,6 +331,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
             >
               <ListItem
                 key={item}
+                disablePadding
                 // disablePadding
                 // onClick={() => handleSideNavCatLinks(item.link)}
               >
@@ -397,7 +393,6 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
                    className={useStyles}
                   options={suggestions.map((option) => option.name)}
                   renderInput={(params) => (
-                    <div ref={params.InputProps.ref}>
                     <TextField
                     ref={inputRef}
                       {...params}
@@ -408,7 +403,6 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
                       }}
                       onChange={(e) => handleSearchChange(e)}
                     />
-                     </div>
                   )}
                 
                 />

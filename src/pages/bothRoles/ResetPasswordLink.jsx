@@ -1,20 +1,18 @@
-import React, { Component } from "react";
+import React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-// import Link from '@mui/material/Link';
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import {forgotPassword} from "../../apis/profiles/forgotPassword"
+import { Link} from "react-router-dom";
+import { resetPasswordRequest } from "../../apis/profiles/resetPasswordRequest";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -36,37 +34,58 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-const ForgotPassword = () => {
-  const [user, setUser] = useState({ email: "" });
-  const [error, setError] = useState(false);
-  const [success,setSuccess] = useState(false)
+const ResetPasswordLink = () => {
+  const [user, setUser] = useState({ password: "", confirmPassword: "" });
+  const [perror, setPError] = useState(false);
+  const [cperror, setCPError] = useState(false);
+  const params =  useParams()
+  const navigate = useNavigate()
   const onChangeHandler = (e) => {
     e.preventDefault();
-    setError(false)
     const name = e.target.name;
+    if (name === "password") {
+      setPError(false);
+    }
+    if (name === "confirmPassword") {
+      setCPError(false);
+    }
     const value = e.target.value;
     user[name] = value;
     setUser({ ...user });
   };
-  const handleSubmit = async(event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const emailRegex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
-    if (user.email === "" || !user.email.match(emailRegex)) {
-      setError(true);
+    if (user.password === "") {
+      setPError(true);
     }
-    else{
-      const res = await forgotPassword({email: user.email})
-      if(res.data.statusCode ===  200){
-        alert(res.data.statusMessage)
-        setSuccess(true)
+    if (user.password === "") {
+      setCPError(true);
+    }
+
+    if (user.password === "" || user.confirmPassword === "") {
+      return;
+    }
+    if (user.password !== user.confirmPassword) {
+      alert("Password and Conform Password doesn't match");
+      return;
+    } else {
+      const res = await resetPasswordRequest(params.token,{ newPassword: user.password });
+     
+      if (res.data?.statusCode  === 200) {
+        alert(res.data.statusMessage);
+        navigate("/login")
+      }
+      if(res.remote === "failure"){
+        alert(res.errors.errors)
       }
     }
   };
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-       { !success && <Box
+        <Box
           sx={{
             marginTop: 8,
             display: "flex",
@@ -78,10 +97,7 @@ const ForgotPassword = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Forgot Password
-          </Typography>
-          <Typography variant="body">
-            Kindly enter your registered email'id
+            Reset Password
           </Typography>
           <Box
             component="form"
@@ -91,16 +107,29 @@ const ForgotPassword = () => {
           >
             <TextField
               margin="normal"
-              error={error}
+              error={perror}
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
+              id="password"
+              label="Password"
+              name="password"
               autoComplete="off"
               autoFocus
               onChange={onChangeHandler}
-              helperText={error ? "Enter Valid email" : ""}
+              helperText={perror ? "Invalid Entry" : ""}
+            />
+            <TextField
+              margin="normal"
+              error={cperror}
+              required
+              fullWidth
+              id="confirmPassword"
+              label="confirmPassword"
+              name="confirmPassword"
+              autoComplete="off"
+              autoFocus
+              onChange={onChangeHandler}
+              helperText={cperror ? "Invalid Entry" : ""}
             />
             <Button
               type="button"
@@ -109,35 +138,13 @@ const ForgotPassword = () => {
               sx={{ mt: 3, mb: 2 }}
               onClick={handleSubmit}
             >
-              Send Password
+              Reset Password
             </Button>
-            <Grid container>
-              <Grid item>
-                <Link to="/register" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
-        </Box>}
-        {success && <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            height:"45vh",
-            textAlign: "center"
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            Kindly check your email to reset your password
-          </Typography>
-          
-        </Box>}
+        </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );
 };
-export default ForgotPassword;
+export default ResetPasswordLink;

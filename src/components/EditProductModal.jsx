@@ -413,6 +413,26 @@ const EditProductModal = ({
                         />
                       </Container>
                       <Container>
+                  <TextField
+                    value={product.discount}
+                    type="number"
+                    InputProps={{ inputProps: { min: 0, max: 100 } }}
+                    //error={errorFields.includes("email") ? true : false}
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="discount"
+                    label="Discount in %"
+                    name="discount"
+                    autoComplete="off"
+                    inputProps={{ maxLength: 10 }}
+                    onChange={onChangeHandler}
+                    //   helperText={
+                    //     errorFields.includes("email") ? "Incorrect entry." : ""
+                    //   }
+                  />
+                </Container>
+                      <Container>
                         <TextField
                           type="number"
                           value={product.stock}
@@ -507,7 +527,7 @@ const EditProductModal = ({
                       sx={{ mt: 3, mb: 2 }}
                       onClick={(e) => handleUpload(e)}
                     >
-                      Add Product
+                      Edit Product
                     </Button>
                     <Button
                       type="submit"

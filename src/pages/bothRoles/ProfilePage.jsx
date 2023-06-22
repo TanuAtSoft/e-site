@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
-import { resetPassword } from "../../apis/profiles/resestPassword";
+import { resetPassword } from "../../apis/profiles/resetPassword";
 
 const theme = createTheme();
 

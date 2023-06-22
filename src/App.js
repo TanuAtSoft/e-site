@@ -21,10 +21,16 @@ const LoggedOut = React.lazy(() => import("./pages/common/LoggedOut"));
 const ViewCart = React.lazy(() => import("./pages/buyer/ViewCart"));
 const Orders = React.lazy(() => import("./pages/buyer/Orders"));
 const WishlistPage = React.lazy(() => import("./pages/buyer/Wishlist"));
-const ManageProducts = React.lazy(()=> import("./pages/seller/ManageProducts"))
-const SellerOrders = React.lazy(()=> import("./pages/seller/SellerOrders"))
-const CategoryPage = React.lazy(()=> import("./pages/common/CategoryPage"))
-const Profilepage = React.lazy(()=>import("./pages/bothRoles/ProfilePage"))
+const ManageProducts = React.lazy(() =>
+  import("./pages/seller/ManageProducts")
+);
+const SellerOrders = React.lazy(() => import("./pages/seller/SellerOrders"));
+const CategoryPage = React.lazy(() => import("./pages/common/CategoryPage"));
+const Profilepage = React.lazy(() => import("./pages/bothRoles/ProfilePage"));
+const BestDealsPage = React.lazy(() => import("./pages/common/BestDealsPage"));
+const ResetPasswordLink = React.lazy(() =>
+  import("./pages/bothRoles/ResetPasswordLink")
+);
 
 const loading = (
   <div className="pt-3 text-center">
@@ -97,19 +103,25 @@ function App() {
             name="dashboard"
             element={<Dashboard handleRefresh={handleRefresh} />}
           />
-           <Route
+          <Route
+            exact
+            path="/bestDeals"
+            name="bestDeals"
+            element={<BestDealsPage />}
+          />
+          <Route
             exact
             path="/bestSeller"
             name="dashboard"
-            element={<Dashboard handleRefresh={handleRefresh}/>}
+            element={<Dashboard handleRefresh={handleRefresh} />}
           />
           <Route
             exact
             path="/topRated"
             name="dashboard"
-            element={<Dashboard handleRefresh={handleRefresh}/>}
+            element={<Dashboard handleRefresh={handleRefresh} />}
           />
-           <Route
+          <Route
             exact
             path="/category"
             name="category"
@@ -127,9 +139,15 @@ function App() {
           />
           <Route
             exact
-            path="/forgot-password"
+            path="/forgotPassword"
             name="Register Page"
             element={<ForgotPassword />}
+          />
+          <Route
+            exact
+            path="/resetPasswordLink/:token"
+            name="Reset Password Link Page"
+            element={<ResetPasswordLink />}
           />
           <Route
             exact
@@ -186,7 +204,7 @@ function App() {
               </PrivateRoute>
             }
           />
-           <Route
+          <Route
             path="/manageProducts"
             name="manage products"
             element={
@@ -200,7 +218,10 @@ function App() {
             name="cart"
             element={
               <PrivateRoute>
-                <ViewCart handleRefresh={handleRefresh} handleCartCount={handleCartCount}/>
+                <ViewCart
+                  handleRefresh={handleRefresh}
+                  handleCartCount={handleCartCount}
+                />
               </PrivateRoute>
             }
           />
@@ -230,8 +251,8 @@ function App() {
             name="orders"
             element={
               <PrivateRoute>
-                 {role === "BUYER" && <Orders handleRefresh={handleRefresh} />}
-               {role === "SELLER" && <SellerOrders />}
+                {role === "BUYER" && <Orders handleRefresh={handleRefresh} />}
+                {role === "SELLER" && <SellerOrders />}
               </PrivateRoute>
             }
           />

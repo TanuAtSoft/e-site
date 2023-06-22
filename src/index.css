@@ -239,3 +239,12 @@ button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.MuiAutocom
 .MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input {
   padding: 0.5px 4px 0.5px 5px;
 }
+.discount-div{
+  position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 0px 14px;
+    background-color: #1976d2;
+    color: white;
+    font-size: 16px;
+}

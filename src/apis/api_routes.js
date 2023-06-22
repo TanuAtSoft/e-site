@@ -9,7 +9,9 @@ export const API_ROUTES = {
         // RESET_PASS:'resetPassword'
     },
     PROFILE:{
-        RESET_PASSWORD: "resetPassword"
+        RESET_PASSWORD: "resetPassword",
+        FORGOT_PASSWORD: "forgotPassword",
+        RESET_PASSWORD_REQUEST:"resetPasswordRequest"
     },
     PRODUCTS:{
         GET_ALL: "products",
@@ -21,7 +23,8 @@ export const API_ROUTES = {
         EDIT_PRODUCT_BY_ID:"editProduct",
         GET_PRODUCTS_BY_CATEGORY:"getProductsByCategory",
         GET_PRODUCTS_BY_SEARCH:"getProductsBySearch",
-        GET_SEARCH_AUTO_COMPLETE:"getSearchAutoComplete"
+        GET_SEARCH_AUTO_COMPLETE:"getSearchAutoComplete",
+        GET_BEST_DEALS_PRODUCT:"getBestDealProducts"
     },
     ADDRESS:{
         GET_ADDRESS: "getAddress",

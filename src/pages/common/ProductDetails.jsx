@@ -8,7 +8,6 @@ import { getSingleProduct } from "../../apis/products/getSingleProduct";
 import Loader from "../../components/Loader";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
-import { Yard } from "@mui/icons-material";
 
 const ProductDetails = ({
   handleRefresh,
@@ -19,6 +18,16 @@ const ProductDetails = ({
   const location = useLocation();
   const params = useParams();
   const [loading, setLoading] = useState(true);
+  const [discountedPrice, setDiscopuntedPrice] = useState();
+
+  useEffect(() => {
+    if (product && product.discount > 0) {
+      const temp = 1 - product.discount / 100;
+      const temp2 = temp * 100;
+      const dicountedPrice = product.price - temp2;
+      setDiscopuntedPrice(dicountedPrice);
+    }
+  }, [product]);
 
   useEffect(() => {
     if (location.state) {
@@ -103,7 +112,7 @@ const ProductDetails = ({
                   component="div"
                   sx={{ fontSize: "18px" }}
                 >
-                  {product?.title}
+                  {product.title}
                 </Typography>
                 <div className="rating-details-page-div">
                   <div className="reviews" style={{ gap: "0px" }}>
@@ -128,16 +137,39 @@ const ProductDetails = ({
                   </div>
                   {product && rating && <p>({product.reviews.length})</p>}
                 </div>
-                {!rating  && <Typography>No Rating available</Typography>}
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  component="div"
-                  sx={{ fontWeight: "bold", fontSize: "18px" }}
-                >
-                  Price: <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
-                  {product?.price}
-                </Typography>
+                {!rating && <Typography>No Rating available</Typography>}
+                {product.discount === 0 && (
+                  <Typography
+                    gutterBottom
+                    variant="h6"
+                    component="div"
+                    sx={{ fontWeight: "bold", fontSize: "18px" }}
+                  >
+                    Price: <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
+                    {product.price}
+                  </Typography>
+                )}
+                {product.discount > 0 && (
+                  <Fragment>
+                    <Typography
+                      gutterBottom
+                      variant="h3"
+                      component="div"
+                      sx={{ fontWeight: "bold", fontSize: "18px" }}
+                    >
+                      -{product.discount}% discount applied
+                    </Typography>
+                    <Typography
+                      gutterBottom
+                      variant="h6"
+                      component="div"
+                      sx={{ fontWeight: "bold", fontSize: "18px" }}
+                    >
+                      Price: <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
+                      {discountedPrice}
+                    </Typography>
+                  </Fragment>
+                )}
                 <Typography
                   gutterBottom
                   variant="h6"

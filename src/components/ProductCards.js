@@ -11,12 +11,22 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import { useEffect } from "react";
 
-const ProductCard = ({ product, handleRefresh, fromWishlist }) => {
+const ProductCard = ({ product, handleRefresh, fromWishlist,isBestDeals }) => {
   const [visibile, setVisible] = useState("hidden");
   const token = JSON.parse(localStorage.getItem("token"));
   const [rating, setRating] = useState();
   let filledArr, unfilledArr;
   const navigate = useNavigate();
+  const [discountedPrice, setDiscopuntedPrice] = useState();
+
+  useEffect(() => {
+    if (product && product.discount > 0) {
+      const temp = 1 - product.discount / 100;
+      const temp2 = temp * 100;
+      const dicountedPrice = product.price - temp2;
+      setDiscopuntedPrice(dicountedPrice);
+    }
+  }, [product]);
   const showButton = (e) => {
     e.preventDefault();
     setVisible("visible");
@@ -77,9 +87,15 @@ const ProductCard = ({ product, handleRefresh, fromWishlist }) => {
           component="img"
           alt="green iguana"
           height="250"
-          image={product.image ? product.image :product.images[0]}
-          style={{objectFit:"contain"}}
+          image={product.image ? product.image : product.images[0]}
+          style={{ objectFit: "contain", position: "relative" }}
         />
+        { isBestDeals && <div
+        // className="cards-hidden-div"
+         style={{ visibility: product.discount > 0 ?  "visible":  "hidden" }}
+        >
+          <Typography variant="body"className="discount-div">{product.discount}% Off</Typography>
+        </div>}
       </Link>
       <CardContent>
         <div className="brand-review-div">
@@ -111,7 +127,7 @@ const ProductCard = ({ product, handleRefresh, fromWishlist }) => {
         <Typography variant="body1" sx={{ color: "#212121" }}>
           {product.title && product.title.substring(0, 24)}....
         </Typography>
-        <Typography
+       {product.discount === 0 && <Typography
           variant="h6"
           sx={{
             fontSize: "18px",
@@ -122,7 +138,19 @@ const ProductCard = ({ product, handleRefresh, fromWishlist }) => {
         >
           <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
           {product.price}
-        </Typography>
+        </Typography>}
+        {product.discount > 0 && <Typography
+          variant="h6"
+          sx={{
+            fontSize: "18px",
+            mt: 1.5,
+            color: "#212121",
+            fontWeight: "500",
+          }}
+        >
+          <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
+          <s>{product.price}</s> {discountedPrice}
+        </Typography>}
         {!fromWishlist && (
           <div
             className="cards-hidden-div"
