@@ -109,13 +109,15 @@ const SignUp = () => {
       user.password !== "" &&
       /\S/.test(user.password);
     if (testPass) {
-      const { data } = await signUp(user);
+      const  data  = await signUp(user);
       setErrorFields([]);
-      console.log("data", data);
-      if (data.statusCode === 200) {
+      if (data.data?.statusCode === 200) {
+        alert(data.data.statusMessage);
         navigate("/login");
+      }else{
+        if(data.remote === "failure")
+        alert(data.errors.errors);
       }
-      alert(data.statusMessage);
     } else {
       return;
     }

@@ -514,7 +514,7 @@ const EditProductModal = ({
                           />
                         </Button>
                       ) : (
-                        <p>You can add maximum of 6 images</p>
+                        <p>You can add maximum of 5 images</p>
                       )}
                       {imgPreview.length < 2 && (
                         <p>Kindly add more than two images</p>

@@ -31,7 +31,7 @@ const AddProduct = () => {
     description: [""],
     main_category: "",
     sub_category: "",
-    disount: 0,
+    discount: 0,
     brand: "",
     price: 1,
     stock: 1,
@@ -145,7 +145,8 @@ const AddProduct = () => {
             alert(res.data.statusMessage);
           } else {
             setLoading(false);
-            alert(res.data.statusMessage);
+            if(res.remote === "failure")
+            alert(res.errors.errors);
           }
         }
         if (!uploadedRes.status) {
