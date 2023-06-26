@@ -48,9 +48,9 @@ const useStyles = {
       padding: "0px !important",
       fontSize: "14px",
       color: "#1E5EF3",
-      fontWeight: 500
-    }
-  }
+      fontWeight: 500,
+    },
+  },
 };
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -91,10 +91,11 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
   const navigate = useNavigate();
   const [searchedText, setSearchedText] = useState("");
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 768px)" });
-  const [suggestions, setSuggestions] = useState([{name:""}]);
-  const inputRef = useRef("inputRef")
+  const [suggestions, setSuggestions] = useState([{ name: "" }]);
+  const inputRef = useRef("inputRef");
+  console.log("role", role);
   const navItems =
-    role === "SELLER"
+    role === "SELLER" || role === "ADMIN"
       ? [
           { label: "Dashboard", link: "" },
           { label: "Add Product", link: "addProduct" },
@@ -104,20 +105,27 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       : [
           { label: "Best Seller", link: "bestSeller" },
           { label: "Top Rated", link: "topRated" },
-          { label: "Best Deals", link: "bestDeals" }
+          { label: "Best Deals", link: "bestDeals" },
           // { label: "Add Product", link: "addProduct" },
           // { label: "Manage Products", link: "manageProducts" },
           // { label: "HeightLights", link: "heighlights" },
         ];
-  const categoryNavlinks = [
-    { label: "Men's Fashion", link: "men's clothing" },
-    { label: "Women's Fashion", link: "women's clothing" },
-    { label: "Girl's Fashion", link: "girl's clothing" },
-    { label: "Boy's Fashion", link: "boy's clothing" },
-    { label: "Electronics", link: "electronics" },
-    { label: "Baby's Fashion", link: "baby's clothing" },
-    { label: "Toys", link: "toys" },
-  ];
+  const categoryNavlinks =
+    role === "ADMIN"
+      ? [
+          { label: "Users Management", link: "usersMangement" },
+          { label: "Sellers Management", link: "sellerManagement" },
+          { label: "Orders Management", link: "ordersManagement" },
+        ]
+      : [
+          { label: "Men's Fashion", link: "men's clothing" },
+          { label: "Women's Fashion", link: "women's clothing" },
+          { label: "Girl's Fashion", link: "girl's clothing" },
+          { label: "Boy's Fashion", link: "boy's clothing" },
+          { label: "Electronics", link: "electronics" },
+          { label: "Baby's Fashion", link: "baby's clothing" },
+          { label: "Toys", link: "toys" },
+        ];
   const handleProfileMenuOpen = (event) => {
     if (token) {
       setAnchorEl(event.currentTarget);
@@ -126,12 +134,12 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       navigate("/login");
     }
   };
-  const handleSearchChange = async(e) => {
-    const res = await getSearchAutoComplete(e.target.value)
-    if(res.data.statusCode === 200){
-      setSuggestions(res.data.data)
+  const handleSearchChange = async (e) => {
+    const res = await getSearchAutoComplete(e.target.value);
+    if (res.data.statusCode === 200) {
+      setSuggestions(res.data.data);
     }
-     setSearchedText(e.target.value);
+    setSearchedText(e.target.value);
   };
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -141,9 +149,9 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
-  const handleProfileClick =() =>{
-    navigate("/profile")
-  }
+  const handleProfileClick = () => {
+    navigate("/profile");
+  };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -191,7 +199,14 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={()=>{handleMenuClose();handleProfileClick()}}>Profile</MenuItem>
+      <MenuItem
+        onClick={() => {
+          handleMenuClose();
+          handleProfileClick();
+        }}
+      >
+        Profile
+      </MenuItem>
       {role === "BUYER" && (
         <MenuItem
           onClick={() => {
@@ -291,7 +306,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       </MenuItem>
       <Divider />
 
-      {role !== "SELLER" && (
+      {role !== "SELLER" && role !== "ADMIN" && (
         <Typography variant="h6" disablePadding>
           Trending
         </Typography>
@@ -300,7 +315,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       <List>
         {navItems.map((item, id) => (
           <ListItem
-          disablePadding
+            disablePadding
             key={id}
             onClick={() => handleSideNavLinks(item.link)}
           >
@@ -312,9 +327,14 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       </List>
       <Divider />
       <br />
-      {role !== "SELLER" && (
+      {role !== "SELLER" && role !== "ADMIN" && (
         <Typography variant="h6" disablePadding>
           Shop By Category
+        </Typography>
+      )}
+      {role === "ADMIN" && (
+        <Typography variant="h6" disablePadding>
+          Managments
         </Typography>
       )}
 
@@ -388,13 +408,13 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
             <Stack spacing={1} sx={{ width: 300 }}>
               <Search>
                 <Autocomplete
-                  onChange={(e,v)=> setSearchedText(v)}
-                   id="custom-input-demo"
-                   className={useStyles}
+                  onChange={(e, v) => setSearchedText(v)}
+                  id="custom-input-demo"
+                  className={useStyles}
                   options={suggestions.map((option) => option.name)}
                   renderInput={(params) => (
                     <TextField
-                    ref={inputRef}
+                      ref={inputRef}
                       {...params}
                       // label="Search"
                       InputProps={{
@@ -404,9 +424,8 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
                       onChange={(e) => handleSearchChange(e)}
                     />
                   )}
-                
                 />
-                
+
                 {/* <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}

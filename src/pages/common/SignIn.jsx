@@ -80,8 +80,8 @@ const SignIn = ({handleCartCount,handleWsihlistCount}) => {
       /\S/.test(user.password);
     if (testPass) {
       const res = await signIn(JSON.stringify(user));
-      // console.log(res);
-      if (res?.data?.statusCode === 200) {
+      console.log(res);
+      if (res.data?.statusCode === 200) {
         localStorage.setItem("token", JSON.stringify(res.data.data.user.token));
         localStorage.setItem("user", JSON.stringify(res.data.data.user.user));
         localStorage.setItem("role", res.data.data.user.role);
