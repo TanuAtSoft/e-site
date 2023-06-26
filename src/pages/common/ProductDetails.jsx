@@ -22,10 +22,9 @@ const ProductDetails = ({
 
   useEffect(() => {
     if (product && product.discount > 0) {
-      const temp = 1 - product.discount / 100;
-      const temp2 = temp * 100;
-      const dicountedPrice = product.price - temp2;
-      setDiscopuntedPrice(dicountedPrice);
+      const temp = product.price/100 * product.discount
+      const temp2 =  product.price - temp
+      setDiscopuntedPrice(temp2.toFixed());
     }
   }, [product]);
 
@@ -79,6 +78,7 @@ const ProductDetails = ({
 
   filledArr = NewArray(rating);
   unfilledArr = NewArray(5 - rating);
+  console.log("discountedPrice",discountedPrice)
 
   return (
     <Fragment>

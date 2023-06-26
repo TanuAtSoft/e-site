@@ -6,14 +6,14 @@ import { addToCart } from "../apis/carts/addToCart";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useMediaQuery } from "react-responsive";
 import { addRatings } from "../apis/ratings/addRatings";
-import StarIcon from '@mui/icons-material/Star';
+import StarIcon from "@mui/icons-material/Star";
 
 const BuyerOrderedCard = ({
   product,
   paymentMode,
   handleRefresh,
   orderObjectId,
-  handleRefetch
+  handleRefetch,
 }) => {
   const token = JSON.parse(localStorage.getItem("token"));
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 900px)" });
@@ -30,7 +30,6 @@ const BuyerOrderedCard = ({
       navigate("/cart");
     }
   };
-  console.log("itemId",product)
 
   const handleRating = async (rate) => {
     const data = {
@@ -42,22 +41,20 @@ const BuyerOrderedCard = ({
     const res = await addRatings(token, JSON.stringify(data));
     if (res.data.statusCode === 200) {
       alert(res.data.statusMessage);
-      handleRefetch()
+      handleRefetch();
       // navigate("/cart");
     }
-    
   };
   function NewArray(size) {
     var x = [];
     for (var i = 0; i < size; ++i) {
-        x[i] = i;
+      x[i] = i;
     }
     return x;
-}
+  }
 
-var filledArr = NewArray(product.rating);
-var unfilledArr = NewArray(5-product.rating);
-
+  var filledArr = NewArray(product.rating);
+  var unfilledArr = NewArray(5 - product.rating);
 
   return (
     <Fragment>
@@ -82,7 +79,9 @@ var unfilledArr = NewArray(5-product.rating);
           <Typography variant="body">
             <strong>Paid:</strong>{" "}
             <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
-            {product.price * product.quantity}
+            {product.discountedPrice
+              ? product.discountedPrice * product.quantity
+              : product.price * product.quantity}
           </Typography>
           <br />
           <Typography variant="body">
@@ -170,34 +169,26 @@ var unfilledArr = NewArray(5-product.rating);
                 </div>
               </Fragment>
             )}
-             {product.status === "DELIVERED" && product.rating > 0 && (
+            {product.status === "DELIVERED" && product.rating > 0 && (
               <Fragment>
                 <Typography>Your rating to this product</Typography>
                 <div className="reviews">
-                  {filledArr.map((item)=>{
-                    return(
-                      <div
-                      className="rating"
-                      key={item}
-                    >
-                      <StarIcon />
-                      {/* <p>Very Bad</p> */}
-                    </div>
-                    )
+                  {filledArr.map((item) => {
+                    return (
+                      <div className="rating" key={item}>
+                        <StarIcon />
+                        {/* <p>Very Bad</p> */}
+                      </div>
+                    );
                   })}
-                  {unfilledArr.map((item)=>{
-                    return(
-                      <div
-                      className="rating"
-                      key={item}
-                    >
-                      <StarBorderIcon />
-                    
-                    </div>
-                    )
+                  {unfilledArr.map((item) => {
+                    return (
+                      <div className="rating" key={item}>
+                        <StarBorderIcon />
+                      </div>
+                    );
                   })}
-                    {/* <p>Very Bad</p> */}
-                 
+                  {/* <p>Very Bad</p> */}
                 </div>
               </Fragment>
             )}

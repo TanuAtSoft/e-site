@@ -21,10 +21,9 @@ const ProductCard = ({ product, handleRefresh, fromWishlist,isBestDeals }) => {
 
   useEffect(() => {
     if (product && product.discount > 0) {
-      const temp = 1 - product.discount / 100;
-      const temp2 = temp * 100;
-      const dicountedPrice = product.price - temp2;
-      setDiscopuntedPrice(dicountedPrice);
+      const temp = (product.price / 100) * product.discount;
+      const temp2 = product.price - temp;
+      setDiscopuntedPrice(temp2.toFixed());
     }
   }, [product]);
   const showButton = (e) => {
@@ -64,9 +63,12 @@ const ProductCard = ({ product, handleRefresh, fromWishlist,isBestDeals }) => {
       return;
     }
     const res = await addToCart(token, JSON.stringify(data));
-    if (res.data.statusCode === 200) {
+    if (res.data?.statusCode === 200) {
       handleRefresh();
       alert(res.data.statusMessage);
+    }
+    if(res.remote === "failure"){
+      alert(res.errors.errors)
     }
   };
   const handleViewDetails = (id) => {
