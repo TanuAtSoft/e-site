@@ -16,6 +16,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { signIn } from "../../apis/signIn/signIn";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 function Copyright(props) {
   return (
@@ -37,10 +38,11 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-const SignIn = ({handleCartCount,handleWsihlistCount}) => {
+const SignIn = ({ handleCartCount, handleWsihlistCount }) => {
   const [user, setUser] = useState({ email: "", password: "" });
   const [errorFields, setErrorFields] = useState([]);
   const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies([""]);
 
   function arrayRemove(arr, value) {
     return arr.filter(function (ele) {
@@ -63,14 +65,14 @@ const SignIn = ({handleCartCount,handleWsihlistCount}) => {
       if (!errorFields.includes("email"))
         setErrorFields((prevState) => [...prevState, "email"]);
     }
-    if (!user.email === "" || user.email.match(emailRegex)) {
+    if (!user.email || user.email.match(emailRegex)) {
       setErrorFields(arrayRemove(errorFields, "email"));
     }
     if (user.password === "" || !/\S/.test(user.password)) {
       if (!errorFields.includes("password"))
         setErrorFields((prevState) => [...prevState, "password"]);
     }
-    if (!user.password === "" || /\S/.test(user.password)) {
+    if (!user.password || /\S/.test(user.password)) {
       setErrorFields(arrayRemove(errorFields, "password"));
     }
     const testPass =
@@ -80,21 +82,40 @@ const SignIn = ({handleCartCount,handleWsihlistCount}) => {
       /\S/.test(user.password);
     if (testPass) {
       const res = await signIn(JSON.stringify(user));
-      console.log(res);
       if (res.data?.statusCode === 200) {
         localStorage.setItem("token", JSON.stringify(res.data.data.user.token));
         localStorage.setItem("user", JSON.stringify(res.data.data.user.user));
         localStorage.setItem("role", res.data.data.user.role);
+        setCookie("softDelete", res.data.data.user.softDelete, { path: "/" });
+        setCookie("verified", res.data.data.user.verified, { path: "/" });
+        setCookie(
+          "submittedVerDoc",
+          res.data.data.user.submittedVerificationDoc,
+          { path: "/" }
+        );
         if (res.data.data.user.role === "BUYER") {
-         // console.log("res.data.data.user.cart.length",res.data.data.user.cart)
-          if(res.data.data.user.cart){
-            handleCartCount(res.data.data.user.cart)
+          // console.log("res.data.data.user.cart.length",res.data.data.user.cart)
+          if (res.data.data.user.cart) {
+            handleCartCount(res.data.data.user.cart);
           }
-          if(res.data.data.user.wishlist){
-            handleWsihlistCount(res.data.data.user.wishlist)
+          if (res.data.data.user.wishlist) {
+            handleWsihlistCount(res.data.data.user.wishlist);
           }
         }
-        navigate("/");
+        if (
+          res.data.data.user.role === "SELLER" &&
+          res.data.data.user.verified === false
+        ) {
+          if (res.data.data.user.submittedVerificationDoc === false)
+            navigate(
+              `/submitSellerVerificationDetails/${res.data.data.user.token}`
+            );
+          else {
+            navigate("/verificationPending");
+          }
+        } else {
+          navigate("/");
+        }
       } else if (res.remote === "failure") {
         alert(res.errors.errors);
       }

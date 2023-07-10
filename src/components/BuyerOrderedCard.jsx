@@ -7,6 +7,8 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import { useMediaQuery } from "react-responsive";
 import { addRatings } from "../apis/ratings/addRatings";
 import StarIcon from "@mui/icons-material/Star";
+import moment from "moment";
+import { cancelOrder } from "../apis/orders/cancelOrder";
 
 const BuyerOrderedCard = ({
   product,
@@ -18,6 +20,20 @@ const BuyerOrderedCard = ({
   const token = JSON.parse(localStorage.getItem("token"));
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 900px)" });
   const navigate = useNavigate();
+
+  const handleCancelOrder = async () => {
+    const data = {
+      orderObjectId: orderObjectId,
+      productId: product.productId,
+    };
+    const res = await cancelOrder(token, data);
+    console.log("res",res)
+    if (res) {
+      if (res.data.statusCode === 200) {
+        alert(res.data.statusMessage);
+      }
+    }
+  };
 
   const handleBuyAgain = async () => {
     const data = {
@@ -102,7 +118,8 @@ const BuyerOrderedCard = ({
           <div className="product-price-div" style={{ gap: "0px" }}>
             <Typography variant="body">
               <strong>Status : </strong>
-              {product.status}
+              {product.status} <strong>On </strong>{" "}
+              {moment(product.updatedAt).format("DD/MM/YYYY")}
             </Typography>
             <Typography variant="body">
               <strong>Payment Mode : </strong>
@@ -191,6 +208,11 @@ const BuyerOrderedCard = ({
                   {/* <p>Very Bad</p> */}
                 </div>
               </Fragment>
+            )}
+            {(product.status === "ORDERED" ||
+              product.status === "INPROCESS" ||
+              product.status === "SHIPPED") && (
+              <Button variant="outlined" onClick={handleCancelOrder}>Cancel</Button>
             )}
           </div>
         </Grid>

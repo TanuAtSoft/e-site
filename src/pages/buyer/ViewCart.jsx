@@ -26,6 +26,7 @@ import { verifyPayment } from "../../apis/payment/verifyPayment";
 import { saveOrder } from "../../apis/orders/saveOrder";
 import OderConfirmationModal from "../../components/OderConfirmationModal";
 import { getSingleProduct } from "../../apis/products/getSingleProduct";
+import {getUserInfo} from "../../apis/admin/userInfo"
 
 const ViewCart = ({ handleRefresh, handleCartCount }) => {
   const token = JSON.parse(localStorage.getItem("token"));
@@ -132,18 +133,28 @@ const ViewCart = ({ handleRefresh, handleCartCount }) => {
     const fetchProducts = async (id) => {
       const res = await getSingleProduct(id);
       const product = await res.data?.data?.product;
+     const sellerDeleted = res.data?.data?.product?.seller?.softDelete;
       const temp = (product.price / 100) * product.discount;
       const temp2 = product.price - temp;
-      return temp2.toFixed();
+      const data =  {
+        discountedPrice:temp2.toFixed(),
+        sellerDeleted:  sellerDeleted
+      }
+      return data
+
     };
     const calcDiscounts = async () => {
       let total = 0;
       for (let i = 0; i < cartItems.length; i++) {
-        const discountedPrice = await fetchProducts(cartItems[i].productId);
-        cartItems[i].discountedPrice = parseInt(discountedPrice);
+        const data = await fetchProducts(cartItems[i].productId);
+       cartItems[i].sellerDeleted = data.sellerDeleted
+        cartItems[i].discountedPrice = parseInt(data.discountedPrice);
         const itemTotal =
-          parseInt(discountedPrice) * parseInt(cartItems[i].quantity);
-        total = total + itemTotal;
+          parseInt(data.discountedPrice) * parseInt(cartItems[i].quantity);
+          if(!data.sellerDeleted){
+            total = total + itemTotal;
+          }
+       
         setChangedCartItems([...changedCartItems, cartItems[i]]);
       }
       setTotalSaving(total);
@@ -282,6 +293,7 @@ const ViewCart = ({ handleRefresh, handleCartCount }) => {
   const handleCashOnDelivery = async () => {
     if (selectedAddress) {
       setLoading(true);
+      setOpen(true)
       try {
         const orderId = "order_" + generateRandomString(14);
         const payload = {
@@ -297,9 +309,11 @@ const ViewCart = ({ handleRefresh, handleCartCount }) => {
           handleCartCount(0);
           setLoading(false);
           handleRefresh();
+          setOpen(false)
         }
       } catch (e) {
         console.log("e", e);
+        setOpen(false)
       }
     } else {
       if (address) {
@@ -379,7 +393,14 @@ const ViewCart = ({ handleRefresh, handleCartCount }) => {
                               }}
                             />
                           </Grid>
-                          <Grid
+                          {item.sellerDeleted ? <Grid
+                            item
+                            xs={12}
+                            md={3.5}
+                            sx={{ maxHeight: "400px", maxWidth: "fit-content" }}
+                          >
+                            <Typography>Item not available</Typography>
+                          </Grid>:<Grid
                             item
                             xs={12}
                             md={3.5}
@@ -421,7 +442,8 @@ const ViewCart = ({ handleRefresh, handleCartCount }) => {
                             >
                               Remove
                             </Typography>
-                          </Grid>
+                          </Grid>}
+                          
                           <Grid item xs={12} md={4} sx={{ maxHeight: "400px" }}>
                             <Typography>Free Delivery</Typography>
                           </Grid>
@@ -495,7 +517,7 @@ const ViewCart = ({ handleRefresh, handleCartCount }) => {
                           </Typography>
                           <Typography style={{ fontWeight: "bolder" }}>
                             <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
-                            {total - totalSaving}
+                            {total - totalSaving === total ? 0: total - totalSaving}
                           </Typography>
                         </div>
                       )}
@@ -511,6 +533,7 @@ const ViewCart = ({ handleRefresh, handleCartCount }) => {
                       variant="contained"
                       sx={{ width: "100% !important" }}
                       onClick={handlePayment}
+                      disabled={totalSaving ===0 ? true: false}
                     >
                       Pay
                     </Button>
@@ -518,6 +541,7 @@ const ViewCart = ({ handleRefresh, handleCartCount }) => {
                       variant="contained"
                       sx={{ width: "100% !important" }}
                       onClick={handleCashOnDelivery}
+                      disabled={totalSaving ===0 ? true: false}
                     >
                       Cash On Delivery
                     </Button>

@@ -26,7 +26,7 @@ const Dashboard = ({handleRefresh}) => {
   return (
     <Fragment>
       {role === "SELLER" && <SellerDashboard />} 
-      {role === "BUYER" && <LandingPage handleRefresh={handleRefresh}/>}
+      {(role === "BUYER" || !role )&& <LandingPage handleRefresh={handleRefresh}/>}
       {role === "ADMIN" && <SellerDashboard />}
     </Fragment>
   );

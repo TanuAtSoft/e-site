@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import EditIcon from "@mui/icons-material/Edit";
 import OrderModal from "./OrderModal";
+import moment from "moment";
 
 export default function Table({ orderedItems, handleRefetch }) {
   const [open, setOpen] = useState(false);
@@ -25,6 +26,18 @@ export default function Table({ orderedItems, handleRefetch }) {
 
   const columns = [
     { field: "orderId", headerName: "Ordered Id", width: 90 },
+    {
+      field: "createdAt",
+      headerName: "Ordered on",
+      width: 90,
+      renderCell: (params) => {
+        return (
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            {moment(params.row.createdAt).format("DD/MM/YYYY")}
+          </div>
+        );
+      },
+    },
     {
       field: "buyerName",
       headerName: "Ordered By",
@@ -94,10 +107,9 @@ export default function Table({ orderedItems, handleRefetch }) {
       sortable: false,
       width: 160,
       valueGetter: (params) => {
-        if(params.row.orderedItems.shippingCompany){
-        return `${params.row.orderedItems.shippingCompany} ${params.row.orderedItems.trackingNumber}`;
-        }
-        else return "NA"
+        if (params.row.orderedItems.shippingCompany) {
+          return `${params.row.orderedItems.shippingCompany} ${params.row.orderedItems.trackingNumber}`;
+        } else return "NA";
       },
     },
 
@@ -111,7 +123,7 @@ export default function Table({ orderedItems, handleRefetch }) {
         <div
           style={{
             visibility:
-              params.row.orderedItems.status === "DELIVERED" ? "hidden" : "",
+              params.row.orderedItems.status === "DELIVERED" || params.row.orderedItems.status === "CANCELLED" ? "hidden" : "",
           }}
           onClick={() => {
             setActiveRow(params.row);

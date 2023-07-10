@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import {useParams } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { Paper, Grid, Container, Typography } from "@mui/material";
@@ -15,33 +15,28 @@ const ProductDetails = ({
   handleWsihlistCount,
 }) => {
   const [product, setProduct] = useState();
-  const location = useLocation();
   const params = useParams();
   const [loading, setLoading] = useState(true);
   const [discountedPrice, setDiscopuntedPrice] = useState();
 
   useEffect(() => {
     if (product && product.discount > 0) {
-      const temp = product.price/100 * product.discount
-      const temp2 =  product.price - temp
+      const temp = (product.price / 100) * product.discount;
+      const temp2 = product.price - temp;
       setDiscopuntedPrice(temp2.toFixed());
     }
   }, [product]);
 
   useEffect(() => {
-    if (location.state) {
-      setProduct(location.state.product);
+    const fetchProducts = async () => {
+      const res = await getSingleProduct(params.id);
+      setProduct(res?.data?.data?.product);
       setLoading(false);
-    }
-    if (!location.state) {
-      const fetchProducts = async () => {
-        const res = await getSingleProduct(params.id);
-        setProduct(res?.data?.data?.product);
-        setLoading(false);
-      };
-      fetchProducts();
-    }
-  }, [location.state, params.id]);
+    };
+    fetchProducts();
+  }, [params.id]);
+
+
   function Item(props) {
     return (
       <Paper sx={{ height: "auto" }}>
@@ -78,7 +73,6 @@ const ProductDetails = ({
 
   filledArr = NewArray(rating);
   unfilledArr = NewArray(5 - rating);
-  console.log("discountedPrice",discountedPrice)
 
   return (
     <Fragment>
@@ -149,7 +143,7 @@ const ProductDetails = ({
                     {product.price}
                   </Typography>
                 )}
-                {product.discount > 0 && (
+                {product.discount > 0 && !product.seller.softDelete &&  (
                   <Fragment>
                     <Typography
                       gutterBottom
@@ -167,6 +161,18 @@ const ProductDetails = ({
                     >
                       Price: <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
                       {discountedPrice}
+                    </Typography>
+                  </Fragment>
+                )}
+                {product.seller.softDelete &&  (
+                  <Fragment>
+                    <Typography
+                      gutterBottom
+                      variant="h3"
+                      component="div"
+                      sx={{ fontWeight: "bold", fontSize: "18px" }}
+                    >
+                     Item is not available
                     </Typography>
                   </Fragment>
                 )}

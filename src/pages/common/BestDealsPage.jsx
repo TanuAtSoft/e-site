@@ -9,7 +9,7 @@ const BestDealsProduct =()=>{
     const [products,setProducts] = useState()
     const [loading, setLoading] = useState(true);
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1024px)" });
-
+  
     useEffect(()=>{
       const fecthBestDealsProduct =async()=>{
         const res = await getBestDealProducts()

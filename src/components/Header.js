@@ -26,6 +26,7 @@ import { getSearchAutoComplete } from "../apis/products/getSearchAutoComplete";
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
 import { TextField } from "@mui/material";
+import { useCookies } from "react-cookie";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -93,7 +94,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const [suggestions, setSuggestions] = useState([{ name: "" }]);
   const inputRef = useRef("inputRef");
-  console.log("role", role);
+  const [ cookies ] = useCookies(["verified"])
   const navItems =
     role === "SELLER" || role === "ADMIN"
       ? [
@@ -113,8 +114,8 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
   const categoryNavlinks =
     role === "ADMIN"
       ? [
-          { label: "Users Management", link: "usersMangement" },
-          { label: "Sellers Management", link: "sellerManagement" },
+          { label: "Users Management", link: "usersManagement" },
+          { label: "Sellers Management", link: "sellersManagement" },
           { label: "Orders Management", link: "ordersManagement" },
         ]
       : [
@@ -292,7 +293,14 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
     setOpen((prevState) => !prevState);
   };
   const handleSideNavLinks = (link) => {
+    if(cookies.verified === true)
     navigate(`/${link}`);
+    else{
+      if(cookies.verified === false && cookies.submittedVerDoc === false)
+      navigate(`/submitSellerVerificationDetails/${token}`)
+      if(cookies.verified === false && cookies.submittedVerDoc === true)
+      navigate("/verificationPending")
+    }
   };
 
   const drawer = (
@@ -338,7 +346,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
         </Typography>
       )}
 
-      {role !== "SELLER" && (
+      {role !== "SELLER" && role !== "ADMIN" &&(
         <List>
           {categoryNavlinks.map((item, id) => (
             <Link
@@ -347,6 +355,30 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
               to={{
                 pathname: "/category",
                 search: `?category=${item.link}`,
+              }}
+            >
+              <ListItem
+                key={item}
+                disablePadding
+                // disablePadding
+                // onClick={() => handleSideNavCatLinks(item.link)}
+              >
+                <ListItemButton sx={{ textAlign: "center" }}>
+                  <ListItemText primary={item.label} />
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
+        </List>
+      )}
+      {role === "ADMIN" && (
+        <List>
+          {categoryNavlinks.map((item, id) => (
+            <Link
+              key={id}
+              className="cat-link"
+              to={{
+                pathname: `${item.link}`,
               }}
             >
               <ListItem
@@ -394,6 +426,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
           {!isTabletOrMobile && (
             <IconButton
               onClick={() => {
+                if(role === "BUYER" || !role)
                 navigate("/");
               }}
             >
@@ -404,7 +437,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
               />
             </IconButton>
           )}
-          {role !== "SELLER" && (
+          {(!role  || role === "BUYER") && (
             <Stack spacing={1} sx={{ width: 300 }}>
               <Search>
                 <Autocomplete

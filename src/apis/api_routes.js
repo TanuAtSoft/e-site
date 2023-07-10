@@ -49,7 +49,8 @@ export const API_ROUTES = {
         GET_SELLER_ORDER_INFO:"getOrderInfo",
         UPDATE_ORDER_INFO: "updateOrderStatus",
         GET_BUYER_ORDER_INFO:"getBuyerOrderInfo",
-        GET_MOST_SOLD_PRODUCTS:"bestSeller"
+        GET_MOST_SOLD_PRODUCTS:"bestSeller",
+        CANCEL_ORDER:"cancelOrder"
     },
     WISHLIST:{
         ADD_TO_WISHLISTBYID:"addWishlist",
@@ -69,5 +70,14 @@ export const API_ROUTES = {
     CATEGORIES:{
         GET_MAIN_CATEGORIES:"getMainCategory",
         GET_SUB_CATEGORIES:"getSubCategory"
+    },
+    ADMIN:{
+        GET_SELLERS:"getSeller",
+        BLOCK_SELLER:"blockSeller",
+        GET_USER_INFO:"userInfo",
+        VERIFY_USER:"verifyUser"
+    },
+    VERIFICATION_DOC:{
+        SELLER_VERIFICATION_DOC:"uploadSellerVerificationDoc"
     }
 }

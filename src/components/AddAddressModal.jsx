@@ -41,7 +41,6 @@ const AddAddressModal = ({ openAdd, handleAddClose,setRefetch,refetch,handleAddr
     }
   };
   const onChangeHandler = (e) => {
-    console.log("e", e.target.name)
     const name = e.target.name;
     const value = e.target.value;
     address[name] = value;

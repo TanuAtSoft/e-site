@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 
 import ProductCard from "../../components/ProductCards";
 import { Grid, Container } from "@mui/material";
@@ -10,7 +10,7 @@ import { getTopRatedProducts } from "../../apis/products/getTopRatedProducts";
 import { useLocation } from "react-router-dom";
 import { getBestSeller } from "../../apis/orders/bestSellerProducts";
 import { useSearchParams } from "react-router-dom";
-import {getSearchedProducts} from "../../apis/products/getSearchedProducts"
+import { getSearchedProducts } from "../../apis/products/getSearchedProducts";
 
 const LandingPage = ({ handleRefresh }) => {
   const [products, setProducts] = useState();
@@ -43,18 +43,18 @@ const LandingPage = ({ handleRefresh }) => {
     fetchProducts();
   }, [location.pathname, params]);
 
-  useEffect(()=>{
-    const fetchSearch =async()=>{
- const res = await getSearchedProducts(params);
-      if(res.data.statusCode === 200){
+  useEffect(() => {
+    const fetchSearch = async () => {
+      const res = await getSearchedProducts(params);
+      if (res.data.statusCode === 200) {
         setProducts(res.data.data);
         setLoading(false);
       }
-    }   
-     if (location.pathname === "/" && params) {
-     fetchSearch()
+    };
+    if (location.pathname === "/" && params) {
+      fetchSearch();
     }
-  },[location.pathname, params])
+  }, [location.pathname, params]);
 
   return (
     <Suspense fallback={<Loader />}>
@@ -69,19 +69,19 @@ const LandingPage = ({ handleRefresh }) => {
           {products &&
             products.map((item, id) => {
               return (
-                <Grid
-                  item
-                  xs={12}
-                  md={3}
-                  key={id}
-                  style={{ paddingLeft: "19px" }}
-                >
-                  <ProductCard
-                    product={item}
-                    handleRefresh={handleRefresh}
-                    fromWishlist={false}
-                  />
-                </Grid>
+                <Fragment key={id}>
+                  {item.seller.softDelete ? (
+                    <Fragment></Fragment>
+                  ) : (
+                    <Grid item xs={12} md={3} style={{ paddingLeft: "19px" }}>
+                      <ProductCard
+                        product={item}
+                        handleRefresh={handleRefresh}
+                        fromWishlist={false}
+                      />
+                    </Grid>
+                  )}
+                </Fragment>
               );
             })}
         </Grid>

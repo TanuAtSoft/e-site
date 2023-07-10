@@ -9,9 +9,14 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../apis/carts/addToCart";
 import { addToWishlist } from "../apis/wishlist/addToWishlist";
-import {deleteWishlist} from "../apis/wishlist/deleteWishlist"
+import { deleteWishlist } from "../apis/wishlist/deleteWishlist";
 
-const BasicCard = ({ product, handleRefresh, fromWishlist,handleWsihlistCount}) => {
+const BasicCard = ({
+  product,
+  handleRefresh,
+  fromWishlist,
+  handleWsihlistCount,
+}) => {
   const token = JSON.parse(localStorage.getItem("token"));
   const navigate = useNavigate();
 
@@ -55,8 +60,8 @@ const BasicCard = ({ product, handleRefresh, fromWishlist,handleWsihlistCount}) 
     if (res.data.statusCode === 200) {
       alert(res.data.statusMessage);
       handleRefresh();
-      handleWsihlistCount()
-      navigate("/wishlist")
+      handleWsihlistCount();
+      navigate("/wishlist");
     }
   };
   return (
@@ -68,10 +73,14 @@ const BasicCard = ({ product, handleRefresh, fromWishlist,handleWsihlistCount}) 
         <Typography sx={{ mb: 1.5, mt: 1.5 }} color="text.secondary">
           <LocationOnIcon /> select delivery location
         </Typography>
-        <Typography variant="h5" sx={{ mt: 1.5 }}>
-          In stock
-        </Typography>
-
+        {!product.seller.softDelete && product.stock > 0 && (
+          <Typography variant="h5" sx={{ mt: 1.5 }}>
+            In stock
+          </Typography>
+        )}
+        {(product.seller.softDelete || product.stock === 0) && (
+          <Typography>Product Not Available</Typography>
+        )}
         <Typography variant="body2">
           sold by
           <br />
@@ -102,6 +111,9 @@ const BasicCard = ({ product, handleRefresh, fromWishlist,handleWsihlistCount}) 
           variant="contained"
           sx={{ width: "100% !important" }}
           onClick={handleAddCart}
+          disabled={
+            product.seller.softDelete || product.stock === 0 ? true : false
+          }
         >
           Add to Cart
         </Button>

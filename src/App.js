@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useState, useEffect, Fragment } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
@@ -7,6 +7,8 @@ import PrivateRoute from "./commans/PrivateRoute";
 import Dashboard from "./components/Dashboard";
 import { getCartLength } from "./apis/carts/getCartLength";
 import { getWishlistLength } from "./apis/wishlist/getWishlistLength";
+const SubmitVerificationDetails = React.lazy(()=> import("./pages/seller/SubmitVerificationDetails"))
+const VerificationPending = React.lazy(()=> import("./pages/seller/VerificationPending"))
 
 const Login = React.lazy(() => import("./pages/common/SignIn"));
 const SignUp = React.lazy(() => import("./pages/common/SignUp"));
@@ -30,6 +32,19 @@ const Profilepage = React.lazy(() => import("./pages/bothRoles/ProfilePage"));
 const BestDealsPage = React.lazy(() => import("./pages/common/BestDealsPage"));
 const ResetPasswordLink = React.lazy(() =>
   import("./pages/bothRoles/ResetPasswordLink")
+);
+const OrdersManagement = React.lazy(() =>
+  import("./pages/admin/OrdersManagement")
+);
+const SellersManagement = React.lazy(() =>
+  import("./pages/admin/SellersManagement")
+);
+const UsersManagement = React.lazy(() =>
+  import("./pages/admin/UsersManagement")
+);
+
+const VerifyBuyerAccount = React.lazy(() =>
+  import("./pages/buyer/verifyAccount")
 );
 
 const loading = (
@@ -103,40 +118,92 @@ function App() {
             name="dashboard"
             element={<Dashboard handleRefresh={handleRefresh} />}
           />
-          <Route
-            exact
-            path="/bestDeals"
-            name="bestDeals"
-            element={<BestDealsPage />}
-          />
-          <Route
-            exact
-            path="/bestSeller"
-            name="dashboard"
-            element={<Dashboard handleRefresh={handleRefresh} />}
-          />
-          <Route
-            exact
-            path="/topRated"
-            name="dashboard"
-            element={<Dashboard handleRefresh={handleRefresh} />}
-          />
-          <Route
-            exact
-            path="/category"
-            name="category"
-            element={<CategoryPage />}
-          />
-          <Route
-            path="/details/:id"
-            name="Details Page"
-            element={
-              <ProductDetails
-                handleRefresh={handleRefresh}
-                fromWishlist={false}
+          {(role === null || role === "BUYER") && (
+            <Route
+              exact
+              path="/bestDeals"
+              name="bestDeals"
+              element={<BestDealsPage />}
+            />
+          )}
+          {(role === null || role === "BUYER") && (
+            <Route
+              exact
+              path="/bestSeller"
+              name="dashboard"
+              element={<Dashboard handleRefresh={handleRefresh} />}
+            />
+          )}
+          {(role === null || role === "BUYER") && (
+            <Route
+              exact
+              path="/topRated"
+              name="dashboard"
+              element={<Dashboard handleRefresh={handleRefresh} />}
+            />
+          )}
+          {(!role || role === "BUYER") && (
+            <Route
+              exact
+              path="/category"
+              name="category"
+              element={<CategoryPage />}
+            />
+          )}
+          {(!role || role === "BUYER") && (
+            <Fragment>
+              <Route
+                path="/details/:id"
+                name="Details Page"
+                element={
+                  <ProductDetails
+                    handleRefresh={handleRefresh}
+                    fromWishlist={false}
+                  />
+                }
               />
-            }
-          />
+              <Route
+                path="/bestSeller/details/:id"
+                name="Details Page"
+                element={
+                  <ProductDetails
+                    handleRefresh={handleRefresh}
+                    fromWishlist={false}
+                  />
+                }
+              />
+              <Route
+                path="/topRated/details/:id"
+                name="Details Page"
+                element={
+                  <ProductDetails
+                    handleRefresh={handleRefresh}
+                    fromWishlist={false}
+                  />
+                }
+              />
+              <Route
+                path="/bestDeals/details/:id"
+                name="Details Page"
+                element={
+                  <ProductDetails
+                    handleRefresh={handleRefresh}
+                    fromWishlist={false}
+                  />
+                }
+              />
+              <Route
+                path="/category/details/:id"
+                name="Details Page"
+                element={
+                  <ProductDetails
+                    handleRefresh={handleRefresh}
+                    fromWishlist={false}
+                  />
+                }
+              />
+            </Fragment>
+          )}
           <Route
             exact
             path="/forgotPassword"
@@ -148,6 +215,24 @@ function App() {
             path="/resetPasswordLink/:token"
             name="Reset Password Link Page"
             element={<ResetPasswordLink />}
+          />
+          <Route
+            exact
+            path="/verifyBuyerAccount/:token"
+            name="verifyBuyerAccount"
+            element={<VerifyBuyerAccount />}
+          />
+          <Route
+            exact
+            path="/submitSellerVerificationDetails/:token"
+            name="submitSellerVerificationDetails"
+            element={<SubmitVerificationDetails />}
+          />
+            <Route
+            exact
+            path="/verificationPending"
+            name="verificationPending"
+            element={<VerificationPending />}
           />
           <Route
             exact
@@ -195,67 +280,124 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/addProduct"
-            name="add product"
-            element={
-              <PrivateRoute>
-                <AddProduct />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/manageProducts"
-            name="manage products"
-            element={
-              <PrivateRoute>
-                <ManageProducts />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/cart"
-            name="cart"
-            element={
-              <PrivateRoute>
-                <ViewCart
-                  handleRefresh={handleRefresh}
-                  handleCartCount={handleCartCount}
-                />
-              </PrivateRoute>
-            }
-          />
-
-          <Route
-            path="/wishlist"
-            name="wishlist"
-            element={
-              <PrivateRoute>
-                <WishlistPage handleRefresh={handleRefresh} />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/wishlist/details/:id"
-            name="wishlist details"
-            element={
-              <ProductDetails
-                handleRefresh={handleRefresh}
-                fromWishlist={true}
-                handleWsihlistCount={handleWsihlistCount}
+          {(role === "SELLER" || role === "ADMIN" || !role) && (
+            <Route
+              path="/addProduct"
+              name="add product"
+              element={
+                <PrivateRoute>
+                  <AddProduct />
+                </PrivateRoute>
+              }
+            />
+          )}
+          {(role === "SELLER" || role === "ADMIN") && (
+            <Route
+              path="/manageProducts"
+              name="manage products"
+              element={
+                <PrivateRoute>
+                  <ManageProducts />
+                </PrivateRoute>
+              }
+            />
+          )}
+          {(role === "BUYER" || !role ) && (
+            <Route
+              path="/cart"
+              name="cart"
+              element={
+                <PrivateRoute>
+                  <ViewCart
+                    handleRefresh={handleRefresh}
+                    handleCartCount={handleCartCount}
+                  />
+                </PrivateRoute>
+              }
+            />
+          )}
+          {(role === "ADMIN" || !role) && (
+            <Fragment>
+              <Route
+                path="/usersManagement"
+                name="userManagement"
+                element={
+                  <PrivateRoute>
+                    <UsersManagement
+                      handleRefresh={handleRefresh}
+                      handleCartCount={handleCartCount}
+                    />
+                  </PrivateRoute>
+                }
               />
-            }
-          />
-          <Route
-            path="/orders"
-            name="orders"
-            element={
-              <PrivateRoute>
-                {role === "BUYER" && <Orders handleRefresh={handleRefresh} />}
-                {role === "SELLER" && <SellerOrders />}
-              </PrivateRoute>
-            }
-          />
+              <Route
+                path="/sellersManagement"
+                name="sellersManagement"
+                element={
+                  <PrivateRoute>
+                    <SellersManagement />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/ordersManagement"
+                name="ordersManagement"
+                element={
+                  <PrivateRoute>
+                    <OrdersManagement />
+                  </PrivateRoute>
+                }
+              />
+            </Fragment>
+          )}
+
+          {(role === "BUYER" || !role) &&  (
+            <Route
+              path="/wishlist"
+              name="wishlist"
+              element={
+                <PrivateRoute>
+                  <WishlistPage handleRefresh={handleRefresh} />
+                </PrivateRoute>
+              }
+            />
+          )}
+          {(role === "BUYER" || !role) && (
+            <Route
+              path="/wishlist/details/:id"
+              name="wishlist details"
+              element={
+                <ProductDetails
+                  handleRefresh={handleRefresh}
+                  fromWishlist={true}
+                  handleWsihlistCount={handleWsihlistCount}
+                />
+              }
+            />
+          )}
+          {(role === "BUYER" || !role) && (
+            <Route
+              path="/orders"
+              name="orders"
+              element={
+                <PrivateRoute>
+                  <Orders handleRefresh={handleRefresh} />
+                </PrivateRoute>
+              }
+            />
+          )}
+          {(role === "SELLER" || !role) && (
+            <Route
+              path="/orders"
+              name="orders"
+              element={
+                <PrivateRoute>
+                  <SellerOrders />
+                </PrivateRoute>
+              }
+            />
+          )}
+          <Route path="*" element={<div>No page found</div>} />
         </Routes>
       </Suspense>
       <Footer />
