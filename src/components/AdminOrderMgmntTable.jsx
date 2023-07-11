@@ -1,53 +1,31 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import BlockIcon from "@mui/icons-material/Block";
-import BlockUserConfirmationModal from "./BlockUserConfirmationModal";
 import moment from "moment";
-import LockOpenIcon from "@mui/icons-material/LockOpen";
-import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
-import ContentPasteOffOutlinedIcon from "@mui/icons-material/ContentPasteOffOutlined";
-import DocumentModal from "./DocumentModal";
+import PreviewIcon from "@mui/icons-material/Preview";
+import OrderedItemsModal from "./OrderedItemsModal";
 
-export default function UserSellerTable({ sellers, handleRefetch }) {
+export default function AdminOrderMgmntTable({ orders }) {
   const [open, setOpen] = useState(false);
-  const [opendoc, setOpenDoc] = useState(false);
   const handleClose = () => {
     setOpen(false);
-  };
-  const handleDocClose = () => {
-    setOpenDoc(false);
   };
   const [data, setData] = useState([]);
   const [activeRow, setActiveRow] = useState();
 
-  const handleOpenDoc = (obj) => {
-    setOpenDoc(true);
-    setActiveRow(obj);
-  };
-
   useEffect(() => {
-    if (sellers && sellers.length > 0) setData(sellers);
-  }, [sellers]);
+    if (orders && orders.length > 0) setData(orders);
+  }, [orders]);
 
 
+  const handleViewModal=(obj)=>{
+    setActiveRow(obj);
+    setOpen(true);
+  }
   const columns = [
-    { field: "_id", headerName: "Id", width: 90 },
-    {
-      field: "name",
-      headerName: "Name",
-      width: 150,
-      editable: true,
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      width: 150,
-      height: 200,
-    },
     {
       field: "createdAt",
-      headerName: "Joined on",
+      headerName: "Ordered on",
       width: 150,
       editable: true,
       renderCell: (params) => {
@@ -59,65 +37,70 @@ export default function UserSellerTable({ sellers, handleRefetch }) {
       },
     },
     {
-      field: "softDelete",
-      headerName: "Status",
+      field: "orderId",
+      headerName: "Order Id",
       width: 150,
       editable: true,
       renderCell: (params) => {
         return (
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {params.row.softDelete ? "banned" : "active"}
+            {params.row.orderId}
           </div>
         );
       },
     },
     {
-      field: "verified",
-      headerName: "Verified",
+      field: "buyerName",
+      headerName: "Ordered By",
       width: 150,
       editable: true,
       renderCell: (params) => {
         return (
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {params.row.verified ? "verified" : "not verified"}
+            {params.row.buyerName}
           </div>
         );
       },
     },
     {
-      field: "verificationDoc",
-      headerName: "Verfication Doc Uploaded",
-      width: 150,
+      field: "deliveryAddress",
+      headerName: "Shipping Address",
+      width: 400,
       editable: true,
       renderCell: (params) => {
         return (
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {params.row.verificationDoc.length > 0 ? (
-              <ContentPasteSearchOutlinedIcon
-                onClick={() => handleOpenDoc(params.row)}
-              />
-            ) : (
-              <ContentPasteOffOutlinedIcon />
-            )}
+            {params.row.deliveryAddress}
           </div>
         );
       },
     },
     {
-      field: "action",
-      headerName: "Actions",
+        field: "paymentStatus",
+        headerName: "Payment Status",
+        width: 100,
+        editable: true,
+        renderCell: (params) => {
+          return (
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {params.row.paymentStatus}
+            </div>
+          );
+        },
+      },
+    {
+      field: "items",
+      headerName: "See Items Ordered",
       description: "This column has a value getter and is not sortable.",
       sortable: false,
       width: 70,
       renderCell: (params) => (
         <div
-          onClick={() => {
-            setActiveRow(params.row);
-            setOpen(true);
-          }}
+          onClick={() => handleViewModal(params.row)
+          }
         >
           {" "}
-          {params.row?.softDelete ? <LockOpenIcon /> : <BlockIcon />}
+          <PreviewIcon />
         </div>
       ),
     },
@@ -127,7 +110,7 @@ export default function UserSellerTable({ sellers, handleRefetch }) {
     <Box sx={{ width: "100%" }}>
       {data && data.length > 0 && (
         <DataGrid
-          rowHeight={150}
+          rowHeight={50}
           rows={data}
           getRowId={(row) => row._id}
           columns={columns}
@@ -143,17 +126,10 @@ export default function UserSellerTable({ sellers, handleRefetch }) {
           disableRowSelectionOnClick
         />
       )}
-      <BlockUserConfirmationModal
+      <OrderedItemsModal
         open={open}
         handleClose={handleClose}
         activeRow={activeRow}
-        handleRefetch={handleRefetch}
-      />
-      <DocumentModal
-        opendoc={opendoc}
-        handleDocClose={handleDocClose}
-        activeRow={activeRow}
-        handleRefetch={handleRefetch}
       />
     </Box>
   );

@@ -27,7 +27,6 @@ const BuyerOrderedCard = ({
       productId: product.productId,
     };
     const res = await cancelOrder(token, data);
-    console.log("res",res)
     if (res) {
       if (res.data.statusCode === 200) {
         alert(res.data.statusMessage);

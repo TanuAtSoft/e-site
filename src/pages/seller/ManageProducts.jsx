@@ -3,6 +3,7 @@ import { Container, Grid, Typography } from "@mui/material";
 import ManageProductCard from "../../components/ManageProductCard";
 import { getProductsByUser } from "../../apis/products/getProductByUser";
 import Loader from "../../components/Loader";
+
 const ManageProducts = () => {
   const [products, setProducts] = useState();
   let token = JSON.parse(localStorage.getItem("token"));

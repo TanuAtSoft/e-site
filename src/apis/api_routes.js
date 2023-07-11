@@ -46,6 +46,7 @@ export const API_ROUTES = {
     },
     ORDER:{
         SAVE_ORDER:"saveOrder",
+        GET_ALL_ORDERS:"getOrders",
         GET_SELLER_ORDER_INFO:"getOrderInfo",
         UPDATE_ORDER_INFO: "updateOrderStatus",
         GET_BUYER_ORDER_INFO:"getBuyerOrderInfo",
@@ -75,7 +76,9 @@ export const API_ROUTES = {
         GET_SELLERS:"getSeller",
         BLOCK_SELLER:"blockSeller",
         GET_USER_INFO:"userInfo",
-        VERIFY_USER:"verifyUser"
+        VERIFY_USER:"verifyUser",
+        VERIFY_SELLER:"verifySeller",
+        GET_BUYERS:"getBuyers"
     },
     VERIFICATION_DOC:{
         SELLER_VERIFICATION_DOC:"uploadSellerVerificationDoc"

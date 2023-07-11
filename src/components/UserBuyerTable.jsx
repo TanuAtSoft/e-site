@@ -5,30 +5,18 @@ import BlockIcon from "@mui/icons-material/Block";
 import BlockUserConfirmationModal from "./BlockUserConfirmationModal";
 import moment from "moment";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import ContentPasteSearchOutlinedIcon from "@mui/icons-material/ContentPasteSearchOutlined";
-import ContentPasteOffOutlinedIcon from "@mui/icons-material/ContentPasteOffOutlined";
-import DocumentModal from "./DocumentModal";
 
-export default function UserSellerTable({ sellers, handleRefetch }) {
+export default function UserBuyerTable({ buyers, handleRefetch }) {
   const [open, setOpen] = useState(false);
-  const [opendoc, setOpenDoc] = useState(false);
   const handleClose = () => {
     setOpen(false);
-  };
-  const handleDocClose = () => {
-    setOpenDoc(false);
   };
   const [data, setData] = useState([]);
   const [activeRow, setActiveRow] = useState();
 
-  const handleOpenDoc = (obj) => {
-    setOpenDoc(true);
-    setActiveRow(obj);
-  };
-
   useEffect(() => {
-    if (sellers && sellers.length > 0) setData(sellers);
-  }, [sellers]);
+    if (buyers && buyers.length > 0) setData(buyers);
+  }, [buyers]);
 
 
   const columns = [
@@ -85,25 +73,6 @@ export default function UserSellerTable({ sellers, handleRefetch }) {
       },
     },
     {
-      field: "verificationDoc",
-      headerName: "Verfication Doc Uploaded",
-      width: 150,
-      editable: true,
-      renderCell: (params) => {
-        return (
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            {params.row.verificationDoc.length > 0 ? (
-              <ContentPasteSearchOutlinedIcon
-                onClick={() => handleOpenDoc(params.row)}
-              />
-            ) : (
-              <ContentPasteOffOutlinedIcon />
-            )}
-          </div>
-        );
-      },
-    },
-    {
       field: "action",
       headerName: "Actions",
       description: "This column has a value getter and is not sortable.",
@@ -149,12 +118,7 @@ export default function UserSellerTable({ sellers, handleRefetch }) {
         activeRow={activeRow}
         handleRefetch={handleRefetch}
       />
-      <DocumentModal
-        opendoc={opendoc}
-        handleDocClose={handleDocClose}
-        activeRow={activeRow}
-        handleRefetch={handleRefetch}
-      />
+   
     </Box>
   );
 }

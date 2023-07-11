@@ -6,6 +6,10 @@ import UserSellerTable from "../../components/UserSellerTable"
 const SellersManagement =()=>{
     const [sellers,setSellers] = useState()
     const token = JSON.parse(localStorage.getItem("token"));
+    const [refetch, setRefetch] = useState(false)
+    const handleRefetch=()=>{
+        setRefetch(!refetch)
+    }
     useEffect(()=>{
      const fetchSellers =async()=>{
         const res = await getSellers(token)
@@ -25,7 +29,7 @@ const SellersManagement =()=>{
         maxWidth="lg"
         sx={{ padding: "20px 0px", minHeight: "85vh", textAlign: "center" }}
       >
-          <UserSellerTable orderedItems={sellers} />
+          <UserSellerTable sellers={sellers} handleRefetch={handleRefetch} />
       </Container>
     )
 }

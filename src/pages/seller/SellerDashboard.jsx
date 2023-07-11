@@ -115,7 +115,18 @@ const SellerDashboard = () => {
         {activeTab === "stocks" && <SellerStock />}
         {activeTab === "bestSold" && <SellerBestSoldComponent />}
         {activeTab === "payment" && (
-          <Grid item xs={12} md={9} spacing={2} style={{display:"flex", justifyContent:"center",alignItems:"center",flexDirection:"column"}}>
+          <Grid
+            item
+            xs={12}
+            md={9}
+            spacing={2}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
             <ConstructionIcon />
             <Typography>Under Construction</Typography>
           </Grid>

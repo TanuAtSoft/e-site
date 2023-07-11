@@ -94,14 +94,14 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const [suggestions, setSuggestions] = useState([{ name: "" }]);
   const inputRef = useRef("inputRef");
-  const [ cookies ] = useCookies(["verified"])
+  const [cookies] = useCookies(["verified"]);
   const navItems =
     role === "SELLER" || role === "ADMIN"
       ? [
           { label: "Dashboard", link: "" },
           { label: "Add Product", link: "addProduct" },
           { label: "Manage Products", link: "manageProducts" },
-          { label: "Oders", link: "orders" },
+          { label: "Oders", link: "sellerOrders" },
         ]
       : [
           { label: "Best Seller", link: "bestSeller" },
@@ -173,7 +173,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
     }
   };
   const handleOrder = () => {
-    navigate("/orders");
+    navigate("/buyerOrders");
   };
   const handleLogout = () => {
     handleCartCount(null);
@@ -181,6 +181,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("role");
+    localStorage.removeItem("submittedVerDoc");
     navigate("/loggedOut");
   };
   const menuId = "primary-search-account-menu";
@@ -293,14 +294,12 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
     setOpen((prevState) => !prevState);
   };
   const handleSideNavLinks = (link) => {
-    if(cookies.verified === true)
-    navigate(`/${link}`);
-    else{
-      if(cookies.verified === false && cookies.submittedVerDoc === false)
-      navigate(`/submitSellerVerificationDetails/${token}`)
-      if(cookies.verified === false && cookies.submittedVerDoc === true)
-      navigate("/verificationPending")
-    }
+    if (cookies.verified === "true")
+      navigate(`/${link}`);
+    if (cookies.verified === "false" && cookies.submittedVerDoc === "false")
+      navigate(`/submitSellerVerificationDetails/${token}`);
+    if (cookies.verified === "false" && cookies.submittedVerDoc === "true")
+      navigate("/verificationPending");
   };
 
   const drawer = (
@@ -346,7 +345,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
         </Typography>
       )}
 
-      {role !== "SELLER" && role !== "ADMIN" &&(
+      {role !== "SELLER" && role !== "ADMIN" && (
         <List>
           {categoryNavlinks.map((item, id) => (
             <Link
@@ -426,8 +425,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
           {!isTabletOrMobile && (
             <IconButton
               onClick={() => {
-                if(role === "BUYER" || !role)
-                navigate("/");
+                if (role === "BUYER" || !role) navigate("/");
               }}
             >
               <img
@@ -437,7 +435,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
               />
             </IconButton>
           )}
-          {(!role  || role === "BUYER") && (
+          {(!role || role === "BUYER") && (
             <Stack spacing={1} sx={{ width: 300 }}>
               <Search>
                 <Autocomplete

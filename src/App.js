@@ -377,7 +377,7 @@ function App() {
           )}
           {(role === "BUYER" || !role) && (
             <Route
-              path="/orders"
+              path="/buyerOrders"
               name="orders"
               element={
                 <PrivateRoute>
@@ -386,9 +386,9 @@ function App() {
               }
             />
           )}
-          {(role === "SELLER" || !role) && (
+          {(role === "SELLER" || role === "ADMIN" || !role) && (
             <Route
-              path="/orders"
+              path="/sellerOrders"
               name="orders"
               element={
                 <PrivateRoute>

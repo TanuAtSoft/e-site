@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState,useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   Container,
@@ -38,6 +38,14 @@ const SubmitVerificationDetails = () => {
   const [idimgPreview, setIdImgPreview] = useState([]);
   const [addressimgPreview, setAddressImgPreview] = useState([]);
   const [loading, setLoading] = useState(false);
+    const submittedDoc = localStorage.getItem("submittedDoc");
+    const [show,setShow] = useState(false)
+
+    useEffect(()=>{
+     if(submittedDoc === "true"){
+      setShow(true)
+     }
+    },[submittedDoc])
 
   const handleSubmitVerificationDetails = async (e) => {
     e.preventDefault();
@@ -114,6 +122,8 @@ const SubmitVerificationDetails = () => {
           setIdImgPreview([]);
           setAddressImgPreview([]);
           alert(res.data.statusMessage);
+          localStorage.setItem("submittedDoc", true);
+          
         }
       }
     } else {
@@ -176,7 +186,7 @@ const SubmitVerificationDetails = () => {
   return (
     <Fragment>
       {loading && <Loader />}
-      {!loading && (
+      {!loading && !show && (
         <Container
           maxWidth="lg"
           sx={{ padding: "20px 0px", minHeight: "85vh", textAlign: "center" }}
@@ -444,7 +454,7 @@ const SubmitVerificationDetails = () => {
                 sx={{ mt: 3, mb: 2 }}
                 onClick={(e) => handleSubmitVerificationDetails(e)}
               >
-                Add Product
+               Sumbit document
               </Button>
 
               {/* <FormControlLabel
@@ -455,6 +465,19 @@ const SubmitVerificationDetails = () => {
           </Container>
         </Container>
       )}
+      {show && <Container
+          maxWidth="lg"
+          sx={{ padding: "20px 0px", minHeight: "85vh", textAlign: "center" }}
+        >
+          <Typography
+            gutterBottom
+            variant="h6"
+            component="div"
+            sx={{ fontSize: "18px" }}
+          >
+            Thank you for submitting your doc, You will be notified once your document is verified from our side.
+          </Typography>
+          </Container>}
     </Fragment>
   );
 };

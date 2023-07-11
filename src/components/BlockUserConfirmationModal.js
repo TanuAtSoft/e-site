@@ -22,16 +22,17 @@ import {
     p: 4,
   };
   
-  const BlockUserConfirmationModal = ({ activeRow,open, handleClose}) => {
+  const BlockUserConfirmationModal = ({ activeRow,open, handleClose,handleRefetch}) => {
     const token = JSON.parse(localStorage.getItem("token"));
     const handleDelete =async()=>{
      const res = await blockSeller(token,activeRow._id)
-     console.log("res",res)
-    //  if(res.data.statusCode === 200){
-    //   alert(res.data.statusMessage)
-    //   handleRefresh()
+    //  console.log("res",res)
+     if(res.data.statusCode === 200){
+      alert(res.data.statusMessage)
+      handleRefetch()
       handleClose()
      }
+    }
     return (
       <Modal
         open={open}
