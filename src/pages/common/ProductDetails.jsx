@@ -164,7 +164,7 @@ const ProductDetails = ({
                     </Typography>
                   </Fragment>
                 )}
-                {product.seller.softDelete &&  (
+                {product.seller?.softDelete &&  (
                   <Fragment>
                     <Typography
                       gutterBottom

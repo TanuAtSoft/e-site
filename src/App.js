@@ -7,8 +7,12 @@ import PrivateRoute from "./commans/PrivateRoute";
 import Dashboard from "./components/Dashboard";
 import { getCartLength } from "./apis/carts/getCartLength";
 import { getWishlistLength } from "./apis/wishlist/getWishlistLength";
-const SubmitVerificationDetails = React.lazy(()=> import("./pages/seller/SubmitVerificationDetails"))
-const VerificationPending = React.lazy(()=> import("./pages/seller/VerificationPending"))
+const SubmitVerificationDetails = React.lazy(() =>
+  import("./pages/seller/SubmitVerificationDetails")
+);
+const VerificationPending = React.lazy(() =>
+  import("./pages/seller/VerificationPending")
+);
 
 const Login = React.lazy(() => import("./pages/common/SignIn"));
 const SignUp = React.lazy(() => import("./pages/common/SignUp"));
@@ -118,38 +122,7 @@ function App() {
             name="dashboard"
             element={<Dashboard handleRefresh={handleRefresh} />}
           />
-          {(role === null || role === "BUYER") && (
-            <Route
-              exact
-              path="/bestDeals"
-              name="bestDeals"
-              element={<BestDealsPage />}
-            />
-          )}
-          {(role === null || role === "BUYER") && (
-            <Route
-              exact
-              path="/bestSeller"
-              name="dashboard"
-              element={<Dashboard handleRefresh={handleRefresh} />}
-            />
-          )}
-          {(role === null || role === "BUYER") && (
-            <Route
-              exact
-              path="/topRated"
-              name="dashboard"
-              element={<Dashboard handleRefresh={handleRefresh} />}
-            />
-          )}
-          {(!role || role === "BUYER") && (
-            <Route
-              exact
-              path="/category"
-              name="category"
-              element={<CategoryPage />}
-            />
-          )}
+
           {(!role || role === "BUYER") && (
             <Fragment>
               <Route
@@ -161,6 +134,30 @@ function App() {
                     fromWishlist={false}
                   />
                 }
+              />
+              <Route
+                exact
+                path="/topRated"
+                name="dashboard"
+                element={<Dashboard handleRefresh={handleRefresh} />}
+              />
+              <Route
+                exact
+                path="/bestSeller"
+                name="dashboard"
+                element={<Dashboard handleRefresh={handleRefresh} />}
+              />
+              <Route
+                exact
+                path="/category"
+                name="category"
+                element={<CategoryPage />}
+              />
+              <Route
+                exact
+                path="/bestDeals"
+                name="bestDeals"
+                element={<BestDealsPage />}
               />
               <Route
                 path="/bestSeller/details/:id"
@@ -228,7 +225,7 @@ function App() {
             name="submitSellerVerificationDetails"
             element={<SubmitVerificationDetails />}
           />
-            <Route
+          <Route
             exact
             path="/verificationPending"
             name="verificationPending"
@@ -302,7 +299,7 @@ function App() {
               }
             />
           )}
-          {(role === "BUYER" || !role ) && (
+          {(role === "BUYER" || !role) && (
             <Route
               path="/cart"
               name="cart"
@@ -351,7 +348,7 @@ function App() {
             </Fragment>
           )}
 
-          {(role === "BUYER" || !role) &&  (
+          {(role === "BUYER" || !role) && (
             <Route
               path="/wishlist"
               name="wishlist"

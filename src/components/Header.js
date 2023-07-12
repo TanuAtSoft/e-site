@@ -294,12 +294,16 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
     setOpen((prevState) => !prevState);
   };
   const handleSideNavLinks = (link) => {
-    if (cookies.verified === "true")
+    if (role === "BUYER" || !role) {
       navigate(`/${link}`);
-    if (cookies.verified === "false" && cookies.submittedVerDoc === "false")
-      navigate(`/submitSellerVerificationDetails/${token}`);
-    if (cookies.verified === "false" && cookies.submittedVerDoc === "true")
-      navigate("/verificationPending");
+    }
+    if (role === "SELLER") {
+      if (cookies.verified === "true") navigate(`/${link}`);
+      if (cookies.verified === "false" && cookies.submittedVerDoc === "false")
+        navigate(`/submitSellerVerificationDetails/${token}`);
+      if (cookies.verified === "false" && cookies.submittedVerDoc === "true")
+        navigate("/verificationPending");
+    }
   };
 
   const drawer = (

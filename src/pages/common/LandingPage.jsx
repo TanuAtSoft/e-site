@@ -70,7 +70,7 @@ const LandingPage = ({ handleRefresh }) => {
             products.map((item, id) => {
               return (
                 <Fragment key={id}>
-                  {item.seller.softDelete ? (
+                  {item?.seller?.softDelete ? (
                     <Fragment></Fragment>
                   ) : (
                     <Grid item xs={12} md={3} style={{ paddingLeft: "19px" }}>
