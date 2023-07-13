@@ -294,7 +294,7 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
     setOpen((prevState) => !prevState);
   };
   const handleSideNavLinks = (link) => {
-    if (role === "BUYER" || !role) {
+    if (role === "BUYER" || !role || role === "ADMIN") {
       navigate(`/${link}`);
     }
     if (role === "SELLER") {

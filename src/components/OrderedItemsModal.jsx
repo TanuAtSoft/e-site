@@ -30,7 +30,7 @@ const style = {
 const OrderedItemsModal = ({ open, activeRow, handleClose }) => {
   const token = JSON.parse(localStorage.getItem("token"));
   const [sellers, setSellers] = useState([]);
-  console.log("activeRow", activeRow);
+
   useEffect(() => {
     const getSellerName = async (id) => {
       const res = await getUserInfo(token, id);

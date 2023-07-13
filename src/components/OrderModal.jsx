@@ -52,7 +52,6 @@ const OrderModal = ({ open, handleClose, activeRow, setRefresh }) => {
       setDropDowns(orderStatus3);
     }
     setCurrentStatus(activeRow?.orderedItems?.status);
-  console.log("activeRow?.orderedItems?.status",activeRow?.orderedItems?.status)
   }, [activeRow?.orderedItems?.status, currentStatus]);
 
   useEffect(() => {

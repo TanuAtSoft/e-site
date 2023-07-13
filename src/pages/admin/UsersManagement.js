@@ -14,7 +14,6 @@ const UsersManagement =()=>{
     useEffect(()=>{
      const fetchSellers =async()=>{
         const res = await getBuyers(token)
-        console.log("res", res.data.data.buyers)
         if(res.remote === "success"){
             if(res.data.statusCode === 200)
             setBuyers(res.data.data.buyers)

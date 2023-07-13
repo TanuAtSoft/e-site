@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { Grid, Typography, Button, Paper } from "@mui/material";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,8 @@ import { addRatings } from "../apis/ratings/addRatings";
 import StarIcon from "@mui/icons-material/Star";
 import moment from "moment";
 import { cancelOrder } from "../apis/orders/cancelOrder";
+import { getSingleProduct } from "../apis/products/getSingleProduct";
+import { getUserInfo } from "../apis/admin/userInfo";
 
 const BuyerOrderedCard = ({
   product,
@@ -20,6 +22,26 @@ const BuyerOrderedCard = ({
   const token = JSON.parse(localStorage.getItem("token"));
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 900px)" });
   const navigate = useNavigate();
+  const [notAvailable, setNotAvailable] = useState(false);
+
+  useEffect(() => {
+    const checkStock = async () => {
+      const res = await getSingleProduct(product.productId);
+      if (res?.data?.data?.product?.stock === 0) {
+        setNotAvailable(true);
+      }
+    };
+    const checkSellerState = async () => {
+      const res = await getUserInfo(token, product.seller);
+      if (res?.data?.data?.sellers?.softDelete) {
+        setNotAvailable(true);
+      }
+    };
+    if (product) {
+      checkStock();
+      checkSellerState();
+    }
+  }, [product, token]);
 
   const handleCancelOrder = async () => {
     const data = {
@@ -104,9 +126,13 @@ const BuyerOrderedCard = ({
             {product.quantity}
           </Typography>
           <br />
-          <Button variant="contained" onClick={() => handleBuyAgain()}>
-            Buy again
-          </Button>
+          {notAvailable ? (
+            <Typography><strong>Out of Stock</strong></Typography>
+          ) : (
+            <Button variant="contained" onClick={() => handleBuyAgain()}>
+              Buy again
+            </Button>
+          )}
         </Grid>
         <Grid
           item
@@ -211,7 +237,9 @@ const BuyerOrderedCard = ({
             {(product.status === "ORDERED" ||
               product.status === "INPROCESS" ||
               product.status === "SHIPPED") && (
-              <Button variant="outlined" onClick={handleCancelOrder}>Cancel</Button>
+              <Button variant="outlined" onClick={handleCancelOrder}>
+                Cancel
+              </Button>
             )}
           </div>
         </Grid>

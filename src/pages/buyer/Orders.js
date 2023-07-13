@@ -21,7 +21,6 @@ const Orders = ({ handleRefresh }) => {
           if (res.data.statusCode === 200) {
             setOrders(res.data.data);
           }
-          console.log("res", res.data.data);
         }
       } catch (e) {
         console.log(e);
