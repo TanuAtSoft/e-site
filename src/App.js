@@ -13,7 +13,7 @@ const SubmitVerificationDetails = React.lazy(() =>
 const VerificationPending = React.lazy(() =>
   import("./pages/seller/VerificationPending")
 );
-
+const PageNotFound = React.lazy(() => import("./pages/common/PageNotFound"));
 const Login = React.lazy(() => import("./pages/common/SignIn"));
 const SignUp = React.lazy(() => import("./pages/common/SignUp"));
 const ForgotPassword = React.lazy(() =>
@@ -394,7 +394,7 @@ function App() {
               }
             />
           )}
-          <Route path="*" element={<div>No page found</div>} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
       </Suspense>
       <Footer />
