@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Grid, Typography } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import Item from "../../components/Item";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 import SellerHome from "../../components/SellerHome";
 import SellerRevenueComponent from "../../components/SellerRevenueComponent";
@@ -10,8 +12,22 @@ import SellerBestSoldComponent from "../../components/SellerBestSoldComponent";
 import ConstructionIcon from "@mui/icons-material/Construction";
 
 const SellerDashboard = () => {
+  let token = JSON.parse(localStorage.getItem("token"));
+  const [cookies] = useCookies(["verified"]);
   const user = JSON.parse(localStorage.getItem("user"));
   const [activeTab, setActiveTab] = useState("home");
+  const navigate= useNavigate()
+
+  useEffect(()=>{
+    if(cookies.verified === "false"){
+      if(cookies.submittedVerDoc === "false"){
+       navigate(`/submitSellerVerificationDetails/${token}`)
+      }
+      if(cookies.submittedVerDoc === "true"){
+       navigate("/verificationPending")
+      }
+    }
+  },[cookies.submittedVerDoc, cookies.verified, navigate, token])
 
   const handleActiveTab = (tab) => {
     setActiveTab(tab);
