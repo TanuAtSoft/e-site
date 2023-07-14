@@ -24,8 +24,8 @@ const SellerOrders=()=>{
           maxWidth="lg"
           sx={{ padding: "20px 0px", minHeight: "85vh", textAlign: "center" }}
         >
-            {orderedItems.length > 0 &&<Table orderedItems={orderedItems} handleRefetch={handleRefetch}/>}
-            {orderedItems.length === 0 && <Typography>No orders</Typography>}
+            {orderedItems?.length > 0 &&<Table orderedItems={orderedItems} handleRefetch={handleRefetch}/>}
+            {orderedItems?.length === 0 && <Typography>No orders</Typography>}
         </Container>
     )
 }
