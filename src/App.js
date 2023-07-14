@@ -288,7 +288,7 @@ function App() {
               }
             />
           )}
-          {(role === "SELLER" || role === "ADMIN") && (
+          {((role === "SELLER" || role === "ADMIN") || !role) && (
             <Route
               path="/manageProducts"
               name="manage products"
