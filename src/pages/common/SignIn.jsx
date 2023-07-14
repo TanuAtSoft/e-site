@@ -104,13 +104,14 @@ const SignIn = ({ handleCartCount, handleWsihlistCount }) => {
         }
         if (
           res.data.data.user.role === "SELLER" &&
-          res.data.data.user.verified === false
+          !res.data.data.user.verified
         ) {
-          if (res.data.data.user.submittedVerificationDoc === false)
+          if (!res.data.data.user.submittedVerificationDoc)
             navigate(
               `/submitSellerVerificationDetails/${res.data.data.user.token}`
             );
           else {
+            if(res.data.data.user.submittedVerificationDoc)
             navigate("/verificationPending");
           }
         } else {

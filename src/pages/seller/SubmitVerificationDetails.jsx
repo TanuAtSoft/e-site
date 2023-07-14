@@ -12,6 +12,7 @@ import {
 import { addSellerVerificationDoc } from "../../apis/sellerVerificationDoc/sellerVerificationDoc";
 import { uploadImgs } from "../../apis/upload/uploadImgs";
 import Loader from "../../components/Loader";
+import { useCookies } from "react-cookie";
 
 function removeElement(arr, ele) {
   const data = arr.filter((item) => {
@@ -38,14 +39,16 @@ const SubmitVerificationDetails = () => {
   const [idimgPreview, setIdImgPreview] = useState([]);
   const [addressimgPreview, setAddressImgPreview] = useState([]);
   const [loading, setLoading] = useState(false);
-    const submittedDoc = localStorage.getItem("submittedDoc");
+  const [cookies] = useCookies(["verified"]);
     const [show,setShow] = useState(false)
+    
 
     useEffect(()=>{
+      const submittedDoc = cookies.submittedVerDoc;
      if(submittedDoc === "true"){
       setShow(true)
      }
-    },[submittedDoc])
+    },[cookies.submittedVerDoc])
 
   const handleSubmitVerificationDetails = async (e) => {
     e.preventDefault();
