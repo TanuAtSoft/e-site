@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import React, { Fragment, useMemo } from "react";
 
 const SellerDashboard = React.lazy(() => import("../pages/seller/SellerDashboard"));
 const LandingPage = React.lazy(() => import("../pages/common/LandingPage"));

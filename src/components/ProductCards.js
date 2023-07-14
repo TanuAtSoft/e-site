@@ -11,11 +11,12 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import { useEffect } from "react";
 
-const ProductCard = ({ product, handleRefresh, fromWishlist,isBestDeals }) => {
+const ProductCard = ({ product, handleRefresh, fromWishlist, isBestDeals }) => {
   const [visibile, setVisible] = useState("hidden");
   const token = JSON.parse(localStorage.getItem("token"));
   const [rating, setRating] = useState();
-  let filledArr, unfilledArr;
+  let filledArr = [],
+    unfilledArr = [];
   const navigate = useNavigate();
   const [discountedPrice, setDiscopuntedPrice] = useState();
 
@@ -67,8 +68,8 @@ const ProductCard = ({ product, handleRefresh, fromWishlist,isBestDeals }) => {
       handleRefresh();
       alert(res.data.statusMessage);
     }
-    if(res.remote === "failure"){
-      alert(res.errors.errors)
+    if (res.remote === "failure") {
+      alert(res.errors.errors);
     }
   };
   const handleViewDetails = (id) => {
@@ -92,12 +93,16 @@ const ProductCard = ({ product, handleRefresh, fromWishlist,isBestDeals }) => {
           image={product.image ? product.image : product.images[0]}
           style={{ objectFit: "contain", position: "relative" }}
         />
-        { isBestDeals && <div
-        // className="cards-hidden-div"
-         style={{ visibility: product.discount > 0 ?  "visible":  "hidden" }}
-        >
-          <Typography variant="body"className="discount-div">{product.discount}% Off</Typography>
-        </div>}
+        {isBestDeals && (
+          <div
+            // className="cards-hidden-div"
+            style={{ visibility: product.discount > 0 ? "visible" : "hidden" }}
+          >
+            <Typography variant="body" className="discount-div">
+              {product.discount}% Off
+            </Typography>
+          </div>
+        )}
       </Link>
       <CardContent>
         <div className="brand-review-div">
@@ -105,23 +110,21 @@ const ProductCard = ({ product, handleRefresh, fromWishlist,isBestDeals }) => {
             {product.brand.substring(0, 10)}
           </Typography>
           <div className="reviews" style={{ gap: "0px" }}>
-            {filledArr &&
-              filledArr.map((item) => {
-                return (
-                  <div className="rating" key={item}>
-                    <StarIcon style={{ fontSize: "14px" }} />
-                    {/* <p>Very Bad</p> */}
-                  </div>
-                );
-              })}
-            {unfilledArr &&
-              unfilledArr.map((item) => {
-                return (
-                  <div className="rating" key={item}>
-                    <StarBorderIcon style={{ fontSize: "14px" }} />
-                  </div>
-                );
-              })}
+            {filledArr.map((item) => {
+              return (
+                <div className="rating" key={item}>
+                  <StarIcon style={{ fontSize: "14px" }} />
+                  {/* <p>Very Bad</p> */}
+                </div>
+              );
+            })}
+            {unfilledArr.map((item) => {
+              return (
+                <div className="rating" key={item}>
+                  <StarBorderIcon style={{ fontSize: "14px" }} />
+                </div>
+              );
+            })}
             {/* <p>Very Bad</p> */}
           </div>
         </div>
@@ -129,30 +132,34 @@ const ProductCard = ({ product, handleRefresh, fromWishlist,isBestDeals }) => {
         <Typography variant="body1" sx={{ color: "#212121" }}>
           {product.title && product.title.substring(0, 24)}....
         </Typography>
-       {product.discount === 0 && <Typography
-          variant="h6"
-          sx={{
-            fontSize: "18px",
-            mt: 1.5,
-            color: "#212121",
-            fontWeight: "500",
-          }}
-        >
-          <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
-          {product.price}
-        </Typography>}
-        {product.discount > 0 && <Typography
-          variant="h6"
-          sx={{
-            fontSize: "18px",
-            mt: 1.5,
-            color: "#212121",
-            fontWeight: "500",
-          }}
-        >
-          <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
-          <s>{product.price}</s> {discountedPrice}
-        </Typography>}
+        {product.discount === 0 && (
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: "18px",
+              mt: 1.5,
+              color: "#212121",
+              fontWeight: "500",
+            }}
+          >
+            <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
+            {product.price}
+          </Typography>
+        )}
+        {product.discount > 0 && (
+          <Typography
+            variant="h6"
+            sx={{
+              fontSize: "18px",
+              mt: 1.5,
+              color: "#212121",
+              fontWeight: "500",
+            }}
+          >
+            <CurrencyRupeeIcon style={{ fontSize: "14px" }} />
+            <s>{product.price}</s> {discountedPrice}
+          </Typography>
+        )}
         {!fromWishlist && (
           <div
             className="cards-hidden-div"

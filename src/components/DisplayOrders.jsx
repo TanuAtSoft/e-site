@@ -13,24 +13,26 @@ const DisplayOrders = ({ order }) => {
         </div>
         <div>
           <h4>Ordered On</h4>{" "}
-          <span>{moment(order?.createdAt).format("DD-MM-YYYY")}</span>
+          <span>{moment(order.createdAt).format("DD-MM-YYYY")}</span>
         </div>
         <div>
-          {order?.orderedItems.length > 0 &&
-            order?.orderedItems.map((item, id) => {
+          {order.orderedItems.length > 0 &&
+            order.orderedItems.map((item, id) => {
               return (
                 <div key={id}>
                   <img
                     style={{ height: "150px", width: "auto" }}
                     src={`${item.image}`}
                     alt="product"
-                    onClick={()=>{}}
+                    onClick={() => {}}
                   />
                   <div>
                     <h4>status: {item.status}</h4>
-                    {item.shippingDetails && item.shippingDetails !== "" && item.shippingDetails !== undefined &&(
-                      <h4>Shipping Details {item.shippingDetails? item.shippingDetails : ""}</h4>
-                    )}
+                    {item.shippingDetails &&
+                      item.shippingDetails !== "" &&
+                      item.shippingDetails !== undefined && (
+                        <h4>Shipping Details {item.shippingDetails}</h4>
+                      )}
                   </div>
                 </div>
               );

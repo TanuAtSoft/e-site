@@ -49,7 +49,7 @@ const AddProduct = () => {
   };
   useEffect(() => {
     setImgPreview(imgPreview);
-  }, [refresh]);
+  }, [imgPreview, refresh]);
 
   const handleCatChange = (e) => {
     const value = e.target.value;

@@ -26,7 +26,6 @@ import { verifyPayment } from "../../apis/payment/verifyPayment";
 import { saveOrder } from "../../apis/orders/saveOrder";
 import OderConfirmationModal from "../../components/OderConfirmationModal";
 import { getSingleProduct } from "../../apis/products/getSingleProduct";
-import {getUserInfo} from "../../apis/admin/userInfo"
 
 const ViewCart = ({ handleRefresh, handleCartCount }) => {
   const token = JSON.parse(localStorage.getItem("token"));
@@ -95,6 +94,7 @@ const ViewCart = ({ handleRefresh, handleCartCount }) => {
     };
     const res = await removeItemFromCart(token, JSON.stringify(data));
     if (res) {
+      handleRefresh();
       setRefresh(!refresh);
       handleRefresh();
     }

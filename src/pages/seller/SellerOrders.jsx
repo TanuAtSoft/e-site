@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from "react"
+import { useState, useEffect } from "react"
 import {getSellerOrderInfo} from "../../apis/orders/getSellerOrderInfo"
 import Table from "../../components/Table"
 import {Container} from "@mui/material";

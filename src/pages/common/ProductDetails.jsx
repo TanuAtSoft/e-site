@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import {useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { Paper, Grid, Container, Typography } from "@mui/material";
@@ -36,7 +36,6 @@ const ProductDetails = ({
     fetchProducts();
   }, [params.id]);
 
-
   function Item(props) {
     return (
       <Paper sx={{ height: "auto" }}>
@@ -50,7 +49,8 @@ const ProductDetails = ({
   }
 
   const [rating, setRating] = useState();
-  let filledArr, unfilledArr;
+  let filledArr = [],
+    unfilledArr = [];
 
   useEffect(() => {
     if (product) {
@@ -83,8 +83,9 @@ const ProductDetails = ({
           <Grid container direction={"row"} spacing={1}>
             <Grid item xs={12} md={6} sx={{ maxHeight: "100vh" }}>
               <Carousel>
-                {product &&
-                  product.images.map((item, i) => <Item key={i} item={item} />)}
+                {product.images.map((item, i) => (
+                  <Item key={i} item={item} />
+                ))}
               </Carousel>
             </Grid>
             <Grid
@@ -110,26 +111,24 @@ const ProductDetails = ({
                 </Typography>
                 <div className="rating-details-page-div">
                   <div className="reviews" style={{ gap: "0px" }}>
-                    {filledArr &&
-                      filledArr.map((item) => {
-                        return (
-                          <div className="rating" key={item}>
-                            <StarIcon />
-                            {/* <p>Very Bad</p> */}
-                          </div>
-                        );
-                      })}
-                    {unfilledArr &&
-                      unfilledArr.map((item) => {
-                        return (
-                          <div className="rating" key={item}>
-                            <StarBorderIcon />
-                          </div>
-                        );
-                      })}
+                    {filledArr.map((item) => {
+                      return (
+                        <div className="rating" key={item}>
+                          <StarIcon />
+                          {/* <p>Very Bad</p> */}
+                        </div>
+                      );
+                    })}
+                    {unfilledArr.map((item) => {
+                      return (
+                        <div className="rating" key={item}>
+                          <StarBorderIcon />
+                        </div>
+                      );
+                    })}
                     {/* <p>Very Bad</p> */}
                   </div>
-                  {product && rating && <p>({product.reviews.length})</p>}
+                  {rating && <p>({product.reviews.length})</p>}
                 </div>
                 {!rating && <Typography>No Rating available</Typography>}
                 {product.discount === 0 && (
@@ -143,7 +142,7 @@ const ProductDetails = ({
                     {product.price}
                   </Typography>
                 )}
-                {product.discount > 0 && !product.seller.softDelete &&  (
+                {product.discount > 0 && !product.seller.softDelete && (
                   <Fragment>
                     <Typography
                       gutterBottom
@@ -164,7 +163,7 @@ const ProductDetails = ({
                     </Typography>
                   </Fragment>
                 )}
-                {product.seller?.softDelete &&  (
+                {product.seller?.softDelete && (
                   <Fragment>
                     <Typography
                       gutterBottom
@@ -172,7 +171,7 @@ const ProductDetails = ({
                       component="div"
                       sx={{ fontWeight: "bold", fontSize: "18px" }}
                     >
-                     Item is not available
+                      Item is not available
                     </Typography>
                   </Fragment>
                 )}
@@ -184,7 +183,7 @@ const ProductDetails = ({
                 >
                   About this Item:
                 </Typography>
-                {product?.description.map((item, id) => {
+                {product.description.map((item, id) => {
                   return (
                     <Typography
                       key={id}
