@@ -248,3 +248,8 @@ button.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.MuiAutocom
     color: white;
     font-size: 16px;
 }
+.card-grid{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

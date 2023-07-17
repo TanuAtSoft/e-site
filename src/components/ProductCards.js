@@ -77,7 +77,7 @@ const ProductCard = ({ product, handleRefresh, fromWishlist, isBestDeals }) => {
   };
   return (
     <Card
-      sx={{ maxWidth: 335, position: "relative", zIndex: "1" }}
+      sx={{ maxWidth: 350, position: "relative", zIndex: "1" }}
       onMouseEnter={(e) => showButton(e)}
       onMouseLeave={(e) => hideButton(e)}
     >

@@ -62,9 +62,9 @@ const LandingPage = ({ handleRefresh }) => {
       <Container maxWidth="lg" sx={{ padding: "20px 0px" }}>
         <Grid
           container
-          direction={"row"}
+          direction={"row"} 
           spacing={6}
-          style={{ marginLeft: isTabletOrMobile ? "0px" : "" }}
+          // style={{ marginLeft: isTabletOrMobile ? "0px" : "" }}
         >
           {products &&
             products.map((item, id) => {
@@ -73,7 +73,7 @@ const LandingPage = ({ handleRefresh }) => {
                   {item?.seller?.softDelete ? (
                     <Fragment></Fragment>
                   ) : (
-                    <Grid item xs={12} md={3} style={{ paddingLeft: "19px" }}>
+                    <Grid item xs={12} md={3} className="card-grid">
                       <ProductCard
                         product={item}
                         handleRefresh={handleRefresh}
