@@ -28,11 +28,11 @@ const CategoryPage=()=>{
         <Suspense fallback={<Loader />}>
         {loading && <Loader />}
         <Container maxWidth="lg" sx={{ padding: "20px 0px" }}>
-          <Grid container direction={"row"} spacing={6} style={{marginLeft:isTabletOrMobile?"0px":""}}>
+          <Grid container direction={"row"} spacing={6} >
             {products &&
               products.map((item, id) => {
                 return (
-                  <Grid item xs={12} md={3} key={id} style={{ paddingLeft: "19px"}}>
+                  <Grid item xs={12} md={3} key={id}  className="card-grid">
                     <ProductCard product={item} fromWishlist={false}/>
                   </Grid>
                 );

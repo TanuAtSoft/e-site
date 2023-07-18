@@ -80,6 +80,8 @@ const ProductCard = ({ product, handleRefresh, fromWishlist, isBestDeals }) => {
       sx={{ maxWidth: 350, position: "relative", zIndex: "1" }}
       onMouseEnter={(e) => showButton(e)}
       onMouseLeave={(e) => hideButton(e)}
+      onTouchStart={(e) => showButton(e)}
+      onTouchEnd={(e) => showButton(e)}
     >
       <Link
         to={`details/${product._id}`}

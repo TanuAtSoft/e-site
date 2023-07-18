@@ -29,7 +29,7 @@ const BestDealsProduct =()=>{
             container
             direction={"row"}
             spacing={6}
-            style={{ marginLeft: isTabletOrMobile ? "0px" : "" }}
+            //style={{ marginLeft: isTabletOrMobile ? "0px" : "" }}
           >
             {products &&
               products.map((item, id) => {
@@ -39,7 +39,8 @@ const BestDealsProduct =()=>{
                     xs={12}
                     md={3}
                     key={id}
-                    style={{ paddingLeft: "19px" }}
+                    // style={{ paddingLeft: "19px" }}
+                    className="card-grid"
                   >
                     <ProductCard
                       product={item}

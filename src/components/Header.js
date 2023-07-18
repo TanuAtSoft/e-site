@@ -312,10 +312,18 @@ const Header = ({ wishlist, cart, handleCartCount, handleWsihlistCount }) => {
       sx={{ textAlign: "center" }}
       style={{ width: "200px" }}
     >
-      <MenuItem style={{ cursor: "default" }}>
-        <img src="./drawerlogo.png" alt="logo" style={{ maxWidth: "112px" }} />
+      <MenuItem style={{ cursor: "default",alignItems:"center",justifyContent:"center" }}>
+        <img src="./drawerlogo.png" alt="logo" style={{ maxWidth: "112px" }}  onClick={() => {
+                if (role === "BUYER" || !role) navigate("/");
+              }}/>
       </MenuItem>
       <Divider />
+      {/* {role !== "SELLER" && role !== "ADMIN" && (
+        <Typography variant="h6" disablePadding>
+         <Link to="/">Home</Link> 
+        </Typography>
+      )}
+      <Divider /> */}
 
       {role !== "SELLER" && role !== "ADMIN" && (
         <Typography variant="h6" disablePadding>
